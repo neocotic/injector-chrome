@@ -2,13 +2,77 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title int17-content="name"></title>
+    <title data-int17-content="name"></title>
     <link rel="stylesheet" href="../css/vendor/bootstrap.css">
     <link rel="stylesheet" href="../css/vendor/bootstrap-responsiveness.css">
     <link rel="stylesheet" href="../css/options.css">
   </head>
   <body id="top">
-    <!-- TODO -->
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="http://neocotic.com/script-runner" data-int17-content="name" target="_blank"></a>
+          <div class="nav-collapse">
+            <ul id="navigation" class="nav">
+              <li><a id="general_nav" tabify="#general_tab" data-int17-content="opt_general_header"></a></li>
+              <li><a id="scripts_nav" tabify="#scripts_tab" data-int17-content="opt_scripts_header"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div id="general_tab" class="tab">
+        <div class="row">
+          <div class="span12">
+            <form class="form-horizontal">
+              <fieldset>
+                <legend data-int17-content="opt_misc_header"></legend>
+                <div class="control-group">
+                  <label class="control-label" for="analytics" data-int17-content="opt_analytics_label"></label>
+                  <div class="controls">
+                    <label class="checkbox span5 tight-left">
+                      <input type="checkbox" id="analytics">
+                      <span data-int17-content="opt_analytics_text"></span>
+                      <p class="help-block" data-int17-content="opt_analytics_sub_text"></p>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="scripts_tab" class="tab">
+        <div class="row">
+          <div class="span12">
+            <form class="form-horizontal">
+              <fieldset>
+                <legend data-int17-content="opt_scripts_header"></legend>
+                <div class="control-group">
+                  <pre id="editor"></pre>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <footer class="footer">
+        <p class="pull-right"><a href="#" data-int17-content="opt_top_button"></a></p>
+        &copy;<span class="year-repl"></span> <a href="http://neocotic.com/script-runner" target="_blank">Alasdair Mercer</a>
+        <form id="donation" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="">
+          <button type="submit" class="btn btn-mini btn-warning" data-placement="top" data-int17-values=".innerHTML:opt_donate_button;title:opt_donate_button_title"></button>
+        </form>
+      </footer>
+    </div>
     <script src="../lib/vendor/ace/ace.js"></script>
     <script src="../lib/vendor/jquery.js"></script>
     <script src="../lib/vendor/underscore.js"></script>

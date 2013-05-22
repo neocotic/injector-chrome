@@ -35,6 +35,10 @@ utils = window.utils = new class Utils extends Class
     str.replace /\w+/g, (word) ->
       word[0].toUpperCase() + word[1..].toLowerCase()
 
+  # Convenient shorthand for `chrome.extension.getURL`.
+  url: ->
+    chrome.extension.getURL arguments...
+
 # Public classes
 # --------------
 
