@@ -1,0 +1,10 @@
+{
+  "description": {
+    "message": "Runs your own scripts based for specific websites",
+    "description": "Brief description of the extension."
+  },
+  "name": {
+    "message": "Script Runner",
+    "description": "Name of the extension."
+  }
+}

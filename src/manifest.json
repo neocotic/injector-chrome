@@ -1,0 +1,43 @@
+{
+    "content_scripts": [
+        {
+            "all_frames": true
+          , "js": [
+                "lib/vendor/coffee-script.js"
+              , "lib/runner.js"]
+          , "matches": ["*://*/*"]
+          , "run_at": "document_start"
+        }
+      , {
+            "js": ["lib/install.js"]
+          , "matches": ["http://*.neocotic.com/script-runner/*"]
+          , "run_at": "document_end"
+        }
+    ]
+  , "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://*.uservoice.com; object-src 'self'"
+  , "default_locale": "en"
+  , "description": "__MSG_description__"
+  , "homepage_url": "http://neocotic.com/script-runner"
+  , "icons": {
+        "16": "img/icon_16.png"
+      , "19": "img/icon_19.png"
+      , "24": "img/icon_24.png"
+      , "32": "img/icon_32.png"
+      , "48": "img/icon_48.png"
+      , "64": "img/icon_64.png"
+      , "72": "img/icon_72.png"
+      , "96": "img/icon_96.png"
+      , "128": "img/icon_128.png"
+    }
+  , "manifest_version": 2
+  , "minimum_chrome_version": "22"
+  , "name": "__MSG_name__"
+  , "options_page": "pages/options.html"
+  , "permissions": [
+        "storage"
+      , "tabs"
+      , "unlimitedStorage"
+      , "<all_urls>"
+    ]
+  , "version": "0.1.0"
+}

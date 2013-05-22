@@ -1,0 +1,48 @@
+{
+    "name": "script-runner-chrome"
+  , "description": "Google Chrome extension that allows you to create scripts that are executed when you visit specific websites"
+  , "version": "0.1.0"
+  , "homepage": "http://neocotic.com/script-runner"
+  , "bugs": {
+      "url": "https://github.com/neocotic/script-runner-chrome/issues"
+    }
+  , "author": {
+        "name": "Alasdair Mercer"
+      , "email": "mercer.alasdair@gmail.com"
+      , "url": "http://neocotic.com"
+    }
+  , "licenses": [
+      {
+          "type": "MIT"
+        , "url": "https://raw.github.com/neocotic/script-runner-chrome/master/LICENSE.md"
+      }
+    ]
+  , "private": true
+  , "keywords": [
+        "script"
+      , "runner"
+      , "browser"
+      , "chrome"
+      , "extension"
+      , "javascript"
+      , "coffeescript"
+    ]
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/neocotic/script-runner-chrome.git"
+    }
+  , "devDependencies": {
+        "grunt": "~0.4.1"
+      , "grunt-contrib-clean": "~0.4.1"
+      , "grunt-contrib-compress": "~0.5.0"
+      , "grunt-contrib-copy": "~0.4.1"
+      , "grunt-contrib-coffee": "~0.7.0"
+      , "grunt-contrib-less": "~0.5.1"
+      , "grunt-contrib-uglify": "~0.2.0"
+      , "grunt-docco": "~0.2.0"
+      , "grunt-json-minify": "~0.4.0"
+    }
+  , "engines": {
+      "node": "~0.8.0"
+    }
+}
