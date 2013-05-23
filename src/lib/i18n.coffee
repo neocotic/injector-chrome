@@ -65,7 +65,7 @@ i18n = window.i18n = int17.create()
 # -------------
 
 # Use `chrome.i18n.getMessage` to retrieve the localized message for the specified `name`.
-i18n::get = (name, subs...) ->
+i18n.get = (name, subs...) ->
   return unless name
 
   message = chrome.i18n.getMessage name, subs
@@ -73,7 +73,7 @@ i18n::get = (name, subs...) ->
 
 # Use `chrome.i18n.getAcceptLanguages` to asynchronously fetch all of the supported languages,
 # optional specifying a `parent` locale for which only it's *children* should be retrieved.
-i18n::languages = (parent, callback) ->
+i18n.languages = (parent, callback) ->
   if _.isFunction parent
     callback = parent
     parent   = null
@@ -95,7 +95,7 @@ i18n::languages = (parent, callback) ->
 
 # Reconfigure this `Messenger` so that it has an empty `messages` map, preventing any attempts to
 # load the resources.
-i18n.messenger::reconfigure = ->
+i18n.messenger.reconfigure = ->
   @messages = {}
 
   this

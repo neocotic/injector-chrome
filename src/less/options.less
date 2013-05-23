@@ -1,3 +1,10 @@
+.transition(@transition) {
+  -webkit-transition: @transition;
+     -moz-transition: @transition;
+       -o-transition: @transition;
+          transition: @transition;
+}
+
 body {
   padding-top: 60px;
   padding-bottom: 10px;
@@ -5,6 +12,50 @@ body {
   @media (max-width: 979px) {
     padding-top: 0;
   }
+}
+
+a {
+  cursor: pointer;
+}
+
+abbr[data-original-title] {
+  cursor: help;
+  border-bottom: 1px dotted #ddd;
+}
+
+.navbar-fixed-top .brand {
+  padding-right: 0;
+  padding-left: 0;
+  margin-left: 20px;
+  float: right;
+  font-weight: bold;
+  color: black;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125); 
+  .transition(all .2s linear);
+}
+
+.popover form {
+  margin: 0;
+}
+
+#donation {
+  display: inline;
+  margin: 0;
+
+  .btn {
+    margin: -4px 0 0 12px;
+  }
+}
+
+#editor {
+  position: relative !important;
+  border: 1px solid lightgray;
+  margin: auto;
+  height: 200px;
+}
+
+#scripts .modified {
+  font-style: italic;
 }
 
 /* TODO */
