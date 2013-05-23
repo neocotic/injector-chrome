@@ -1,10 +1,52 @@
 {
+  "analytics_label": {
+    "message": "Analytics",
+    "description": "Label for the Analytics field."
+  },
+  "analytics_sub_text": {
+    "message": "This information is only ever used to help improve user experience and will never be supplied to a 3rd party",
+    "description": "Help text for the Analytics field."
+  },
+  "analytics_text": {
+    "message": "Send anonymous usage statistics",
+    "description": "Text for the Analytics field."
+  },
   "description": {
     "message": "Runs your own scripts based for specific websites",
     "description": "Brief description of the extension."
   },
+  "donate_button": {
+    "message": "$ICON$ Donate",
+    "description": "Text for the Donate button.",
+    "placeholders": {
+      "icon": {
+        "content": "<i class=\"icon-heart icon-white\"></i>",
+        "example": "<i class=\"icon-heart icon-white\"></i>"
+      }
+    }
+  },
+  "donate_button_title": {
+    "message": "Share the love!",
+    "description": "Hover text for the Donate button."
+  },
+  "general_header": {
+    "message": "General",
+    "description": "Header of the General tab."
+  },
+  "misc_header": {
+    "message": "Miscellaneous",
+    "description": "Header of the Miscellaneous section."
+  },
   "name": {
     "message": "Script Runner",
     "description": "Name of the extension."
+  },
+  "scripts_header": {
+    "message": "Scripts",
+    "description": "Header of the Scripts tab."
+  },
+  "top_button": {
+    "message": "Back to top",
+    "description": "Text for the link in the footer that takes the user to the top of the page."
   }
 }
