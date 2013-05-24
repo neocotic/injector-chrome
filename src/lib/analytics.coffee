@@ -20,8 +20,8 @@ analytics = window.analytics = new class Analytics extends utils.Class
 
   # Initialize analytics, potentially adding it to the current page.
   init: ->
-    chrome.storage.sync.get analytics: yes, (store) ->
-      return unless store.analytics
+    store.sync.get analytics, yes, (enabled) ->
+      return unless enabled
 
       # Setup tracking details for analytics.
       _gaq = window._gaq ?= []

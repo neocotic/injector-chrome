@@ -2,56 +2,6 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# Events
-# ------
-
-# TODO: Document
-listeners = {}
-
-# TODO: Document
-calculateChanges = (newValue = {}, oldValue = {}) ->
-  changes = {}
-
-  for field, value of newValue when value isnt oldValue[field]
-    changes[field] =
-      newValue: value
-      oldValue: oldValue[field]
-
-  for field, value of oldValue when not _(newValue).has field
-    changes[field] =
-      newValue: undefined
-      oldValue: value
-
-  changes
-
-# TODO: Document
-createListenerManager = (namespace) ->
-  (target, field, handler) ->
-    listeners[namespace] ?= {}
-    listeners[namespace][target] ?= {}
-    (listeners[namespace][target][field] ?= []).push handler
-
-# TODO: Document
-triggerChangeListeners = (namespace, target, changes) ->
-  base           = listeners[namespace] ? {}
-  allHandlers    = base['*']            ? {}
-  targetHandlers = base[target]         ? {}
-
-  for field, change of changes
-    {newValue, oldValue} = change
-
-    _(allHandlers['*']).each (handler) ->
-      handler target, field, newValue, oldValue
-
-    _(allHandlers[field]).each (handler) ->
-      handler target, newValue, oldValue
-
-    _(targetHandlers['*']).each (handler) ->
-      handler field, newValue, oldValue
-
-    _(targetHandlers[field]).each (handler) ->
-      handler newValue, oldValue
-
 # Settings
 # --------
 
@@ -74,16 +24,10 @@ bindSetting = (field) ->
   field.off '.setting'
 
   # TODO: Comment
-  key = (value) ->
-    _([name]).object [value]
-
-  # TODO: Comment
-  chrome.storage[area].get key(value), (store) ->
-    value = store[name]
-
+  store[area].get name, value, (value) ->
     if field.is ':checkbox, :radio'
       field.on 'change.setting', ->
-        chrome.storage[area].set key field.is ':checked'
+        store[area].set name, field.is ':checked'
 
       field.prop('checked', value).trigger 'change'
     else if field.is 'input[type=number]'
@@ -91,17 +35,17 @@ bindSetting = (field) ->
 
       field.on 'input.setting', ->
         min = field.attr('min') ? 0
-        chrome.storage[area].set key convert(field.val()) ? min
+        store[area].set name, convert(field.val()) ? min
 
       field.val(value).trigger 'input'
     else if field.is ':text, :password, textarea'
       field.on 'input.setting', ->
-        chrome.storage[area].set key convert field.val()
+        store[area].set name, convert field.val()
 
       field.val(value).trigger 'change'
     else if field.is 'select'
       field.on 'change.setting', ->
-        chrome.storage[area].set key if field.is '[multiple]'
+        store[area].set name, if field.is '[multiple]'
           (convert val for val in field.val() ? [])
         else
           convert field.val()
@@ -114,13 +58,6 @@ bindSetting = (field) ->
         else
           "#{value}" is option.val()
       field.trigger 'change'
-
-# TODO: Document
-chrome.storage.onChanged.addListener (changes, area) ->
-  triggerChangeListeners 'setting', area, changes
-
-# TODO: Document
-onChangedSetting = createListenerManager 'setting'
 
 # Editor
 # ------
@@ -167,17 +104,17 @@ loadEditor = ->
   ).val DEFAULT_MODE
 
   # TODO: Comment
-  onChangedSetting 'sync', 'editorSoftTabs', (soft) ->
+  store.sync.onChanged 'editorSoftTabs', (soft) ->
     editor.getSession().setUseSoftTabs soft
 
-  onChangedSetting 'sync', 'editorIndentSize', (size) ->
+  store.sync.onChanged 'editorIndentSize', (size) ->
     if _(config.indentSizes).contains size
       editor.getSession().setTabSize size
 
-  onChangedSetting 'sync', 'editorLineWrap', (wrap) ->
+  store.sync.onChanged 'editorLineWrap', (wrap) ->
     editor.getSession().setUseWrapMode wrap
 
-  onChangedSetting 'sync', 'editorTheme', (theme) ->
+  store.sync.onChanged 'editorTheme', (theme) ->
     if _(config.themes).contains theme
       editor.setTheme "ace/theme/#{theme}"
 
@@ -228,7 +165,7 @@ loadFeedback = ->
 
 # TODO: Document
 loadAnalytics = ->
-  onChangedSetting 'sync', 'analytics', (enabled) ->
+  store.sync.onChanged 'analytics', (enabled) ->
     if enabled
       analytics.init()
       analytics.track 'General', 'Changed', 'Analytics', 1
@@ -243,35 +180,26 @@ loadAnalytics = ->
 DEFAULT_MODE = 'javascript'
 
 # TODO: Document
-onChangedSetting 'local', '*', (name, newValue, oldValue) ->
+store.local.onChanged '*', (name, newValue, oldValue) ->
   domain = name.match(/script_(.+)/)?[1]
-
   return unless domain
 
-  triggerChangeListeners 'script', domain, calculateChanges newValue, oldValue
-
-# TODO: Document
-onChangedScript = createListenerManager 'script'
+  @trigger domain, @diff newValue, oldValue
 
 # TODO: Document
 getActiveDomain = ->
   $('#scripts li.active a').text() or null
 
 # TODO: Document
-getDomainInfo = (domain, callback) ->
-  chrome.storage.local.get domains: [], (store) ->
-    callback "script_#{domain}", store.domains
-
 getScript = (domain, callback) ->
   return do callback unless domain
 
-  name = "script_#{domain}"
-  chrome.storage.local.get _([name]).object([{}]), (store) ->
-    callback store[name]
+  store.local.get "script_#{domain}", {}, (script) ->
+    callback script
 
 # TODO: Document
 hasExistingDomain = (domain, callback) ->
-  getDomainInfo domain, (name, domains) ->
+  store.local.get 'domains', [], (domains) ->
     callback _(domains).contains domain
 
 # TODO: Document
@@ -288,8 +216,8 @@ hideDomain = (domain) ->
 # TODO: Document
 loadScripts = ->
   # TODO: Comment
-  chrome.storage.local.get domains: [], (store) ->
-    _(store.domains).each showDomain
+  store.local.get 'domains', [], (domains) ->
+    _(domains).each showDomain
 
   # TODO: Comment
   $('#add_button, #clone_button').popover(
@@ -376,7 +304,7 @@ loadScripts = ->
       # TODO: Change editor to reflect newly select script
 
   # TODO: Comment
-  onChangedSetting 'local', 'domains', (newValue = [], oldValue = []) ->
+  store.local.onChanged 'domains', (newValue = [], oldValue = []) ->
     activeDomain = do getActiveDomain
 
     if newValue.length > oldValue.length
@@ -406,13 +334,15 @@ loadScripts = ->
 
 # TODO: Document
 removeScript = (domain, callback) ->
-  getDomainInfo domain, (name, domains) ->
-    if _(domains).contains domain
-      domains = _(domains).without domain
+  store.local.get 'domains', [], (domains) ->
+    return unless _(domains).contains domain
 
-      chrome.storage.local.remove name, ->
-        chrome.storage.local.set {domains}, ->
-          callback?()
+    domains = _(domains).without domain
+    name    = "script_#{domain}"
+
+    store.local.remove name, ->
+      store.local.set 'domains', domains, ->
+        callback?()
 
 # TODO: Document
 showDomain = (domain, active) ->
@@ -423,19 +353,30 @@ showDomain = (domain, active) ->
 
 # TODO: Document
 updateScript = (domain, properties, callback) ->
-  getDomainInfo domain, (name, domains) ->
+  store.local.get 'domains', [], (domains) ->
+    name = "script_#{domain}"
+
     domains.push domain unless _(domains).contains domain
 
-    chrome.storage.local.get _([name]).object([{}]), (store) ->
-      script = store[name]
-
+    store.local.get name, {}, (script) ->
       _(script).extend properties
 
-      chrome.storage.local.set _([name, 'domains']).object([script, domains]), ->
+      changes = {domains}
+      changes[name] = script
+
+      store.local.set changes, ->
         callback?()
 
 # User interface
 # --------------
+
+# TODO: Document
+class UI extends utils.Class
+
+  # TODO: Complete
+
+# Miscellaneous
+# -------------
 
 # Activate tooltip effects, optionally only within a specific context.
 activateTooltips = (selector) ->
@@ -462,14 +403,10 @@ activateTooltips = (selector) ->
 
 options = window.options = new class Options extends utils.Class
 
-  # Public variables
-  # ----------------
-
-  # Configuration data that is to be loaded at runtime.
-  config: {}
-
-  # Current version of Script Runner.
-  version: ''
+  # Create a new instance of `Options`.
+  constructor: ->
+    @config  = {}
+    @version = ''
 
   # Public functions
   # ----------------
@@ -507,7 +444,7 @@ options = window.options = new class Options extends utils.Class
           $(target).show().siblings('.tab').hide()
 
           id = nav.attr 'id'
-          chrome.storage.sync.set activeTab: id, ->
+          store.sync.set 'activeTab', id, ->
             unless initialTabChange
               id = utils.capitalize id.match(/(\S*)_nav$/)[1]
               analytics.track 'Tabs', 'Changed', id
@@ -516,8 +453,8 @@ options = window.options = new class Options extends utils.Class
             $(document.body).scrollTop 0
 
       # Reflect the previously persisted tab initially.
-      chrome.storage.sync.get activeTab: 'general_nav', (store) ->
-        $("##{store.activeTab}").trigger 'click'
+      store.sync.get 'activeTab', 'general_nav', (activeTab) ->
+        $("##{activeTab}").trigger 'click'
 
       # Ensure that form submissions don't reload the page.
       $('form:not([target="_blank"])').on 'submit', ->
@@ -540,10 +477,11 @@ options = window.options = new class Options extends utils.Class
       do loadScripts
 
       # TODO: Remove debug
-      onChangedSetting '*', '*', (area, name, newValue, oldValue) ->
-        newValue = JSON.stringify newValue if _.isObject newValue
-        oldValue = JSON.stringify oldValue if _.isObject oldValue
-        console.log "#{name} setting has been changed in #{area} from '#{oldValue}' to '#{newValue}'"
+      for area in ['local', 'sync']
+        store[area].onChanged '*', (name, newValue, oldValue) ->
+          newValue = JSON.stringify newValue if _.isObject newValue
+          oldValue = JSON.stringify oldValue if _.isObject oldValue
+          console.log "#{name} setting has been changed in #{area} from '#{oldValue}' to '#{newValue}'"
 
       # TODO: Comment
       $('[name][data-setting-area]').each ->
