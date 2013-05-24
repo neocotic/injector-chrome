@@ -280,7 +280,17 @@ hasUnsavedChanges = (callback) ->
     callback if script? and script.code isnt editor.getValue()
 
 # TODO: Document
+hideDomain = (domain) ->
+  $('#scripts li a').each ->
+    $this = $ this
+    $this.remove() if $this.text() is domain
+
+# TODO: Document
 loadScripts = ->
+  # TODO: Comment
+  chrome.storage.local.get domains: [], (store) ->
+    _(store.domains).each showDomain
+
   # TODO: Comment
   $('#add_button, #clone_button').popover(
     html:      yes
@@ -366,13 +376,33 @@ loadScripts = ->
       # TODO: Change editor to reflect newly select script
 
   # TODO: Comment
-  onChangedSetting 'local', 'domains', (newValue, oldValue) ->
-    # TODO: If new script was added, add it to the list and change the active context to the new
-    # script if there are no active unsaved changes to the current active script; otherwise, prompt
-    # user to save or discard their changes, or cancel
-    # TODO: See `hasUnsavedChanges`
+  onChangedSetting 'local', 'domains', (newValue = [], oldValue = []) ->
+    activeDomain = do getActiveDomain
 
-    # TODO: If active script was removed, remove it from list and reset the context.
+    if newValue.length > oldValue.length
+      # One or more domains have been added so they need to be displayed.
+      newDomains  = _(newValue).difference oldValue
+      swapContext = no
+
+      if activeDomain
+        # TODO: If the active script has unsaved changes, ask user if they want to save or discard
+        # them and switch to the newest (last) domain, or stay put.
+        # TODO: See `hasUnsavedChanges`
+        # TODO: Only change `swapContext` to `yes` **if** user confirmed action, but after saving
+        # **if** they requested to do so.
+        swapContext = yes
+
+      for domain, i in newDomains
+        activate = swapContext and i is newDomains.length - 1
+
+        showDomain domain, activate
+        # TODO: Change editor context **if** `activate`
+    else
+      removedDomains = _(oldValue).difference newValue
+
+      for domain in removedDomains
+        hideDomain domain
+        # TODO: Clear editor context **if** `domain is activeDomain`
 
 # TODO: Document
 removeScript = (domain, callback) ->
@@ -383,6 +413,13 @@ removeScript = (domain, callback) ->
       chrome.storage.local.remove name, ->
         chrome.storage.local.set {domains}, ->
           callback?()
+
+# TODO: Document
+showDomain = (domain, active) ->
+  item = $ '<li/>'
+  item.append $ '<a/>', text: domain
+  item.appendTo $ '#scripts'
+  item.addClass('active').siblings().removeClass 'active' if active
 
 # TODO: Document
 updateScript = (domain, properties, callback) ->
