@@ -180,6 +180,96 @@ loadAnalytics = ->
 DEFAULT_MODE = 'javascript'
 
 # TODO: Document
+Script = Backbone.Model.extend
+
+  defaults:
+    active: no
+    code:   ''
+    mode:   'javascript'
+
+  validate: (attributes) ->
+    {host, mode} = attributes
+
+    unless host
+      # TODO: Verify `host` is unique?
+      'host is required'
+    else unless mode
+      'mode is required'
+    else unless _(options.config.editor.modes).contains mode
+      'mode is unrecognized'
+
+# TODO: Document
+Scripts = Backbone.Collection.extend
+
+  chromeStorage: new Backbone.ChromeStorage 'Scripts', 'local'
+
+  model: Script
+
+# TODO: Document
+ScriptItem = Backbone.View.extend
+
+  tagName: 'li'
+
+  template: _.template '<a><%= host %></a>'
+
+  initialize: ->
+    # TODO: Add link
+    @listenTo @model, 'change', @render
+    @listenTo @model, 'destroy', @remove
+
+  remove: ->
+    @$el.remove()
+
+  render: ->
+    @$el.html @template @model.attributes
+
+    this
+
+# TODO: Document
+ScriptsList = Backbone.View.extend
+
+  tagName: 'ul'
+
+  className: 'nav nav-pills nav-stacked'
+
+  addOne: (model) ->
+    @$el.append new ScriptItem({model}).render().el
+
+  addAll: ->
+    _(@collection).each @addOne, this
+
+  initialize: ->
+    @listenTo @collection, 'add', @addOne
+    @listenTo @collection, 'reset', @addAll
+    @listenTo @collection, 'change', @render
+    @listenTo @collection, 'destroy', @remove
+
+  remove: ->
+    @$el.remove()
+
+  render: ->
+    # TODO: Is `ul` tag generated and appended automatically?
+    do @addAll
+
+    this
+
+# TODO: Documnet
+ScriptsView = Backbone.View.extend
+
+  initialize: ->
+    @collection = new Scripts
+
+  render: ->
+    # TODO: Complete
+    @list = new ScriptsList {@collection}
+    @$('#scripts_nav').append @list.render().$el
+
+    this
+
+# TODO: Comment and/or move
+scriptsView = new ScriptsView el: $ '#scripts_tab'
+
+# TODO: Document
 store.local.onChanged '*', (name, newValue, oldValue) ->
   domain = name.match(/script_(.+)/)?[1]
   return unless domain
