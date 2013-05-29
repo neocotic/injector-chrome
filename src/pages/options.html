@@ -59,7 +59,7 @@
 
                   <div class="controls">
                     <label class="checkbox span5 tight-left">
-                      <input type="checkbox" id="analytics" name="analytics" data-setting-area="sync" data-setting-default="true" data-setting-type="json">
+                      <input type="checkbox" id="analytics">
 
                       <span data-int17-content="analytics_text"></span>
                       <p class="help-block" data-int17-content="analytics_sub_text"></p>
@@ -82,7 +82,7 @@
                 <div class="control-group">
                   <div class="row">
                     <div class="span3">
-                      <div class="btn-toolbar">
+                      <div class="btn-toolbar" id="scripts_controls">
                         <div class="btn-group">
                           <a class="btn btn-mini" id="add_button" data-int17-values="title:add_button_title"><i class="icon-plus"></i></a>
                           <a class="btn btn-mini disabled" id="delete_button"><i class="icon-minus"></i></a>
@@ -95,20 +95,20 @@
                     </div>
 
                     <div class="span9">
-                      <div class="pull-right">
-                        <select class="input-large" name="editorTheme" data-setting-area="sync" data-setting-default="github" data-setting-type="text">
+                      <div class="pull-right" id="editor_settings">
+                        <select class="input-large" id="editor_theme">
                           <optgroup data-int17-values="label:editor_theme_label"></optgroup>
                         </select>
 
-                        <select class="input-small" name="editorSoftTabs" data-setting-area="sync" data-setting-default="true" data-setting-type="json">
+                        <select class="input-small" id="editor_soft_tabs">
                           <optgroup data-int17-values="label:editor_indent_mode_label" data-int17-options="editor_indent_mode_tabs:false;editor_indent_mode_spaces:true"></optgroup>
                         </select>
 
-                        <select class="input-mini" name="editorIndentSize" data-setting-area="sync" data-setting-default="2" data-setting-type="json">
+                        <select class="input-mini" id="editor_indent_size">
                           <optgroup data-int17-values="label:editor_indent_size_label"></optgroup>
                         </select>
 
-                        <select class="input-small" name="editorLineWrap" data-setting-area="sync" data-setting-default="false" data-setting-type="json">
+                        <select class="input-small" id="editor_line_wrap">
                           <optgroup data-int17-values="label:editor_line_wrap_label" data-int17-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></optgroup>
                         </select>
                       </div>

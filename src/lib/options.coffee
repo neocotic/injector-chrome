@@ -2,122 +2,6 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# Settings
-# --------
-
-# TODO: Document
-bindSetting = (field) ->
-  # Extract all setting data from `field`.
-  area = field.data('setting-area') ? 'local'
-  name = field.attr 'name'
-  type = field.data('setting-type') ? 'text'
-
-  # TODO: Comment
-  convert = (value) ->
-    switch type
-      when 'json' then JSON.parse value ? null
-      when 'text' then value ? ''
-
-  value = convert field.data 'setting-default'
-
-  # Ensure any previously bound settings-related events are removed first.
-  field.off '.setting'
-
-  # TODO: Comment
-  store[area].get name, value, (value) ->
-    if field.is ':checkbox, :radio'
-      field.on 'change.setting', ->
-        store[area].set name, field.is ':checked'
-
-      field.prop('checked', value).trigger 'change'
-    else if field.is 'input[type=number]'
-      type = 'json'
-
-      field.on 'input.setting', ->
-        min = field.attr('min') ? 0
-        store[area].set name, convert(field.val()) ? min
-
-      field.val(value).trigger 'input'
-    else if field.is ':text, :password, textarea'
-      field.on 'input.setting', ->
-        store[area].set name, convert field.val()
-
-      field.val(value).trigger 'change'
-    else if field.is 'select'
-      field.on 'change.setting', ->
-        store[area].set name, if field.is '[multiple]'
-          (convert val for val in field.val() ? [])
-        else
-          convert field.val()
-
-      field.find('option').each ->
-        option = $ this
-
-        option.prop 'selected', if _.isArray value
-          _(value).contains option.val()
-        else
-          "#{value}" is option.val()
-      field.trigger 'change'
-
-# Editor
-# ------
-
-# TODO: Document
-editor = null
-
-# TODO: Document
-loadEditor = ->
-  config = options.config.editor
-  editor = ace.edit 'editor'
-
-  editor.setReadOnly yes
-  editor.setShowPrintMargin no
-
-  # TODO: Comment
-  group = $ '[name=editorIndentSize] optgroup'
-  group.remove 'option'
-  _(config.indentSizes).each (size) ->
-    group.append $ '<option/>', text: size
-
-  # TODO: Comment
-  group = $ '[name=editorTheme] optgroup'
-  group.remove 'option'
-  _(config.themes).each (theme) ->
-    group.append $ '<option/>',
-      html:  i18n.get "editor_theme_#{theme}"
-      value: theme
-
-  # TODO: Comment
-  group = $ '#editor_modes optgroup'
-  group.remove 'option'
-  _(config.modes).each (mode) ->
-    group.append $ '<option/>',
-      html:  i18n.get "editor_mode_#{mode}"
-      value: mode
-
-  # TODO: Comment
-  $('#editor_modes').on('change', ->
-    mode = $(this).val()
-
-    editor.getSession().setMode "ace/mode/#{mode}"
-    # TODO: Update active script type
-  ).val DEFAULT_MODE
-
-  # TODO: Comment
-  store.sync.onChanged 'editorSoftTabs', (soft) ->
-    editor.getSession().setUseSoftTabs soft
-
-  store.sync.onChanged 'editorIndentSize', (size) ->
-    if _(config.indentSizes).contains size
-      editor.getSession().setTabSize size
-
-  store.sync.onChanged 'editorLineWrap', (wrap) ->
-    editor.getSession().setUseWrapMode wrap
-
-  store.sync.onChanged 'editorTheme', (theme) ->
-    if _(config.themes).contains theme
-      editor.setTheme "ace/theme/#{theme}"
-
 # Feedback
 # --------
 
@@ -129,7 +13,7 @@ loadFeedback = ->
   # Only load and configure the feedback widget once.
   return if feedbackAdded
 
-  {id, forum} = options.config.options.userVoice
+  { id, forum } = options.config.options.userVoice
 
   # Create a script element to load the UserVoice widget.
   uv       = document.createElement 'script'
@@ -160,18 +44,127 @@ loadFeedback = ->
   # Ensure that the widget isn't loaded again.
   feedbackAdded = yes
 
-# General
-# -------
+# Settings
+# --------
 
 # TODO: Document
-loadAnalytics = ->
-  store.sync.onChanged 'analytics', (enabled) ->
-    if enabled
+Settings = Backbone.Model.extend
+
+  defaults:
+    activeTab:        'general_nav'
+    analytics:        yes
+    editorIndentSize: 2
+    editorLineWrap:   no
+    editorSoftTabs:   yes
+    editorTheme:      'github'
+
+  initialize: ->
+    @on 'change:analytics', @updateAnalytics
+    @on """
+      change:editorIndentSize
+      change:editorLineWrap
+      change:editorSoftTabs
+      change:editorTheme
+    """.replace(/\n/g, ' '), @updateEditor
+
+    do @updateAnalytics
+
+  updateAnalytics: ->
+    if @get 'analytics'
       analytics.init()
-      analytics.track 'General', 'Changed', 'Analytics', 1
     else
-      analytics.track 'General', 'Changed', 'Analytics', 0
       analytics.remove()
+
+  updateEditor: ->
+    options.app.editor.updateSettings()
+
+# TODO: Document
+EditorSettingsView = Backbone.View.extend
+
+  el: '#editor_settings'
+
+  events:
+    'change #editorIndentSize': 'update'
+    'change #editorLineWrap':   'update'
+    'change #editorSoftTabs':   'update'
+    'change #editorTheme':      'update'
+
+  initialize: ->
+    group = @$ '#editorIndentSize optgroup'
+    _(options.config.editor.indentSizes).each (size) =>
+      group.append @$ '<option/>', text: size
+
+    # TODO: Comment
+    group = @$ '#editorTheme optgroup'
+    _(options.config.editor.themes).each (theme) =>
+      group.append @$ '<option/>',
+        html:  i18n.get "editor_theme_#{theme}"
+        value: theme
+
+    @listenTo @model, 'change:editorIndentSize', @render
+    @listenTo @model, 'change:editorLineWrap',   @render
+    @listenTo @model, 'change:editorSoftTabs',   @render
+    @listenTo @model, 'change:editorTheme',      @render
+
+  render: ->
+    @$('#editorIndentSize').val @model.get 'editorIndentSize'
+    @$('#editorLineWrap').val   @model.get 'editorLineWrap'
+    @$('#editorSoftTabs').val   @model.get 'editorSoftTabs'
+    @$('#editorTheme').val      @model.get 'editorTheme'
+
+    this
+
+  update: ->
+    $indentSize = @$ '#editorIndentSize'
+    $lineWrap   = @$ '#editorLineWrap'
+    $softTabs   = @$ '#editorSoftTabs'
+    $theme      = @$ '#editorTheme'
+
+    @model.set
+      editorIndentSize: parseInt $indentSize.val(), 0
+      editorLineWrap:   $lineWrap.val() is 'true'
+      editorSoftTabs:   $softTabs.val() is 'true'
+      editorTheme:      $theme.val()
+    # TODO: Sync
+
+# TODO: Document
+GeneralSettingsView = Backbone.View.extend
+
+  el: '#general_tab'
+
+  events:
+    'change #analytics': 'update'
+
+  initialize: ->
+    @listenTo @model, 'change:analytics', @render
+
+  render: ->
+    @$('#analytics').prop 'checked', @model.get 'analytics'
+
+    this
+
+  update: ->
+    $analytics = @$ '#analytics'
+
+    @model.set analytics: $analytics.is ':checked'
+    # TODO: Sync
+
+# TODO: Document
+SettingsView = Backbone.View.extend
+
+  el: 'body'
+
+  initialize: ->
+    @model = new Settings
+
+    @editor  = new EditorSettingsView  { @model }
+    @general = new GeneralSettingsView { @model }
+
+  render: ->
+    @editor.render()
+    @general.render()
+
+    this
 
 # Scripts
 # -------
@@ -183,16 +176,14 @@ DEFAULT_MODE = 'javascript'
 Script = Backbone.Model.extend
 
   defaults:
-    active: no
     code:   ''
-    mode:   'javascript'
+    mode:   DEFAULT_MODE
 
   validate: (attributes) ->
-    {host, mode} = attributes
+    { id, mode } = attributes
 
-    unless host
-      # TODO: Verify `host` is unique?
-      'host is required'
+    unless id
+      'id is required'
     else unless mode
       'mode is required'
     else unless _(options.config.editor.modes).contains mode
@@ -206,19 +197,176 @@ Scripts = Backbone.Collection.extend
   model: Script
 
 # TODO: Document
+ScriptControls = Backbone.View.extend
+
+  el: '#scripts_controls'
+
+  events:
+    'click #add_button': 'togglePrompt'
+    'shown #add_button': 'promptAdd'
+    'click #clone_button': 'togglePrompt'
+    'shown #clone_button': 'promptClone'
+    'click #delete_button': 'togglePrompt'
+    'shown #delete_button': 'promptDelete'
+
+  initialize: ->
+    @$('#add_button, #clone_button').popover
+      html:      yes
+      placement: 'bottom'
+      trigger:   'manual'
+      content:   """
+        <form class="form-inline" id="new_script">
+          <div class="control-group">
+            <input type="text" placeholder="yourdomain.com">
+          </div>
+        </form>
+      """
+
+    # TODO: Setup popover for delete button
+
+  promptAdd: (e) ->
+    @promptCreate $ e.target
+
+  promptClone: (e) ->
+    return if not @model?
+
+    @promptCreate $(e.target), yes
+
+  promptCreate: ($btn, clone) ->
+    view = this
+
+    $('#new_script').on('submit', ->
+      $form  = $ this
+      group  = $form.find '.control-group'
+      id     = $form.find(':text').val().replace /\s+/g, ''
+      exists = _(view.collection.pluck 'id').contains id
+
+      if not id or exists
+        group.addClass 'error'
+      else
+        group.removeClass 'error'
+
+        base = if clone and view.model? then view.model else new Script
+
+        view.collection.add new Script {
+          id
+          code: base.get('code') or ''
+          mode: base.get('mode') or DEFAULT_MODE
+        }, silent: yes
+        # TODO: Sync data (is async?)
+        # TODO: Make new script active in editor
+        $btn.popover 'hide'
+
+      false
+    ).find(':text').focus().on 'keydown', (e) ->
+      $btn.popover 'hide' if e.keyCode is 27
+
+  promptDelete: ->
+    # TODO: Complete
+    return if not @model?
+
+    # TODO: Prompt user to confirm action
+    @model.destroy()
+    # TODO: Is async?
+    options.app.update()
+
+  togglePrompt: (e) ->
+    $btn = $ e.target
+    $btn.popover 'toggle' unless $btn.is '.disabled'
+
+  update: (@model) ->
+    if @model?
+      @$('#clone_button, #delete_button').removeClass 'disabled'
+    else
+      @$('#clone_button, #delete_button').addClass('disabled').popover 'hide'
+
+# TODO: Document
+ScriptEditor = Backbone.View.extend
+
+  el: '#editor'
+
+  initialize: ->
+    @ace = ace.edit 'editor'
+    @ace.setReadOnly yes
+    @ace.setShowPrintMargin no
+
+    @modes = new ScriptEditorModes { @ace }
+
+    do @updateSettings
+
+  render: ->
+    @modes.render()
+
+    this
+
+  update: (@model) ->
+    @ace.setValue @model?.get('code') or ''
+    @modes.update @model
+
+  updateSettings: ->
+    settings = options.settings.model
+
+    @ace.getSession().editorLineWrap settings.get 'editorLineWrap'
+    @ace.getSession().setUseSoftTabs settings.get 'editorSoftTabs'
+    @ace.getSession().setTabSize     settings.get 'editorIndentSize'
+    @ace.setTheme "ace/theme/#{settings.get 'editorTheme'}"
+
+# TODO: Document
+ScriptEditorModes = Backbone.View.extend
+
+  el: '#editor_modes'
+
+  template: _.template '<option value="<%- value %>"><%= html %></option>'
+
+  events:
+    'change': 'updateMode'
+
+  render: ->
+    _(options.config.editor.modes).each (mode) =>
+      @$el.append @template
+        html:  i18n.get "editor_mode_#{mode}"
+        value: mode
+    do @update
+
+    this
+
+  update: (@model) ->
+    mode   = if @model? then @model.get 'mode'
+    mode or= DEFAULT_MODE
+
+    @$("option[value='#{mode}']").prop 'selected', yes
+    do @updateMode
+
+  updateMode: ->
+    mode = @$el.val()
+
+    @ace.getSession().setMode "ace/mode/#{mode}"
+
+    if @model?
+      @model.set { mode }
+      # TODO: Sync?
+
+# TODO: Document
 ScriptItem = Backbone.View.extend
 
   tagName: 'li'
 
-  template: _.template '<a><%= host %></a>'
+  template: _.template '<a><%= id %></a>'
+
+  events:
+    'click a': 'activate'
+
+  activate: (e) ->
+    if e.ctrlKey
+      @$el.removeClass 'active'
+      options.app.update()
+    else
+      @$el.addClass('active').siblings().removeClass 'active'
+      options.app.update @model
 
   initialize: ->
-    # TODO: Add link
-    @listenTo @model, 'change', @render
     @listenTo @model, 'destroy', @remove
-
-  remove: ->
-    @$el.remove()
+    @listenTo @model, 'change:id', @render
 
   render: ->
     @$el.html @template @model.attributes
@@ -233,7 +381,7 @@ ScriptsList = Backbone.View.extend
   className: 'nav nav-pills nav-stacked'
 
   addOne: (model) ->
-    @$el.append new ScriptItem({model}).render().el
+    @$el.append new ScriptItem({ model }).render().$el
 
   addAll: ->
     _(@collection).each @addOne, this
@@ -244,9 +392,6 @@ ScriptsList = Backbone.View.extend
     @listenTo @collection, 'change', @render
     @listenTo @collection, 'destroy', @remove
 
-  remove: ->
-    @$el.remove()
-
   render: ->
     # TODO: Is `ul` tag generated and appended automatically?
     do @addAll
@@ -256,217 +401,26 @@ ScriptsList = Backbone.View.extend
 # TODO: Documnet
 ScriptsView = Backbone.View.extend
 
+  el: '#scripts_tab'
+
   initialize: ->
     @collection = new Scripts
 
+    @controls = new ScriptControls { @collection }
+    @editor   = new ScriptEditor
+    @list     = new ScriptsList { @collection }
+
   render: ->
-    # TODO: Complete
-    @list = new ScriptsList {@collection}
     @$('#scripts_nav').append @list.render().$el
 
     this
 
-# TODO: Comment and/or move
-scriptsView = new ScriptsView el: $ '#scripts_tab'
-
-# TODO: Document
-store.local.onChanged '*', (name, newValue, oldValue) ->
-  domain = name.match(/script_(.+)/)?[1]
-  return unless domain
-
-  @trigger domain, @diff newValue, oldValue
-
-# TODO: Document
-getActiveDomain = ->
-  $('#scripts li.active a').text() or null
-
-# TODO: Document
-getScript = (domain, callback) ->
-  return do callback unless domain
-
-  store.local.get "script_#{domain}", {}, (script) ->
-    callback script
-
-# TODO: Document
-hasExistingDomain = (domain, callback) ->
-  store.local.get 'domains', [], (domains) ->
-    callback _(domains).contains domain
-
-# TODO: Document
-hasUnsavedChanges = (callback) ->
-  getScript do getActiveDomain, (script) ->
-    callback if script? and script.code isnt editor.getValue()
-
-# TODO: Document
-hideDomain = (domain) ->
-  $('#scripts li a').each ->
-    $this = $ this
-    $this.remove() if $this.text() is domain
-
-# TODO: Document
-loadScripts = ->
-  # TODO: Comment
-  store.local.get 'domains', [], (domains) ->
-    _(domains).each showDomain
-
-  # TODO: Comment
-  $('#add_button, #clone_button').popover(
-    html:      yes
-    placement: 'bottom'
-    trigger:   'manual'
-    content:   """
-      <form class="form-inline" id="new_script">
-        <div class="control-group">
-          <input type="text" placeholder="yourdomain.com">
-        </div>
-      </form>
-    """
-  ).on('shown', ->
-    button = $ this
-
-    # TODO: Comment
-    $('#new_script').on('submit', ->
-      $this  = $ this
-      group  = $this.find '.control-group'
-      domain = $this.find(':text').val().replace /\s+/g, ''
-
-      hasExistingDomain domain, (exists) ->
-        if not domain or exists
-          group.addClass 'error'
-        else
-          group.removeClass 'error'
-
-          if button.is '#add_button'
-            updateScript domain, {
-              code: ''
-              mode: DEFAULT_MODE
-            }, ->
-              # TODO: Make new script active in editor
-
-              analytics.track 'Scripts', 'Added', domain
-
-              button.popover 'hide'
-          else
-            clonedDomain = do getActiveDomain
-
-            getScript clonedDomain, (script) ->
-              updateScript domain, _.clone(script), ->
-                # TODO: Make cloned script active in editor
-
-                analytics.track 'Scripts', 'Cloned', clonedDomain, domain
-
-                button.popover 'hide'
-
-      false
-    ).find(':text').focus().on 'keydown', (e) ->
-      # TODO: Comment
-      button.popover 'hide' if e.keyCode is 27
-  ).on 'click', ->
-    # TODO: Comment
-    $this = $ this
-    $this.popover 'toggle' unless $this.is '.disabled'
-
-  # TODO: Comment
-  $('#delete_button').on 'click', ->
-    return if $(this).is '.disabled'
-
-    domain = do getActiveDomain
-
-    # TODO: Prompt user to confirm action
-    removeScript domain, ->
-      analytics.track 'Scripts', 'Deleted', domain
-
-  # TODO: Comment
-  $('#scripts li a').on 'click', (e) ->
-    $this  = $ this
-    item   = $this.parent()
-    active = item.hasClass 'active'
-
-    if active and e.ctrlKey
-      # TODO: Comment
-      item.removeClass 'active'
-
-      # TODO: Clear editor
-    else if not active
-      # TODO: Comment
-      item.addClass('active').siblings().removeClass 'active'
-
-      # TODO: Change editor to reflect newly select script
-
-  # TODO: Comment
-  store.local.onChanged 'domains', (newValue = [], oldValue = []) ->
-    activeDomain = do getActiveDomain
-
-    if newValue.length > oldValue.length
-      # One or more domains have been added so they need to be displayed.
-      newDomains  = _(newValue).difference oldValue
-      swapContext = no
-
-      if activeDomain
-        # TODO: If the active script has unsaved changes, ask user if they want to save or discard
-        # them and switch to the newest (last) domain, or stay put.
-        # TODO: See `hasUnsavedChanges`
-        # TODO: Only change `swapContext` to `yes` **if** user confirmed action, but after saving
-        # **if** they requested to do so.
-        swapContext = yes
-
-      for domain, i in newDomains
-        activate = swapContext and i is newDomains.length - 1
-
-        showDomain domain, activate
-        # TODO: Change editor context **if** `activate`
-    else
-      removedDomains = _(oldValue).difference newValue
-
-      for domain in removedDomains
-        hideDomain domain
-        # TODO: Clear editor context **if** `domain is activeDomain`
-
-# TODO: Document
-removeScript = (domain, callback) ->
-  store.local.get 'domains', [], (domains) ->
-    return unless _(domains).contains domain
-
-    domains = _(domains).without domain
-    name    = "script_#{domain}"
-
-    store.local.remove name, ->
-      store.local.set 'domains', domains, ->
-        callback?()
-
-# TODO: Document
-showDomain = (domain, active) ->
-  item = $ '<li/>'
-  item.append $ '<a/>', text: domain
-  item.appendTo $ '#scripts'
-  item.addClass('active').siblings().removeClass 'active' if active
-
-# TODO: Document
-updateScript = (domain, properties, callback) ->
-  store.local.get 'domains', [], (domains) ->
-    name = "script_#{domain}"
-
-    domains.push domain unless _(domains).contains domain
-
-    store.local.get name, {}, (script) ->
-      _(script).extend properties
-
-      changes = {domains}
-      changes[name] = script
-
-      store.local.set changes, ->
-        callback?()
+  update: (model) ->
+    @controls.update model
+    @editor.update model
 
 # User interface
 # --------------
-
-# TODO: Document
-class UI extends utils.Class
-
-  # TODO: Complete
-
-# Miscellaneous
-# -------------
 
 # Activate tooltip effects, optionally only within a specific context.
 activateTooltips = (selector) ->
@@ -505,16 +459,17 @@ options = window.options = new class Options extends utils.Class
   # This will involve inserting and configuring the UI elements as well as loading the current
   # settings.
   init: ->
-    # Add support for analytics if the user hasn't opted out.
-    analytics.init()
-
     # It's nice knowing what version is running.
-    {@version} = chrome.runtime.getManifest()
+    { @version } = chrome.runtime.getManifest()
 
     # Load the configuration data from the file before storing it locally.
     $.getJSON utils.url('configuration.json'), (@config) =>
       # Add the user feedback feature to the page.
       do loadFeedback
+
+      # TODO: Comment
+      @settings = new SettingsView().render()
+      @app      = new ScriptsView().render()
 
       # Begin initialization.
       i18n.traverse()
@@ -534,17 +489,17 @@ options = window.options = new class Options extends utils.Class
           $(target).show().siblings('.tab').hide()
 
           id = nav.attr 'id'
-          store.sync.set 'activeTab', id, ->
-            unless initialTabChange
-              id = utils.capitalize id.match(/(\S*)_nav$/)[1]
-              analytics.track 'Tabs', 'Changed', id
+          options.settings.model.set 'activeTag', id
+          # TODO: Sync
+          unless initialTabChange
+            id = utils.capitalize id.match(/(\S*)_nav$/)[1]
+            analytics.track 'Tabs', 'Changed', id
 
-            initialTabChange = no
-            $(document.body).scrollTop 0
+          initialTabChange = no
+          $(document.body).scrollTop 0
 
       # Reflect the previously persisted tab initially.
-      store.sync.get 'activeTab', 'general_nav', (activeTab) ->
-        $("##{activeTab}").trigger 'click'
+      $("##{@settings.model.get 'activeTab'}").trigger 'click'
 
       # Ensure that form submissions don't reload the page.
       $('form:not([target="_blank"])').on 'submit', ->
@@ -562,20 +517,12 @@ options = window.options = new class Options extends utils.Class
 
       do activateTooltips
 
-      do loadAnalytics
-      do loadEditor
-      do loadScripts
-
       # TODO: Remove debug
       for area in ['local', 'sync']
         store[area].onChanged '*', (name, newValue, oldValue) ->
           newValue = JSON.stringify newValue if _.isObject newValue
           oldValue = JSON.stringify oldValue if _.isObject oldValue
           console.log "#{name} setting has been changed in #{area} from '#{oldValue}' to '#{newValue}'"
-
-      # TODO: Comment
-      $('[name][data-setting-area]').each ->
-        bindSetting $ this
 
 # Initialize `options` when the DOM is ready.
 $ -> options.init()
