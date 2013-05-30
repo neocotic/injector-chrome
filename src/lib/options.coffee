@@ -48,6 +48,7 @@ loadFeedback = ->
 # --------
 
 # TODO: Document
+# TODO: Support singleton pattern
 Settings = Backbone.Model.extend
 
   defaults:
@@ -79,25 +80,35 @@ Settings = Backbone.Model.extend
     options.app.editor.updateSettings()
 
 # TODO: Document
+SettingsLookup = Backbone.Collection.extend
+
+  chromeStorage: new Backbone.ChromeStorage 'Settings', 'sync'
+
+  model: Settings
+
+# TODO: Document
 EditorSettingsView = Backbone.View.extend
 
   el: '#editor_settings'
 
+  template: _.template '<option value="<%- value %>"><%= html %></option>'
+
   events:
-    'change #editorIndentSize': 'update'
-    'change #editorLineWrap':   'update'
-    'change #editorSoftTabs':   'update'
-    'change #editorTheme':      'update'
+    'change #editor_indent_size': 'update'
+    'change #editor_line_wrap':   'update'
+    'change #editor_soft_tabs':   'update'
+    'change #editor_theme':       'update'
 
   initialize: ->
-    group = @$ '#editorIndentSize optgroup'
+    group = @$ '#editor_indent_size optgroup'
     _(options.config.editor.indentSizes).each (size) =>
-      group.append @$ '<option/>', text: size
+      group.append @template
+        html:  size
+        value: size
 
-    # TODO: Comment
-    group = @$ '#editorTheme optgroup'
+    group = @$ '#editor_theme optgroup'
     _(options.config.editor.themes).each (theme) =>
-      group.append @$ '<option/>',
+      group.append @template
         html:  i18n.get "editor_theme_#{theme}"
         value: theme
 
@@ -107,25 +118,32 @@ EditorSettingsView = Backbone.View.extend
     @listenTo @model, 'change:editorTheme',      @render
 
   render: ->
-    @$('#editorIndentSize').val @model.get 'editorIndentSize'
-    @$('#editorLineWrap').val   @model.get 'editorLineWrap'
-    @$('#editorSoftTabs').val   @model.get 'editorSoftTabs'
-    @$('#editorTheme').val      @model.get 'editorTheme'
+    indentSize = @model.get 'editorIndentSize'
+    lineWrap   = @model.get 'editorLineWrap'
+    softTabs   = @model.get 'editorSoftTabs'
+    theme      = @model.get 'editorTheme'
+
+    @$("""
+      #editor_indent_size option[value='#{indentSize}']
+      #editor_line_wrap   option[value='#{lineWrap}']
+      #editor_soft_tabs   option[value='#{softTabs}']
+      #editor_theme       option[value='#{theme}']
+    """.replace /\n/g, ', ').prop 'selected', yes
 
     this
 
   update: ->
-    $indentSize = @$ '#editorIndentSize'
-    $lineWrap   = @$ '#editorLineWrap'
-    $softTabs   = @$ '#editorSoftTabs'
-    $theme      = @$ '#editorTheme'
+    $indentSize = @$ '#editor_indent_size'
+    $lineWrap   = @$ '#editor_line_wrap'
+    $softTabs   = @$ '#editor_soft_tabs'
+    $theme      = @$ '#editor_theme'
 
-    @model.set
+    @model.save {
       editorIndentSize: parseInt $indentSize.val(), 0
       editorLineWrap:   $lineWrap.val() is 'true'
       editorSoftTabs:   $softTabs.val() is 'true'
       editorTheme:      $theme.val()
-    # TODO: Sync
+    }, wait: yes
 
 # TODO: Document
 GeneralSettingsView = Backbone.View.extend
@@ -146,8 +164,7 @@ GeneralSettingsView = Backbone.View.extend
   update: ->
     $analytics = @$ '#analytics'
 
-    @model.set analytics: $analytics.is ':checked'
-    # TODO: Sync
+    @model.save { analytics: $analytics.is ':checked' }, wait: yes
 
 # TODO: Document
 SettingsView = Backbone.View.extend
@@ -155,8 +172,6 @@ SettingsView = Backbone.View.extend
   el: 'body'
 
   initialize: ->
-    @model = new Settings
-
     @editor  = new EditorSettingsView  { @model }
     @general = new GeneralSettingsView { @model }
 
@@ -176,14 +191,14 @@ DEFAULT_MODE = 'javascript'
 Script = Backbone.Model.extend
 
   defaults:
-    code:   ''
-    mode:   DEFAULT_MODE
+    code: ''
+    mode: DEFAULT_MODE
 
   validate: (attributes) ->
-    { id, mode } = attributes
+    { host, mode } = attributes
 
-    unless id
-      'id is required'
+    unless host
+      'host is required'
     else unless mode
       'mode is required'
     else unless _(options.config.editor.modes).contains mode
@@ -201,11 +216,19 @@ ScriptControls = Backbone.View.extend
 
   el: '#scripts_controls'
 
+  template: _.template """
+    <form class="form-inline" id="<%- id %>">
+      <div class="control-group">
+        <%= html %>
+      </div>
+    </form>
+  """
+
   events:
-    'click #add_button': 'togglePrompt'
-    'shown #add_button': 'promptAdd'
-    'click #clone_button': 'togglePrompt'
-    'shown #clone_button': 'promptClone'
+    'click #add_button':    'togglePrompt'
+    'shown #add_button':    'promptAdd'
+    'click #clone_button':  'togglePrompt'
+    'shown #clone_button':  'promptClone'
     'click #delete_button': 'togglePrompt'
     'shown #delete_button': 'promptDelete'
 
@@ -214,64 +237,87 @@ ScriptControls = Backbone.View.extend
       html:      yes
       placement: 'bottom'
       trigger:   'manual'
-      content:   """
-        <form class="form-inline" id="new_script">
-          <div class="control-group">
-            <input type="text" placeholder="yourdomain.com">
-          </div>
-        </form>
-      """
+      content:   @template
+        html: '<input type="text" placeholder="yourdomain.com">'
+        id:   'new_script'
 
+    @$('#delete_button').popover
+      html:      yes
+      placement: 'bottom'
+      trigger:   'manual'
+      content:   @template
+        html: """
+          Are you sure?
+          <div class="btn-group">
+            <a class="btn" id="delete_cancel_button">No</a>
+            <a class="btn" id="delete_confirm_button">Yes</a>
+          </div>
+        """ # TODO: Complete & i18n
+        id:   'remove_script'
     # TODO: Setup popover for delete button
 
   promptAdd: (e) ->
-    @promptCreate $ e.target
+    # TODO: Do nothing if another popover is visible
+    @promptCreate $ e.currentTarget
 
   promptClone: (e) ->
+    # TODO: Do nothing if another popover is visible
     return if not @model?
 
-    @promptCreate $(e.target), yes
+    @promptCreate $(e.currentTarget), yes
 
   promptCreate: ($btn, clone) ->
-    view = this
-
-    $('#new_script').on('submit', ->
-      $form  = $ this
+    $('#new_script').on('submit', (e) =>
+      $form  = $ e.target
       group  = $form.find '.control-group'
-      id     = $form.find(':text').val().replace /\s+/g, ''
-      exists = _(view.collection.pluck 'id').contains id
+      host   = $form.find(':text').val().replace /\s+/g, ''
+      exists = _(@collection.pluck 'host').contains host
 
-      if not id or exists
+      if not host or exists
         group.addClass 'error'
       else
         group.removeClass 'error'
 
-        base = if clone and view.model? then view.model else new Script
+        base = if clone and @model? then @model else new Script
 
-        view.collection.add new Script {
-          id
+        console.dir @collection.create {
+          host
           code: base.get('code') or ''
           mode: base.get('mode') or DEFAULT_MODE
-        }, silent: yes
-        # TODO: Sync data (is async?)
-        # TODO: Make new script active in editor
+        }, {
+          success: ->
+            # TODO: Make new script active in editor
+          wait: yes
+        }
         $btn.popover 'hide'
 
       false
-    ).find(':text').focus().on 'keydown', (e) ->
+    ).on('keypress', (e) =>
       $btn.popover 'hide' if e.keyCode is 27
+    ).find(':text').focus()
 
   promptDelete: ->
-    # TODO: Complete
+    # TODO: Do nothing if another popover is visible
     return if not @model?
 
-    # TODO: Prompt user to confirm action
-    @model.destroy()
-    # TODO: Is async?
-    options.app.update()
+    $btn = @$ '#delete_button'
+
+    $('#remove_script').on('keypress', (e) ->
+      $btn.popover 'hide' if e.keyCode is 27
+    ).find(':button').first().focus()
+
+    $('#delete_cancel_button').on 'click', ->
+      $btn.popover 'hide'
+
+    $('#delete_confirm_button').on 'click', =>
+      # TODO: Remove debug
+      console.dir @model.destroy()
+      # TODO: Is async?
+      options.app.update()
+      $btn.popover 'hide'
 
   togglePrompt: (e) ->
-    $btn = $ e.target
+    $btn = $ e.currentTarget
     $btn.popover 'toggle' unless $btn.is '.disabled'
 
   update: (@model) ->
@@ -287,7 +333,6 @@ ScriptEditor = Backbone.View.extend
 
   initialize: ->
     @ace = ace.edit 'editor'
-    @ace.setReadOnly yes
     @ace.setShowPrintMargin no
 
     @modes = new ScriptEditorModes { @ace }
@@ -300,13 +345,14 @@ ScriptEditor = Backbone.View.extend
     this
 
   update: (@model) ->
+    @ace.setReadOnly not @model?
     @ace.setValue @model?.get('code') or ''
     @modes.update @model
 
   updateSettings: ->
     settings = options.settings.model
 
-    @ace.getSession().editorLineWrap settings.get 'editorLineWrap'
+    @ace.getSession().setUseWrapMode settings.get 'editorLineWrap'
     @ace.getSession().setUseSoftTabs settings.get 'editorSoftTabs'
     @ace.getSession().setTabSize     settings.get 'editorIndentSize'
     @ace.setTheme "ace/theme/#{settings.get 'editorTheme'}"
@@ -340,18 +386,18 @@ ScriptEditorModes = Backbone.View.extend
   updateMode: ->
     mode = @$el.val()
 
-    @ace.getSession().setMode "ace/mode/#{mode}"
+    @options.ace.getSession().setMode "ace/mode/#{mode}"
 
     if @model?
-      @model.set { mode }
-      # TODO: Sync?
+      @model.save { mode }, wait: yes
+      # TODO: Callback?
 
 # TODO: Document
 ScriptItem = Backbone.View.extend
 
   tagName: 'li'
 
-  template: _.template '<a><%= id %></a>'
+  template: _.template '<a><%= host %></a>'
 
   events:
     'click a': 'activate'
@@ -366,7 +412,6 @@ ScriptItem = Backbone.View.extend
 
   initialize: ->
     @listenTo @model, 'destroy', @remove
-    @listenTo @model, 'change:id', @render
 
   render: ->
     @$el.html @template @model.attributes
@@ -384,7 +429,7 @@ ScriptsList = Backbone.View.extend
     @$el.append new ScriptItem({ model }).render().$el
 
   addAll: ->
-    _(@collection).each @addOne, this
+    @collection.each @addOne, this
 
   initialize: ->
     @listenTo @collection, 'add', @addOne
@@ -404,13 +449,13 @@ ScriptsView = Backbone.View.extend
   el: '#scripts_tab'
 
   initialize: ->
-    @collection = new Scripts
-
     @controls = new ScriptControls { @collection }
     @editor   = new ScriptEditor
     @list     = new ScriptsList { @collection }
 
   render: ->
+    @controls.render()
+    @editor.render()
     @$('#scripts_nav').append @list.render().$el
 
     this
@@ -467,62 +512,68 @@ options = window.options = new class Options extends utils.Class
       # Add the user feedback feature to the page.
       do loadFeedback
 
-      # TODO: Comment
-      @settings = new SettingsView().render()
-      @app      = new ScriptsView().render()
-
       # Begin initialization.
       i18n.traverse()
 
-      # Ensure the current year is displayed throughout, where appropriate.
-      $('.year-repl').html "#{new Date().getFullYear()}"
+      # TODO: Complete
+      (lookup = new SettingsLookup).fetch().then =>
+        lookup.add new Settings unless lookup.length
 
-      # Bind tab selection event to all tabs.
-      initialTabChange = yes
-      $('a[data-tabify]').on 'click', ->
-        target = $(this).data 'tabify'
-        nav    = $ "#navigation a[data-tabify='#{target}']"
-        parent = nav.parent 'li'
+        settings  = lookup.first()
+        @settings = new SettingsView(model: settings).render()
 
-        unless parent.hasClass 'active'
-          parent.addClass('active').siblings().removeClass 'active'
-          $(target).show().siblings('.tab').hide()
+        (scripts = new Scripts).fetch().then( =>
+          @app = new ScriptsView(collection: scripts).render()
+          @app.update()
+        ).then =>
+          # Ensure the current year is displayed throughout, where appropriate.
+          $('.year-repl').html "#{new Date().getFullYear()}"
 
-          id = nav.attr 'id'
-          options.settings.model.set 'activeTag', id
-          # TODO: Sync
-          unless initialTabChange
-            id = utils.capitalize id.match(/(\S*)_nav$/)[1]
-            analytics.track 'Tabs', 'Changed', id
+          # Bind tab selection event to all tabs.
+          initialTabChange = yes
+          $('a[data-tabify]').on 'click', ->
+            target = $(this).data 'tabify'
+            nav    = $ "#navigation a[data-tabify='#{target}']"
+            parent = nav.parent 'li'
 
-          initialTabChange = no
-          $(document.body).scrollTop 0
+            unless parent.hasClass 'active'
+              parent.addClass('active').siblings().removeClass 'active'
+              $(target).show().siblings('.tab').hide()
 
-      # Reflect the previously persisted tab initially.
-      $("##{@settings.model.get 'activeTab'}").trigger 'click'
+              id = nav.attr 'id'
+              settings.save(activeTab: id).then ->
+                unless initialTabChange
+                  id = utils.capitalize id.match(/(\S*)_nav$/)[1]
+                  analytics.track 'Tabs', 'Changed', id
 
-      # Ensure that form submissions don't reload the page.
-      $('form:not([target="_blank"])').on 'submit', ->
-        # Return `false` to ensure default behaviour is prevented.
-        false
+                initialTabChange = no
+                $(document.body).scrollTop 0
 
-      # Bind analytical tracking events to key footer buttons and links.
-      $('footer a[href*="neocotic.com"]').on 'click', ->
-        analytics.track 'Footer', 'Clicked', 'Homepage'
+          # Reflect the previously persisted tab initially.
+          $("##{settings.get 'activeTab'}").trigger 'click'
 
-      # Setup and configure the donation button in the footer.
-      $('#donation input[name="hosted_button_id"]').val @config.options.payPal
-      $('#donation').on 'submit', ->
-        analytics.track 'Footer', 'Clicked', 'Donate'
+          # Ensure that form submissions don't reload the page.
+          $('form:not([target="_blank"])').on 'submit', ->
+            # Return `false` to ensure default behaviour is prevented.
+            false
 
-      do activateTooltips
+          # Bind analytical tracking events to key footer buttons and links.
+          $('footer a[href*="neocotic.com"]').on 'click', ->
+            analytics.track 'Footer', 'Clicked', 'Homepage'
 
-      # TODO: Remove debug
-      for area in ['local', 'sync']
-        store[area].onChanged '*', (name, newValue, oldValue) ->
-          newValue = JSON.stringify newValue if _.isObject newValue
-          oldValue = JSON.stringify oldValue if _.isObject oldValue
-          console.log "#{name} setting has been changed in #{area} from '#{oldValue}' to '#{newValue}'"
+          # Setup and configure the donation button in the footer.
+          $('#donation input[name="hosted_button_id"]').val @config.options.payPal
+          $('#donation').on 'submit', ->
+            analytics.track 'Footer', 'Clicked', 'Donate'
+
+          do activateTooltips
+
+          # TODO: Remove debug
+          for area in ['local', 'sync']
+            store[area].onChanged '*', (name, newValue, oldValue) ->
+              newValue = JSON.stringify newValue if _.isObject newValue
+              oldValue = JSON.stringify oldValue if _.isObject oldValue
+              console.log "#{name} setting has been changed in #{area} from '#{oldValue}' to '#{newValue}'"
 
 # Initialize `options` when the DOM is ready.
 $ -> options.init()
