@@ -48,7 +48,6 @@ loadFeedback = ->
 # --------
 
 # TODO: Document
-# TODO: Support singleton pattern
 Settings = Backbone.Model.extend
 
   defaults:
