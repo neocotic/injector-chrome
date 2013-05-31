@@ -1,7 +1,7 @@
 {
     "name": "script-runner-chrome"
   , "description": "Google Chrome extension that allows you to create scripts that are executed when you visit specific websites"
-  , "version": "0.1.0"
+  , "version": "1.0.0"
   , "homepage": "http://neocotic.com/script-runner"
   , "bugs": {
       "url": "https://github.com/neocotic/script-runner-chrome/issues"
