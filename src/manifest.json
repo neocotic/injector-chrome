@@ -3,8 +3,14 @@
         {
             "all_frames": true
           , "js": [
-                "lib/vendor/coffee-script.js"
-              , "lib/runner.js"]
+                "lib/vendor/jquery.js"
+              , "lib/vendor/underscore.js"
+              , "lib/vendor/backbone.js"
+              , "lib/vendor/backbone.chromestorage.js"
+              , "lib/vendor/coffee-script.js"
+              , "lib/models.js"
+              , "lib/runner.js"
+            ]
           , "matches": ["*://*/*"]
           , "run_at": "document_start"
         }
@@ -28,5 +34,5 @@
       , "unlimitedStorage"
       , "<all_urls>"
     ]
-  , "version": "0.1.0"
+  , "version": "1.0.0"
 }

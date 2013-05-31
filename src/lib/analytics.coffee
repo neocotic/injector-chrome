@@ -20,20 +20,17 @@ analytics = window.analytics = new class Analytics extends utils.Class
 
   # Initialize analytics, potentially adding it to the current page.
   init: ->
-    store.sync.get analytics, yes, (enabled) ->
-      return unless enabled
+    # Setup tracking details for analytics.
+    _gaq = window._gaq ?= []
+    _gaq.push ['_setAccount', ACCOUNT]
+    _gaq.push ['_trackPageview']
 
-      # Setup tracking details for analytics.
-      _gaq = window._gaq ?= []
-      _gaq.push ['_setAccount', ACCOUNT]
-      _gaq.push ['_trackPageview']
-
-      # Inject script to capture analytics.
-      ga = document.createElement 'script'
-      ga.async = 'async'
-      ga.src   = SOURCE
-      script = document.getElementsByTagName('script')[0]
-      script.parentNode.insertBefore ga, script
+    # Inject script to capture analytics.
+    ga = document.createElement 'script'
+    ga.async = 'async'
+    ga.src   = SOURCE
+    script = document.getElementsByTagName('script')[0]
+    script.parentNode.insertBefore ga, script
 
   # Remove analytics from the current page.
   remove: ->
