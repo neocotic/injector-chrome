@@ -1,8 +1,4 @@
 {
-  "add_button_title": {
-    "message": "Add",
-    "description": "Hover text for the Add button."
-  },
   "analytics_label": {
     "message": "Analytics",
     "description": "Label for the Analytics field."
@@ -15,13 +11,17 @@
     "message": "Send anonymous usage statistics",
     "description": "Text for the Analytics field."
   },
-  "clone_button_title": {
-    "message": "Clone",
-    "description": "Hover text for the Clone button."
+  "delete_cancel_button": {
+    "message": "No",
+    "description": "Text for the cancel delete button."
   },
-  "delete_button_title": {
-    "message": "Delete",
-    "description": "Hover text for the Delete button."
+  "delete_confirm_button": {
+    "message": "Yes",
+    "description": "Text for the confirm delete button."
+  },
+  "delete_confirm_text": {
+    "message": "Are you sure?",
+    "description": "Text for the delete confirmation."
   },
   "description": {
     "message": "Runs your own scripts based for specific websites",
@@ -236,5 +236,9 @@
   "update_button": {
     "message": "Update",
     "description": "Text for the Update button."
+  },
+  "update_button_alt": {
+    "message": "Saved!",
+    "description": "Alternative text for the Update button which is displayed after being clicked."
   }
 }

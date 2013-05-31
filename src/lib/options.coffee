@@ -2,6 +2,8 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
+# TODO: Add import/export functionality
+
 # Feedback
 # --------
 
@@ -48,6 +50,8 @@ loadFeedback = ->
 # --------
 
 # TODO: Document
+# TODO: Add section for advanced editor settings
+# TODO: Move editor settings into separate model
 Settings = Backbone.Model.extend
 
   defaults:
@@ -233,6 +237,7 @@ ScriptControls = Backbone.View.extend
 
   initialize: ->
     @$('#add_button, #clone_button').popover
+      container: 'body'
       html:      yes
       placement: 'bottom'
       trigger:   'manual'
@@ -241,26 +246,26 @@ ScriptControls = Backbone.View.extend
         id:   'new_script'
 
     @$('#delete_button').popover
+      container: 'body'
       html:      yes
       placement: 'bottom'
       trigger:   'manual'
       content:   @template
         html: """
-          Are you sure?
-          <div class="btn-group">
-            <a class="btn" id="delete_cancel_button">No</a>
-            <a class="btn" id="delete_confirm_button">Yes</a>
+          <p>#{i18n.get 'delete_confirm_text'}</p>
+          <div style="text-align: right">
+            <div class="btn-group">
+              <a class="btn btn-mini" id="delete_cancel_button">#{i18n.get 'delete_cancel_button'}</a>
+              <a class="btn btn-mini" id="delete_confirm_button">#{i18n.get 'delete_confirm_button'}</a>
+            </div>
           </div>
-        """ # TODO: Complete & i18n
+        """
         id:   'remove_script'
-    # TODO: Setup popover for delete button
 
   promptAdd: (e) ->
-    # TODO: Do nothing if another popover is visible
     @promptCreate $ e.currentTarget
 
   promptClone: (e) ->
-    # TODO: Do nothing if another popover is visible
     return if not @model?
 
     @promptCreate $(e.currentTarget), yes
@@ -284,42 +289,37 @@ ScriptControls = Backbone.View.extend
           code: base.get('code') or ''
           mode: base.get('mode') or DEFAULT_MODE
         }, {
+          wait: yes
           success: ->
             # TODO: Make new script active in editor
-          wait: yes
         }
         $btn.popover 'hide'
 
       false
-    ).on('keypress', (e) =>
-      $btn.popover 'hide' if e.keyCode is 27
     ).find(':text').focus()
 
   promptDelete: ->
-    # TODO: Do nothing if another popover is visible
     return if not @model?
 
     $btn = @$ '#delete_button'
 
-    $('#remove_script').on('keypress', (e) ->
-      $btn.popover 'hide' if e.keyCode is 27
-    ).find(':button').first().focus()
+    $('#remove_script :button').first().focus()
 
     $('#delete_cancel_button').on 'click', ->
       $btn.popover 'hide'
 
     $('#delete_confirm_button').on 'click', =>
-      # TODO: Remove debug
-      console.dir @model.destroy()
-      # TODO: Is async?
-      options.app.update()
+      @model.destroy().then ->
+        options.app.update()
       $btn.popover 'hide'
 
   togglePrompt: (e) ->
     $btn = $ e.currentTarget
-    $btn.popover 'toggle' unless $btn.is '.disabled'
+    $btn.popover 'toggle' unless $btn.hasClass 'disabled'
 
   update: (@model) ->
+    @$('#add_button').removeClass 'disabled'
+
     if @model?
       @$('#clone_button, #delete_button').removeClass 'disabled'
     else
@@ -333,12 +333,19 @@ ScriptEditor = Backbone.View.extend
   initialize: ->
     @ace = ace.edit 'editor'
     @ace.setShowPrintMargin no
+    @ace.getSession().on 'change', =>
+      @model.trigger 'modified', @ace.getValue(), @hasUnsavedChanges() if @model?
 
-    @modes = new ScriptEditorModes { @ace }
+    @controls = new ScriptEditorControls { @ace }
+    @modes    = new ScriptEditorModes { @ace }
 
     do @updateSettings
 
+  hasUnsavedChanges: ->
+    @model? and @model.get('code') isnt @ace.getValue()
+
   render: ->
+    @controls.render()
     @modes.render()
 
     this
@@ -346,6 +353,9 @@ ScriptEditor = Backbone.View.extend
   update: (@model) ->
     @ace.setReadOnly not @model?
     @ace.setValue @model?.get('code') or ''
+    @ace.gotoLine 0
+
+    @controls.update @model
     @modes.update @model
 
   updateSettings: ->
@@ -355,6 +365,38 @@ ScriptEditor = Backbone.View.extend
     @ace.getSession().setUseSoftTabs settings.get 'editorSoftTabs'
     @ace.getSession().setTabSize     settings.get 'editorIndentSize'
     @ace.setTheme "ace/theme/#{settings.get 'editorTheme'}"
+
+# TODO: Document
+ScriptEditorControls = Backbone.View.extend
+
+  el: '#editor_controls'
+
+  events:
+    'click #reset_button':  'reset'
+    'click #update_button': 'save'
+
+  render: ->
+    do @update
+
+    this
+
+  reset: (e) ->
+    return if $(e.currentTarget).hasClass('disabled') or not @model?
+
+    @options.ace.setValue @model.get 'code'
+    @options.ace.gotoLine 0
+
+  save: (e) ->
+    $btn = $ e.currentTarget
+    return if $btn.hasClass('disabled') or not @model?
+
+    @model.save(code: @options.ace.getValue()).then ->
+      $btn.html(i18n.get 'update_button_alt').delay(800).queue ->
+        $btn.html(i18n.get 'update_button').dequeue()
+
+  update: (@model) ->
+    action = if @model? then 'removeClass' else 'addClass'
+    @$('#reset_button, #update_button')[action] 'disabled'
 
 # TODO: Document
 ScriptEditorModes = Backbone.View.extend
@@ -387,9 +429,7 @@ ScriptEditorModes = Backbone.View.extend
 
     @options.ace.getSession().setMode "ace/mode/#{mode}"
 
-    if @model?
-      @model.save { mode }, wait: yes
-      # TODO: Callback?
+    @model.save { mode }, wait: yes if @model?
 
 # TODO: Document
 ScriptItem = Backbone.View.extend
@@ -401,16 +441,22 @@ ScriptItem = Backbone.View.extend
   events:
     'click a': 'activate'
 
-  activate: (e) ->
-    if e.ctrlKey
-      @$el.removeClass 'active'
-      options.app.update()
-    else
-      @$el.addClass('active').siblings().removeClass 'active'
-      options.app.update @model
-
   initialize: ->
     @listenTo @model, 'destroy', @remove
+    @listenTo @model, 'modified', @modified
+
+  activate: (e) ->
+    # TODO: Warn if another script is already active and it's code has unsaved changes
+    if e.ctrlKey
+      @$el.removeClass 'active modified'
+      options.app.update()
+    else unless @$el.hasClass 'active'
+      @$el.addClass('active').siblings().removeClass 'active modified'
+      options.app.update @model
+
+  modified: (value, changed) ->
+    action = if changed then 'addClass' else 'removeClass'
+    @$el[action] 'modified'
 
   render: ->
     @$el.html @template @model.attributes
@@ -433,11 +479,8 @@ ScriptsList = Backbone.View.extend
   initialize: ->
     @listenTo @collection, 'add', @addOne
     @listenTo @collection, 'reset', @addAll
-    @listenTo @collection, 'change', @render
-    @listenTo @collection, 'destroy', @remove
 
   render: ->
-    # TODO: Is `ul` tag generated and appended automatically?
     do @addAll
 
     this
@@ -463,8 +506,8 @@ ScriptsView = Backbone.View.extend
     @controls.update model
     @editor.update model
 
-# User interface
-# --------------
+# Miscellaneous
+# -------------
 
 # Activate tooltip effects, optionally only within a specific context.
 activateTooltips = (selector) ->
@@ -555,6 +598,10 @@ options = window.options = new class Options extends utils.Class
           $('form:not([target="_blank"])').on 'submit', ->
             # Return `false` to ensure default behaviour is prevented.
             false
+
+          # Ensure that popovers are closed when the Esc key is pressed anywhere.
+          $(document).on 'keydown', (e) ->
+            $('.js-popover-toggle').popover 'hide' if e.keyCode is 27
 
           # Bind analytical tracking events to key footer buttons and links.
           $('footer a[href*="neocotic.com"]').on 'click', ->

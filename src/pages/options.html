@@ -18,7 +18,8 @@
     <script src="../lib/vendor/int17.js"></script>
 
     <script src="../lib/utils.js"></script>
-    <script src="../lib/store.js"></script>
+    <script src="../lib/models.js"></script>
+    <script src="../lib/store.js"></script><!-- TODO: Remove -->
     <script src="../lib/i18n.js"></script>
     <script src="../lib/analytics.js"></script>
     <script src="../lib/options.js"></script>
@@ -84,12 +85,12 @@
                     <div class="span3">
                       <div class="btn-toolbar" id="scripts_controls">
                         <div class="btn-group">
-                          <a class="btn btn-mini" id="add_button" data-int17-values="title:add_button_title"><i class="icon-plus"></i></a>
-                          <a class="btn btn-mini disabled" id="delete_button"><i class="icon-minus"></i></a>
+                          <a class="btn btn-mini js-popover-toggle" id="add_button"><i class="icon-plus"></i></a>
+                          <a class="btn btn-mini disabled js-popover-toggle" id="delete_button"><i class="icon-minus"></i></a>
                         </div>
 
                         <div class="btn-group">
-                          <a class="btn btn-mini disabled" id="clone_button"><i class="icon-share"></i></a>
+                          <a class="btn btn-mini disabled js-popover-toggle" id="clone_button"><i class="icon-share"></i></a>
                         </div>
                       </div>
                     </div>
@@ -127,10 +128,10 @@
                     <div class="span9">
                       <pre id="editor"></pre>
 
-                      <div class="form-actions">
+                      <div class="form-actions" id="editor_controls">
                         <div class="pull-right">
                           <a class="btn disabled" id="reset_button" data-int17-content="reset_button"></a>
-                          <a class="btn btn-success disabled" data-int17-content="update_button"></a>
+                          <a class="btn btn-success disabled" id="update_button" data-int17-content="update_button"></a>
                         </div>
                       </div>
                     </div>
