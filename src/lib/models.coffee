@@ -9,6 +9,7 @@
 editorSettingsLookup = null
 
 # TODO: Document
+# TODO: Add more advanced editor settings
 EditorSettings = window.EditorSettings = Backbone.Model.extend {
 
   defaults:
@@ -41,37 +42,11 @@ EditorSettingsLookup = Backbone.Collection.extend
 settingsLookup = null
 
 # TODO: Document
-# TODO: Add section for advanced editor settings
-# TODO: Move editor settings into separate model
 Settings = window.Settings = Backbone.Model.extend {
 
   defaults:
-    activeTab:        'general_nav'
-    analytics:        yes
-    editorIndentSize: 2
-    editorLineWrap:   no
-    editorSoftTabs:   yes
-    editorTheme:      'github'
-
-  initialize: ->
-    @on 'change:analytics', @updateAnalytics
-    @on """
-      change:editorIndentSize
-      change:editorLineWrap
-      change:editorSoftTabs
-      change:editorTheme
-    """.replace(/\n/g, ' '), @updateEditor
-
-    do @updateAnalytics
-
-  updateAnalytics: ->
-    if @get 'analytics'
-      analytics.init()
-    else
-      analytics.remove()
-
-  updateEditor: ->
-    options.app.editor.updateSettings()
+    activeTab: 'general_nav'
+    analytics: yes
 
 }, {
 
@@ -101,7 +76,7 @@ Script = window.Script = Backbone.Model.extend {
 
   defaults:
     code: ''
-    mode: Script.defaultMode
+    mode: DEFAULT_MODE
 
   validate: (attributes) ->
     { host, mode } = attributes
@@ -110,8 +85,6 @@ Script = window.Script = Backbone.Model.extend {
       'host is required'
     else unless mode
       'mode is required'
-    else unless _(options.config.editor.modes).contains mode
-      'mode is unrecognized'
 
 }, {
 
@@ -133,3 +106,16 @@ Scripts = window.Scripts = Backbone.Collection.extend {
       callback scripts
 
 }
+
+# Models
+# ------
+
+# TODO: Document
+models = window.models =
+
+  # TODO: Document
+  fetch: (callback) ->
+    Settings.fetch (settings) ->
+      EditorSettings.fetch (editorSettings) ->
+        Scripts.fetch (scripts) ->
+          callback { settings, editorSettings, scripts }
