@@ -87,7 +87,11 @@ EditorControls = Backbone.View.extend
     $btn = $ e.currentTarget
     return if $btn.hasClass('disabled') or not @model?
 
-    @model.save(code: @options.ace.getValue()).then ->
+    code = @options.ace.getValue()
+
+    @model.save({ code }).then ->
+      options.editor.trigger 'modified', code, no
+
       $btn.html(i18n.get 'update_button_alt').delay(800).queue ->
         $btn.html(i18n.get 'update_button').dequeue()
 
@@ -196,7 +200,7 @@ EditorView = Backbone.View.extend
     @ace = ace.edit 'editor'
     @ace.setShowPrintMargin no
     @ace.getSession().on 'change', =>
-      @model.trigger 'modified', @ace.getValue(), @hasUnsavedChanges() if @model?
+      @trigger 'modified', @ace.getValue(), @hasUnsavedChanges() if @model?
 
     @settings = new EditorSettings { model: @options.settings }
     @controls = new EditorControls { @ace }
@@ -407,7 +411,7 @@ ScriptItem = Backbone.View.extend
 
   initialize: ->
     @listenTo @model, 'destroy', @remove
-    @listenTo @model, 'modified', @modified
+    @listenTo options.editor, 'modified', @modified
 
   activate: (e) ->
     # TODO: Warn if another script is already active and it's code has unsaved changes

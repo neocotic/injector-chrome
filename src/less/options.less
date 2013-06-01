@@ -9,6 +9,11 @@
           transition: @transition;
 }
 
+// TODO: Test/remove
+html, body {
+  height: 100%;
+}
+
 body {
   padding-top: 60px;
   padding-bottom: 10px;
@@ -57,7 +62,8 @@ abbr[data-original-title] {
   position: relative !important;
   border: 1px solid lightgrey;
   margin: auto;
-  height: 200px;
+  // TODO: height: 200px;
+  min-height: 100%;
 }
 
 #scripts_nav .modified {
