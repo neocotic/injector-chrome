@@ -2,6 +2,19 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
+# Models
+# ------
+
+# TODO: Document
+models = window.models =
+
+  # TODO: Document
+  fetch: (callback) ->
+    Settings.fetch (settings) ->
+      EditorSettings.fetch (editorSettings) ->
+        Scripts.fetch (scripts) ->
+          callback { settings, editorSettings, scripts }
+
 # Editor
 # ------
 
@@ -10,7 +23,7 @@ editorSettingsLookup = null
 
 # TODO: Document
 # TODO: Add more advanced editor settings
-EditorSettings = window.EditorSettings = Backbone.Model.extend {
+EditorSettings = models.EditorSettings = Backbone.Model.extend {
 
   defaults:
     indentSize: 2
@@ -42,7 +55,7 @@ EditorSettingsLookup = Backbone.Collection.extend
 settingsLookup = null
 
 # TODO: Document
-Settings = window.Settings = Backbone.Model.extend {
+Settings = models.Settings = Backbone.Model.extend {
 
   defaults:
     activeTab: 'general_nav'
@@ -72,7 +85,7 @@ SettingsLookup = Backbone.Collection.extend
 DEFAULT_MODE = 'javascript'
 
 # TODO: Document
-Script = window.Script = Backbone.Model.extend {
+Script = models.Script = Backbone.Model.extend {
 
   defaults:
     code: ''
@@ -93,7 +106,7 @@ Script = window.Script = Backbone.Model.extend {
 }
 
 # TODO: Document
-Scripts = window.Scripts = Backbone.Collection.extend {
+Scripts = models.Scripts = Backbone.Collection.extend {
 
   chromeStorage: new Backbone.ChromeStorage 'Scripts', 'local'
 
@@ -106,16 +119,3 @@ Scripts = window.Scripts = Backbone.Collection.extend {
       callback scripts
 
 }
-
-# Models
-# ------
-
-# TODO: Document
-models = window.models =
-
-  # TODO: Document
-  fetch: (callback) ->
-    Settings.fetch (settings) ->
-      EditorSettings.fetch (editorSettings) ->
-        Scripts.fetch (scripts) ->
-          callback { settings, editorSettings, scripts }

@@ -2,40 +2,36 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# Private constants
-# -----------------
+# Analytics
+# ---------
 
-# Code for Script Runner analytics account.
-ACCOUNT = 'TODO'
-# Source URL of the analytics script.
-SOURCE  = 'https://ssl.google-analytics.com/ga.js'
+# Analytics capture end-user interactions and usage details which can be used to improve the
+# extension.  
+# Although enabled by default, the user can disable the capturing of this information via the
+# options page.
+analytics = window.analytics =
 
-# Analytics setup
-# ---------------
+  # Source URL of the analytics script.
+  source: 'https://ssl.google-analytics.com/ga.js'
 
-analytics = window.analytics = new class Analytics extends utils.Class
-
-  # Public functions
-  # ----------------
-
-  # Initialize analytics, potentially adding it to the current page.
-  init: ->
+  # Add analytics to the current page.
+  add: (account) ->
     # Setup tracking details for analytics.
     _gaq = window._gaq ?= []
-    _gaq.push ['_setAccount', ACCOUNT]
+    _gaq.push ['_setAccount', account]
     _gaq.push ['_trackPageview']
 
     # Inject script to capture analytics.
     ga = document.createElement 'script'
     ga.async = 'async'
-    ga.src   = SOURCE
+    ga.src   = analytics.source
     script = document.getElementsByTagName('script')[0]
     script.parentNode.insertBefore ga, script
 
   # Remove analytics from the current page.
   remove: ->
     # Delete scripts used to capture analytics.
-    for script in document.querySelectorAll "script[src='#{SOURCE}']"
+    for script in document.querySelectorAll "script[src='#{analytics.source}']"
       script.parentNode.removeChild script
 
     # Remove tracking details for analytics.
@@ -49,11 +45,10 @@ analytics = window.analytics = new class Analytics extends utils.Class
     # Add the required information.
     event.push category
     event.push action
-    # Add the optional information where possible.
+    # Add the optional information, where possible.
     event.push label          if label?
     event.push value          if value?
     event.push nonInteraction if nonInteraction?
 
     # Add the event to analytics.
-    _gaq = window._gaq ?= []
-    _gaq.push event
+    window._gaq.push event

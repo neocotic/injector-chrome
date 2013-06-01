@@ -2,21 +2,10 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# Private classes
-# ---------------
-
-# `Class` makes for more readable logs etc. as it overrides `toString` to output the name of the
-# implementing class.
-class Class
-
-  # Override the default `toString` implementation to provide a cleaner output.
-  toString: ->
-    @constructor.name
-
 # Utilities setup
 # ---------------
 
-utils = window.utils = new class Utils extends Class
+utils = window.utils = new class Utils
 
   # Public functions
   # ----------------
@@ -38,9 +27,3 @@ utils = window.utils = new class Utils extends Class
   # Convenient shorthand for `chrome.extension.getURL`.
   url: ->
     chrome.extension.getURL arguments...
-
-# Public classes
-# --------------
-
-# Objects within the extension should extend this class wherever possible.
-utils.Class = Class

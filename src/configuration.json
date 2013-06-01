@@ -1,5 +1,6 @@
 {
-    "options": {
+    "analytics": "UA-41395505-1"
+  , "options": {
         "payPal": "BGWG9R5LBNECY"
       , "userVoice": {
             "forum": 207850

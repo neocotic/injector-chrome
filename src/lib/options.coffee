@@ -4,6 +4,22 @@
 
 # TODO: Add import/export functionality
 
+# TODO: Document
+{ EditorSettings, EditorSettings, Script, Scripts } = models
+
+# Utilities
+# ---------
+
+# Extend `_` with our utility functions.
+_.mixin
+
+  # Transform the given string into title case.
+  capitalize: (str) ->
+    return str unless str
+
+    str.replace /\w+/g, (word) ->
+      word[0].toUpperCase() + word[1..].toLowerCase()
+
 # Feedback
 # --------
 
@@ -251,8 +267,8 @@ GeneralSettingsView = Backbone.View.extend
     @model.save { analytics: $analytics.is ':checked' }, wait: yes
 
   updateAnalytics: ->
-    action = if @model.get 'analytics' then 'init' else 'remove'
-    do analytics[action]
+    action = if @model.get 'analytics' then 'add' else 'remove'
+    analytics[action] options.config.analytics
 
 # TODO: Document
 SettingsView = Backbone.View.extend
@@ -479,7 +495,7 @@ activateTooltips = (selector) ->
 # Options page setup
 # ------------------
 
-options = window.options = new class Options extends utils.Class
+options = window.options = new class Options
 
   # Create a new instance of `Options`.
   constructor: ->
@@ -497,7 +513,7 @@ options = window.options = new class Options extends utils.Class
     { @version } = chrome.runtime.getManifest()
 
     # Load the configuration data from the file before storing it locally.
-    $.getJSON utils.url('configuration.json'), (@config) =>
+    $.getJSON chrome.extension.getURL('configuration.json'), (@config) =>
       # Add the user feedback feature to the page.
       do loadFeedback
 
@@ -530,7 +546,7 @@ options = window.options = new class Options extends utils.Class
             id = nav.attr 'id'
             settings.save(activeTab: id).then ->
               unless initialTabChange
-                id = utils.capitalize id.match(/(\S*)_nav$/)[1]
+                id = _.capitalize id.match(/(\S*)_nav$/)[1]
                 analytics.track 'Tabs', 'Changed', id
 
               initialTabChange = no

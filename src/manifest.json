@@ -1,6 +1,11 @@
 {
     "content_scripts": [
         {
+            "js": ["lib/install.js"]
+          , "matches": ["http://*.neocotic.com/script-runner/*"]
+          , "run_at": "document_end"
+        }
+      , {
             "all_frames": true
           , "js": [
                 "lib/vendor/jquery.js"
@@ -13,11 +18,6 @@
             ]
           , "matches": ["*://*/*"]
           , "run_at": "document_start"
-        }
-      , {
-            "js": ["lib/install.js"]
-          , "matches": ["http://*.neocotic.com/script-runner/*"]
-          , "run_at": "document_end"
         }
     ]
   , "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://*.uservoice.com; object-src 'self'"

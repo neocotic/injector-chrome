@@ -2,8 +2,8 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# Variables
-# ---------
+# Inline installation
+# -------------------
 
 # Script Runner's extension ID is currently using.
 id         = chrome.i18n.getMessage '@@extension_id'
@@ -11,9 +11,6 @@ id         = chrome.i18n.getMessage '@@extension_id'
 newClasses = ['disabled']
 # Names of the classes to be removed from the targeted elements.
 oldClasses = ['chrome_install_button']
-
-# Functionality
-# -------------
 
 # Disable all "Install" links on the homepage for Template.
 for link in document.querySelectorAll "a.#{oldClasses[0]}[href$=#{id}]"
