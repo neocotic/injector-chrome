@@ -26,17 +26,15 @@ _.mixin
 # Indicate whether or not the user feedback feature has been added to the page.
 feedbackAdded = no
 
-# Add the user feedback feature to the page.
-loadFeedback = ->
+# Add the user feedback feature to the page using the `options` provided.
+loadFeedback = (options) ->
   # Only load and configure the feedback widget once.
   return if feedbackAdded
-
-  { id, forum } = options.config.options.userVoice
 
   # Create a script element to load the UserVoice widget.
   uv       = document.createElement 'script'
   uv.async = 'async'
-  uv.src   = "https://widget.uservoice.com/#{id}.js"
+  uv.src   = "https://widget.uservoice.com/#{options.id}.js"
   # Insert the script element into the DOM.
   script = document.getElementsByTagName('script')[0]
   script.parentNode.insertBefore uv, script
@@ -51,7 +49,7 @@ loadFeedback = ->
       primary_color: '#333'
       link_color:    '#08c'
       default_mode:  'feedback'
-      forum_id:      forum
+      forum_id:      options.forum
       tab_label:     i18n.get 'feedback_button'
       tab_color:     '#333'
       tab_position:  'middle-left'
@@ -515,7 +513,7 @@ options = window.options = new class Options
     # Load the configuration data from the file before storing it locally.
     $.getJSON chrome.extension.getURL('configuration.json'), (@config) =>
       # Add the user feedback feature to the page.
-      do loadFeedback
+      loadFeedback @config.options.userVoice
 
       # Begin initialization.
       i18n.traverse()
@@ -556,13 +554,16 @@ options = window.options = new class Options
         $("##{settings.get 'activeTab'}").trigger 'click'
 
         # Ensure that form submissions don't reload the page.
-        $('form:not([target="_blank"])').on 'submit', ->
-          # Return `false` to ensure default behaviour is prevented.
-          false
+        $('form:not([target="_blank"])').on 'submit', -> false
 
         # Ensure that popovers are closed when the Esc key is pressed anywhere.
         $(document).on 'keydown', (e) ->
           $('.js-popover-toggle').popover 'hide' if e.keyCode is 27
+
+        # Support *goto* navigation elements that change the current scroll position when clicked.
+        $('[data-goto]').on 'click', ->
+          switch $(this).data 'goto'
+            when 'top' then $(document.body).scrollTop 0
 
         # Bind analytical tracking events to key footer buttons and links.
         $('footer a[href*="neocotic.com"]').on 'click', ->
@@ -577,8 +578,7 @@ options = window.options = new class Options
 
         # TODO: Remove debug
         chrome.storage.onChanged.addListener (changes, areaName) ->
-          console.log "[#{areaName}] Changed:"
-          console.dir changes
+          console.log "[#{areaName}] Changed: #{JSON.stringify changes}"
 
   # TODO: Document
   update: (script) ->

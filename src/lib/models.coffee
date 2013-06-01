@@ -5,10 +5,13 @@
 # Models
 # ------
 
-# TODO: Document
+# Expose all models (and collections) that are used throughout the extension.  
+# These are intentionally not added to the global object (i.e. `window`) to avoid cluttering that
+# *namespace*.
 models = window.models =
 
-  # TODO: Document
+  # Convenience short-hand method for fetching all common models and collections.  
+  # The `callback` function will be passed a map of the fetched instances.
   fetch: (callback) ->
     Settings.fetch (settings) ->
       EditorSettings.fetch (editorSettings) ->
@@ -33,6 +36,7 @@ EditorSettings = models.EditorSettings = Backbone.Model.extend {
 
 }, {
 
+  # TODO: Document
   fetch: (callback) ->
     (editorSettingsLookup ?= new EditorSettingsLookup).fetch().then ->
       editorSettingsLookup.add new EditorSettings unless editorSettingsLookup.length

@@ -10,7 +10,8 @@ module.exports = (grunt) ->
     pkg
 
     clean:
-      build: 'bin/*'
+      build:      'bin/*'
+      buildAfter: 'bin/less/'
 
       dist:      'dist/*'
       distAfter: 'dist/temp/'
@@ -33,7 +34,7 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    ['**', '!less/', '!lib/*.coffee']
+        src:    ['**', '!lib/*.coffee']
         dest:   'bin/'
 
       dist:
@@ -101,6 +102,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'build', [
     'clean:build'
     'copy:build'
+    'clean:buildAfter'
     'coffee'
     'less'
   ]
