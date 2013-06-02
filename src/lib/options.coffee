@@ -2,6 +2,8 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
+# TODO: Capture more analytics
+
 # Extract the models and collections that are required by the options page.
 { EditorSettings, EditorSettings, Script, Scripts } = models
 
