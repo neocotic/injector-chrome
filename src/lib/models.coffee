@@ -10,7 +10,7 @@
 # *namespace*.
 models = window.models =
 
-  # Convenience short-hand method for fetching all common models and collections.  
+  # Convenience short-hand method for retrieving all common models and collections.  
   # The `callback` function will be passed a map of the fetched instances.
   fetch: (callback) ->
     Settings.fetch (settings) ->
@@ -21,11 +21,10 @@ models = window.models =
 # Editor
 # ------
 
-# TODO: Document
+# Singleton instance of the `EditorSettingsLookup` collection.
 editorSettingsLookup = null
 
-# TODO: Document
-# TODO: Add more advanced editor settings
+# The settings associated with the Ace editor.
 EditorSettings = models.EditorSettings = Backbone.Model.extend {
 
   defaults:
@@ -36,7 +35,7 @@ EditorSettings = models.EditorSettings = Backbone.Model.extend {
 
 }, {
 
-  # TODO: Document
+  # Retrieve the singleton instance of the `EditorSettings` model.
   fetch: (callback) ->
     (editorSettingsLookup ?= new EditorSettingsLookup).fetch().then ->
       editorSettingsLookup.add new EditorSettings unless editorSettingsLookup.length
@@ -45,7 +44,7 @@ EditorSettings = models.EditorSettings = Backbone.Model.extend {
 
 }
 
-# TODO: Document
+# Lookup collection used for retrieving a singleton instance of the `EditorSettings` model.
 EditorSettingsLookup = Backbone.Collection.extend
 
   chromeStorage: new Backbone.ChromeStorage 'EditorSettings', 'sync'
@@ -55,10 +54,10 @@ EditorSettingsLookup = Backbone.Collection.extend
 # Settings
 # --------
 
-# TODO: Document
+# Singleton instance of the `SettingsLookup` collection.
 settingsLookup = null
 
-# TODO: Document
+# The general settings that can be configured (or are related to) the options page.
 Settings = models.Settings = Backbone.Model.extend {
 
   defaults:
@@ -67,6 +66,7 @@ Settings = models.Settings = Backbone.Model.extend {
 
 }, {
 
+  # Retrieve the singleton instance of the `Settings` model.
   fetch: (callback) ->
     (settingsLookup ?= new SettingsLookup).fetch().then ->
       settingsLookup.add new Settings unless settingsLookup.length
@@ -75,7 +75,7 @@ Settings = models.Settings = Backbone.Model.extend {
 
 }
 
-# TODO: Document
+# Lookup collection used for retrieving a singleton instance of the `Settings` model.
 SettingsLookup = Backbone.Collection.extend
 
   chromeStorage: new Backbone.ChromeStorage 'Settings', 'sync'
@@ -85,10 +85,11 @@ SettingsLookup = Backbone.Collection.extend
 # Scripts
 # -------
 
-# TODO: Document
+# Default Ace editor mode/language.
 DEFAULT_MODE = 'javascript'
 
-# TODO: Document
+# A script to be executed on a specific host.  
+# The script's code can be written in any supported language that compiles to JavaScript.
 Script = models.Script = Backbone.Model.extend {
 
   defaults:
@@ -109,7 +110,7 @@ Script = models.Script = Backbone.Model.extend {
 
 }
 
-# TODO: Document
+# Collection of scripts created by the user.
 Scripts = models.Scripts = Backbone.Collection.extend {
 
   chromeStorage: new Backbone.ChromeStorage 'Scripts', 'local'
@@ -118,6 +119,7 @@ Scripts = models.Scripts = Backbone.Collection.extend {
 
 }, {
 
+  # Retrieve the **all** instances of `Script`.
   fetch: (callback) ->
     (scripts = new Scripts).fetch().then ->
       callback scripts

@@ -78,7 +78,7 @@ i18n.languages = (parent, callback) ->
     callback = parent
     parent   = null
 
-  {languages} = @messenger
+  { languages } = @messenger
 
   if parent
     return @languages (err, languages) =>

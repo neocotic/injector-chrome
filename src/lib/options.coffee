@@ -2,9 +2,7 @@
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
-# TODO: Add import/export functionality
-
-# TODO: Document
+# Extract the models and collections that are required by the options page.
 { EditorSettings, EditorSettings, Script, Scripts } = models
 
 # Utilities
@@ -63,7 +61,8 @@ loadFeedback = (options) ->
 # Editor
 # ------
 
-# TODO: Document
+# View containing buttons for saving/resetting the code of the active script from the contents of
+# the Ace editor.
 EditorControls = Backbone.View.extend
 
   el: '#editor_controls'
@@ -99,7 +98,8 @@ EditorControls = Backbone.View.extend
     action = if @model? then 'removeClass' else 'addClass'
     @$('#reset_button, #update_button')[action] 'disabled'
 
-# TODO: Document
+# A selection of available modes/languages that are supported by this extension for executing
+# scripts.
 EditorModes = Backbone.View.extend
 
   el: '#editor_modes'
@@ -132,8 +132,7 @@ EditorModes = Backbone.View.extend
 
     @model.save { mode }, wait: yes if @model?
 
-# TODO: Document
-# TODO: Add view for more advanced editor settings
+# View containing options that allow the user to configure the Ace editor.
 EditorSettings = Backbone.View.extend
 
   el: '#editor_settings'
@@ -191,7 +190,7 @@ EditorSettings = Backbone.View.extend
       softTabs:   $softTabs.val() is 'true'
       theme:      $theme.val()
 
-# TODO: Document
+# Contains the Ace editor that allows the user to modify a script's code.
 EditorView = Backbone.View.extend
 
   el: '#editor'
@@ -244,7 +243,7 @@ EditorView = Backbone.View.extend
 # Settings
 # --------
 
-# TODO: Document
+# Allows the user to modify the general settings of the extension.
 GeneralSettingsView = Backbone.View.extend
 
   el: '#general_tab'
@@ -272,7 +271,7 @@ GeneralSettingsView = Backbone.View.extend
     action = if @model.get 'analytics' then 'add' else 'remove'
     analytics[action] options.config.analytics
 
-# TODO: Document
+# Parent view for all configurable settings.
 SettingsView = Backbone.View.extend
 
   el: 'body'
@@ -288,7 +287,7 @@ SettingsView = Backbone.View.extend
 # Scripts
 # -------
 
-# TODO: Document
+# View contains buttons used to control/manage the user's scripts.
 ScriptControls = Backbone.View.extend
 
   el: '#scripts_controls'
@@ -399,7 +398,8 @@ ScriptControls = Backbone.View.extend
     else
       @$('#clone_button, #delete_button').addClass('disabled').popover 'hide'
 
-# TODO: Document
+# Menu item which, when selected, makes the underlying script *active*, enabling the user to manage
+# it and modify it's code.
 ScriptItem = Backbone.View.extend
 
   tagName: 'li'
@@ -431,7 +431,7 @@ ScriptItem = Backbone.View.extend
 
     this
 
-# TODO: Document
+# A menu of scripts that allows the user to easily manage them.
 ScriptsList = Backbone.View.extend
 
   tagName: 'ul'
@@ -453,7 +453,7 @@ ScriptsList = Backbone.View.extend
 
     this
 
-# TODO: Documnet
+# The primary view for managing scripts.
 ScriptsView = Backbone.View.extend
 
   el: '#scripts_tab'
@@ -522,10 +522,11 @@ options = window.options = new class Options
       # Begin initialization.
       i18n.traverse()
 
-      # TODO: Complete
+      # Retrieve all singleton instances as well as the collection for user-created scripts.
       models.fetch (result) =>
         { settings, editorSettings, scripts } = result
 
+        # Create views for the important models and collections.
         @editor   = new EditorView(settings: editorSettings).render()
         @settings = new SettingsView(model: settings).render()
         @scripts  = new ScriptsView(collection: scripts).render()
@@ -580,11 +581,7 @@ options = window.options = new class Options
 
         do activateTooltips
 
-        # TODO: Remove debug
-        chrome.storage.onChanged.addListener (changes, areaName) ->
-          console.log "[#{areaName}] Changed: #{JSON.stringify changes}"
-
-  # TODO: Document
+  # Update the primary views with the active `script` provided.
   update: (script) ->
     @editor.update script
     @scripts.update script
