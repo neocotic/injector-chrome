@@ -317,7 +317,7 @@ ScriptControls = Backbone.View.extend
       placement: 'bottom'
       trigger:   'manual'
       content:   @template
-        html: '<input type="text" placeholder="yourdomain.com">'
+        html: '<input type="text" spellcheck="false" placeholder="yourdomain.com">'
         id:   'new_script'
 
     @$('#delete_button').popover
