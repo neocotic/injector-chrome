@@ -580,6 +580,8 @@ options = window.options = new class Options
         # Setup and configure the donation button in the footer.
         $('#donation input[name="hosted_button_id"]').val @config.options.payPal
         $('#donation').on 'submit', ->
+          $(this).find(':submit').tooltip 'hide'
+
           analytics.track 'Footer', 'Clicked', 'Donate'
 
         do activateTooltips
