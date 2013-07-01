@@ -23,7 +23,7 @@ _.mixin
 # Feedback
 # --------
 
-# Indicate whether or not the user feedback feature has been added to the page.
+# Indicate whether the user feedback feature has been added to the page.
 feedbackAdded = no
 
 # Add the user feedback feature to the page using the `options` provided.
@@ -132,7 +132,7 @@ EditorModes = Backbone.View.extend
 
     @options.ace.getSession().setMode "ace/mode/#{mode}"
 
-    @model.save { mode }, wait: yes if @model?
+    @model.save { mode } if @model?
 
 # View containing options that allow the user to configure the Ace editor.
 EditorSettings = Backbone.View.extend
@@ -267,7 +267,7 @@ GeneralSettingsView = Backbone.View.extend
   update: ->
     $analytics = @$ '#analytics'
 
-    @model.save { analytics: $analytics.is ':checked' }, wait: yes
+    @model.save { analytics: $analytics.is ':checked' }
 
   updateAnalytics: ->
     action = if @model.get 'analytics' then 'add' else 'remove'
@@ -366,6 +366,7 @@ ScriptControls = Backbone.View.extend
         }, {
           wait: yes
           success: ->
+            # TODO: Is `wait` necessary?
             # TODO: Make new script active in editor
         }
         $btn.popover 'hide'

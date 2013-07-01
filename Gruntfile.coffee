@@ -1,3 +1,8 @@
+# Module dependencies
+# -------------------
+
+int17 = require 'int17'
+
 module.exports = (grunt) ->
 
   # Configuration
@@ -132,14 +137,6 @@ module.exports = (grunt) ->
     files.forEach (file) ->
       grunt.log.write "Preparing \"#{file}\"..."
 
-      messages = grunt.file.readJSON file
-
-      for name, message of messages
-        delete message.description
-
-        if message.placeholders
-          delete placeholder.example for key, placeholder of message.placeholders
-
-      grunt.file.write file, JSON.stringify messages
+      grunt.file.write file, JSON.stringify int17.optimize grunt.file.readJSON file
 
       grunt.log.ok()
