@@ -330,8 +330,8 @@ ScriptControls = Backbone.View.extend
           <p>#{i18n.get 'delete_confirm_text'}</p>
           <div style="text-align: right">
             <div class="btn-group">
-              <a class="btn btn-mini" id="delete_cancel_button">#{i18n.get 'delete_cancel_button'}</a>
-              <a class="btn btn-mini" id="delete_confirm_button">#{i18n.get 'delete_confirm_button'}</a>
+              <button class="btn btn-mini" id="delete_cancel_button">#{i18n.get 'delete_cancel_button'}</button>
+              <button class="btn btn-mini" id="delete_confirm_button">#{i18n.get 'delete_confirm_button'}</button>
             </div>
           </div>
         """
@@ -379,7 +379,9 @@ ScriptControls = Backbone.View.extend
 
     $btn = @$ '#delete_button'
 
-    $('#remove_script :button').first().focus()
+    $('#remove_script').on('submit', (e) =>
+      false
+    ).find(':button').first().focus()
 
     $('#delete_cancel_button').on 'click', ->
       $btn.popover 'hide'
