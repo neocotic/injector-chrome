@@ -90,8 +90,8 @@ EditorControls = Backbone.View.extend
 
     code = @options.ace.getValue()
 
-    @model.save({ code }).then ->
-      options.editor.trigger 'modified', code, no
+    @model.save({ code }).then =>
+      @model.trigger 'modified', no, code
 
       $btn.html(i18n.get 'update_button_alt').delay(800).queue ->
         $btn.html(i18n.get 'update_button').dequeue()
@@ -160,10 +160,12 @@ EditorSettings = Backbone.View.extend
         html:  i18n.get "editor_theme_#{theme}"
         value: theme
 
-    @listenTo @model, 'change:indentSize', @render
-    @listenTo @model, 'change:lineWrap',   @render
-    @listenTo @model, 'change:softTabs',   @render
-    @listenTo @model, 'change:theme',      @render
+    @listenTo @model, """
+      change:indentSize
+      change:lineWrap
+      change:softTabs
+      change:theme
+    """, @render
 
   render: ->
     indentSize = @model.get 'indentSize'
@@ -172,11 +174,11 @@ EditorSettings = Backbone.View.extend
     theme      = @model.get 'theme'
 
     @$("""
-      #editor_indent_size option[value='#{indentSize}']
-      #editor_line_wrap   option[value='#{lineWrap}']
-      #editor_soft_tabs   option[value='#{softTabs}']
+      #editor_indent_size option[value='#{indentSize}'],
+      #editor_line_wrap   option[value='#{lineWrap}'],
+      #editor_soft_tabs   option[value='#{softTabs}'],
       #editor_theme       option[value='#{theme}']
-    """.replace /\n/g, ', ').prop 'selected', yes
+    """).prop 'selected', yes
 
     this
 
@@ -201,7 +203,7 @@ EditorView = Backbone.View.extend
     @ace = ace.edit 'editor'
     @ace.setShowPrintMargin no
     @ace.getSession().on 'change', =>
-      @trigger 'modified', @ace.getValue(), @hasUnsavedChanges() if @model?
+      @model.trigger 'modified', @hasUnsavedChanges(), @ace.getValue() if @model?
 
     @settings = new EditorSettings { model: @options.settings }
     @controls = new EditorControls { @ace }
@@ -212,7 +214,7 @@ EditorView = Backbone.View.extend
       change:lineWrap
       change:softTabs
       change:theme
-    """.replace(/\n/g, ' '), @updateSettings
+    """, @updateSettings
 
     do @updateSettings
 
@@ -305,20 +307,22 @@ ScriptControls = Backbone.View.extend
   events:
     'click #add_button':    'togglePrompt'
     'shown #add_button':    'promptAdd'
+    'click #edit_button':   'togglePrompt'
+    'shown #edit_button':   'promptEdit'
     'click #clone_button':  'togglePrompt'
     'shown #clone_button':  'promptClone'
     'click #delete_button': 'togglePrompt'
     'shown #delete_button': 'promptDelete'
 
   initialize: ->
-    @$('#add_button, #clone_button').popover
+    @$('#add_button, #clone_button, #edit_button').popover
       container: 'body'
       html:      yes
       placement: 'bottom'
       trigger:   'manual'
       content:   @template
         html: '<input type="text" spellcheck="false" placeholder="yourdomain.com">'
-        id:   'new_script'
+        id:   'edit_script'
 
     @$('#delete_button').popover
       container: 'body'
@@ -338,41 +342,12 @@ ScriptControls = Backbone.View.extend
         id:   'remove_script'
 
   promptAdd: (e) ->
-    @promptCreate $ e.currentTarget
+    @promptDomain e
 
   promptClone: (e) ->
     return if not @model?
 
-    @promptCreate $(e.currentTarget), yes
-
-  promptCreate: ($btn, clone) ->
-    $('#new_script').on('submit', (e) =>
-      $form  = $ e.target
-      group  = $form.find '.control-group'
-      host   = $form.find(':text').val().replace /\s+/g, ''
-      exists = _(@collection.pluck 'host').contains host
-
-      if not host or exists
-        group.addClass 'error'
-      else
-        group.removeClass 'error'
-
-        base = if clone and @model? then @model else new Script
-
-        console.dir @collection.create {
-          host
-          code: base.get('code') or ''
-          mode: base.get('mode') or Script.defaultMode
-        }, {
-          wait: yes
-          success: ->
-            # TODO: Is `wait` necessary?
-            # TODO: Make new script active in editor
-        }
-        $btn.popover 'hide'
-
-      false
-    ).find(':text').focus()
+    @promptDomain e, clone: yes
 
   promptDelete: ->
     return if not @model?
@@ -391,6 +366,47 @@ ScriptControls = Backbone.View.extend
         options.update()
       $btn.popover 'hide'
 
+  promptDomain: (e, options = {}) ->
+    $btn  = $ e.currentTarget
+    value = if options.clone or options.edit then @model.get 'host' else ''
+
+    $('#edit_script').on('submit', (e) =>
+      e.preventDefault()
+      $form = $ e.target
+      group = $form.find '.control-group'
+      host  = $form.find(':text').val().replace /\s+/g, ''
+
+      if not host
+        group.addClass 'error'
+      else
+        group.removeClass 'error'
+
+        if options.edit
+          @model.save { host }
+        else
+          base = if options.clone then @model else new Script
+
+          @collection.create {
+            host
+            code: base.get('code') or ''
+            mode: base.get('mode') or Script.defaultMode
+          }, {
+            # TODO: Is `wait` necessary?
+            wait: yes
+            success: ->
+              # TODO: Make new script active in editor
+          }
+
+      $btn.popover 'hide'
+
+      false
+    ).find(':input').focus().val value
+
+  promptEdit: (e) ->
+    return if not @model?
+
+    @promptDomain e, edit: yes
+
   togglePrompt: (e) ->
     $btn = $ e.currentTarget
     $btn.popover 'toggle' unless $btn.hasClass 'disabled'
@@ -399,9 +415,9 @@ ScriptControls = Backbone.View.extend
     @$('#add_button').removeClass 'disabled'
 
     if @model?
-      @$('#clone_button, #delete_button').removeClass 'disabled'
+      @$('#clone_button, #delete_button, #edit_button').removeClass 'disabled'
     else
-      @$('#clone_button, #delete_button').addClass('disabled').popover 'hide'
+      @$('#clone_button, #delete_button, #edit_button').addClass('disabled').popover 'hide'
 
 # Menu item which, when selected, makes the underlying script *active*, enabling the user to manage
 # it and modify it's code.
@@ -415,8 +431,9 @@ ScriptItem = Backbone.View.extend
     'click a': 'activate'
 
   initialize: ->
+    @listenTo @model, 'change', @render
     @listenTo @model, 'destroy', @remove
-    @listenTo options.editor, 'modified', @modified
+    @listenTo @model, 'modified', @modified
 
   activate: (e) ->
     # TODO: Warn if another script is already active and it's code has unsaved changes
@@ -427,7 +444,7 @@ ScriptItem = Backbone.View.extend
       @$el.addClass('active').siblings().removeClass 'active modified'
       options.update @model
 
-  modified: (value, changed) ->
+  modified: (changed) ->
     action = if changed then 'addClass' else 'removeClass'
     @$el[action] 'modified'
 
