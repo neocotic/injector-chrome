@@ -362,8 +362,10 @@ ScriptControls = Backbone.View.extend
       $btn.popover 'hide'
 
     $('#delete_confirm_button').on 'click', =>
-      @model.destroy().then ->
-        options.update()
+      model = @model
+      model.deactivate().done ->
+        model.destroy()
+
       $btn.popover 'hide'
 
   promptDomain: (e, options = {}) ->
@@ -390,8 +392,8 @@ ScriptControls = Backbone.View.extend
             host
             code: base.get('code') or ''
             mode: base.get('mode') or Script.defaultMode
-          }, success: ->
-              # TODO: Make new script active in editor
+          }, success: (model) ->
+            model.activate()
 
       $btn.popover 'hide'
 
@@ -427,25 +429,24 @@ ScriptItem = Backbone.View.extend
     'click a': 'activate'
 
   initialize: ->
-    @listenTo @model, 'change', @render
+    @listenTo @model, 'change:active change:host', @render
     @listenTo @model, 'destroy', @remove
     @listenTo @model, 'modified', @modified
 
   activate: (e) ->
-    # TODO: Warn if another script is already active and it's code has unsaved changes
     if e.ctrlKey
-      @$el.removeClass 'active modified'
-      options.update()
+      @model.deactivate()
     else unless @$el.hasClass 'active'
-      @$el.addClass('active').siblings().removeClass 'active modified'
-      options.update @model
+      @model.activate()
 
   modified: (changed) ->
     action = if changed then 'addClass' else 'removeClass'
     @$el[action] 'modified'
 
   render: ->
+    action = if @model.get 'active' then 'addClass' else 'removeClass'
     @$el.html @template @model.attributes
+    @$el[action] 'active'
 
     this
 
@@ -548,7 +549,13 @@ options = window.options = new class Options
         @editor   = new EditorView(settings: editorSettings).render()
         @settings = new SettingsView(model: settings).render()
         @scripts  = new ScriptsView(collection: scripts).render()
-        @scripts.update()
+
+        # Ensure that views are updated accordingly when scripts are activated and deactivated.
+        scripts.on 'activate deactivate', (script) =>
+          if script.get 'active' then @update script else do @update
+
+        activeScript = scripts.findWhere { active: yes }
+        @update activeScript if activeScript
 
         # Ensure the current year is displayed throughout, where appropriate.
         $('.year-repl').html "#{new Date().getFullYear()}"
@@ -565,7 +572,7 @@ options = window.options = new class Options
             $(target).show().siblings('.tab').hide()
 
             id = nav.attr 'id'
-            settings.save(activeTab: id).then ->
+            settings.save(tab: id).then ->
               unless initialTabChange
                 id = _.capitalize id.match(/(\S*)_nav$/)[1]
                 analytics.track 'Tabs', 'Changed', id
@@ -574,7 +581,7 @@ options = window.options = new class Options
               $(document.body).scrollTop 0
 
         # Reflect the previously persisted tab initially.
-        $("##{settings.get 'activeTab'}").trigger 'click'
+        $("##{settings.get 'tab'}").trigger 'click'
 
         # Ensure that form submissions don't reload the page.
         $('form:not([target="_blank"])').on 'submit', -> false

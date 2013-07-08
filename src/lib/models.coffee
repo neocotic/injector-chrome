@@ -61,7 +61,7 @@ settingsLookup = null
 Settings = models.Settings = Backbone.Model.extend {
 
   defaults:
-    activeTab: 'general_nav'
+    tab:       'general_nav'
     analytics: yes
 
 }, {
@@ -93,8 +93,15 @@ DEFAULT_MODE = 'javascript'
 Script = models.Script = Backbone.Model.extend {
 
   defaults:
-    code: ''
-    mode: DEFAULT_MODE
+    active: no
+    code:   ''
+    mode:   DEFAULT_MODE
+
+  activate: ->
+    @collection.activate this
+
+  deactivate: ->
+    @collection.deactivate this
 
   validate: (attributes) ->
     { host, mode } = attributes
@@ -116,6 +123,17 @@ Scripts = models.Scripts = Backbone.Collection.extend {
   chromeStorage: new Backbone.ChromeStorage 'Scripts', 'local'
 
   model: Script
+
+  activate: (model) ->
+    model.save(active: yes).done =>
+      @chain().without(model).invoke 'save', { active: no }
+      model.trigger 'activate', model
+
+  deactivate: (model) ->
+    xhr = model.save active: no
+    model.trigger 'deactivate', model
+
+    xhr
 
 }, {
 
