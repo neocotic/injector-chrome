@@ -390,12 +390,8 @@ ScriptControls = Backbone.View.extend
             host
             code: base.get('code') or ''
             mode: base.get('mode') or Script.defaultMode
-          }, {
-            # TODO: Is `wait` necessary?
-            wait: yes
-            success: ->
+          }, success: ->
               # TODO: Make new script active in editor
-          }
 
       $btn.popover 'hide'
 
