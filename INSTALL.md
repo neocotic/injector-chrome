@@ -18,7 +18,8 @@ Follow these steps to build [Script Runner][];
 2. `cd` to the repository directory
 3. Ensure that you have all of the dependencies by entering `npm install`
 4. Ensure that you can run [Grunt][] by using `npm install -g grunt-cli`
-5. To update the compiled and runnable version enter `grunt build` (**Pro Tip:** Entering just `grunt` does exactly the same thing in this case)
+5. To update the compiled and runnable version enter `grunt build`
+   * **Pro Tip:** Entering just `grunt` does exactly the same thing in this case
    * Outputs to the `bin` directory
 6. To update the optimized distributable file enter `grunt dist`
    * Requires the previous step to have been run previously (i.e. the `bin` directory must exist)
