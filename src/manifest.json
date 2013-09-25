@@ -1,38 +1,38 @@
 {
-    "content_scripts": [
-        {
-            "js": ["lib/install.js"]
-          , "matches": ["http://*.neocotic.com/script-runner/*"]
-          , "run_at": "document_end"
-        }
-      , {
-            "all_frames": true
-          , "js": [
-                "lib/vendor/jquery.js"
-              , "lib/vendor/underscore.js"
-              , "lib/vendor/backbone.js"
-              , "lib/vendor/backbone.chromestorage.js"
-              , "lib/vendor/coffee-script.js"
-              , "lib/models.js"
-              , "lib/runner.js"
-            ]
-          , "matches": ["*://*/*"]
-          , "run_at": "document_start"
-        }
-    ]
-  , "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://*.uservoice.com; object-src 'self'"
-  , "default_locale": "en"
-  , "description": "__MSG_description__"
-  , "homepage_url": "http://neocotic.com/script-runner"
-  , "manifest_version": 2
-  , "minimum_chrome_version": "22"
-  , "name": "__MSG_name__"
-  , "options_page": "pages/options.html"
-  , "permissions": [
-        "storage"
-      , "tabs"
-      , "unlimitedStorage"
-      , "<all_urls>"
-    ]
-  , "version": "1.0.0"
+  "name": "__MSG_name__",
+  "description": "__MSG_description__",
+  "homepage_url": "http://neocotic.com/script-runner",
+  "default_locale": "en",
+  "manifest_version": 2,
+  "minimum_chrome_version": "22",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://*.uservoice.com; object-src 'self'",
+  "content_scripts": [
+    {
+      "js": [ "js/install.js" ],
+      "run_at": "document_end",
+      "matches": [ "http://*.neocotic.com/script-runner/*" ]
+    },
+    {
+      "js": [
+        "js/vendor/jquery.js",
+        "js/vendor/underscore.js",
+        "js/vendor/backbone.js",
+        "js/vendor/backbone.chromestorage.js",
+        "js/vendor/coffee-script.js",
+        "js/models.js",
+        "js/runner.js"
+      ],
+      "run_at": "document_start",
+      "matches": [ "*://*/*" ],
+      "all_frames": true
+    }
+  ],
+  "options_page": "html/options.html",
+  "permissions": [
+    "<all_urls>",
+    "tabs",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "version": "1.0.0"
 }

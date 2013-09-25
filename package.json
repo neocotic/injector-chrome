@@ -1,49 +1,46 @@
 {
-    "name": "script-runner-chrome"
-  , "description": "Google Chrome extension that allows you to create scripts that are executed when you visit specific websites"
-  , "version": "1.0.0"
-  , "homepage": "http://neocotic.com/script-runner"
-  , "bugs": {
-      "url": "https://github.com/neocotic/script-runner-chrome/issues"
+  "name": "script-runner-chrome",
+  "description": "Google Chrome extension that allows you to create scripts that are executed when you visit specific websites",
+  "version": "1.0.0",
+  "homepage": "http://neocotic.com/script-runner",
+  "bugs": {
+    "url": "https://github.com/neocotic/script-runner-chrome/issues"
+  },
+  "author": {
+    "url": "http://neocotic.com",
+    "name": "Alasdair Mercer",
+    "email": "mercer.alasdair@gmail.com"
+  },
+  "licenses": [
+    {
+      "url": "https://raw.github.com/neocotic/script-runner-chrome/master/LICENSE.md",
+      "type": "MIT"
     }
-  , "author": {
-        "name": "Alasdair Mercer"
-      , "email": "mercer.alasdair@gmail.com"
-      , "url": "http://neocotic.com"
-    }
-  , "licenses": [
-      {
-          "type": "MIT"
-        , "url": "https://raw.github.com/neocotic/script-runner-chrome/master/LICENSE.md"
-      }
-    ]
-  , "private": true
-  , "keywords": [
-        "script"
-      , "runner"
-      , "browser"
-      , "chrome"
-      , "extension"
-      , "javascript"
-      , "coffeescript"
-    ]
-  , "repository": {
-        "type": "git"
-      , "url": "git://github.com/neocotic/script-runner-chrome.git"
-    }
-  , "devDependencies": {
-        "grunt": "~0.4.1"
-      , "grunt-contrib-clean": "~0.4.1"
-      , "grunt-contrib-compress": "~0.5.2"
-      , "grunt-contrib-copy": "~0.4.1"
-      , "grunt-contrib-coffee": "~0.7.0"
-      , "grunt-contrib-less": "~0.6.1"
-      , "grunt-contrib-uglify": "~0.2.2"
-      , "grunt-docco": "~0.2.0"
-      , "grunt-json-minify": "~0.4.0"
-      , "int17": "~0.3.0"
-    }
-  , "engines": {
-      "node": "~0.8.0"
-    }
+  ],
+  "private": true,
+  "keywords": [
+    "script",
+    "runner",
+    "browser",
+    "chrome",
+    "extension",
+    "javascript",
+    "coffeescript"
+  ],
+  "repository": {
+    "url": "git://github.com/neocotic/script-runner-chrome.git",
+    "type": "git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.5.2",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-less": "~0.7.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-json-minify": "~0.4.0",
+    "grunt-docco": "~0.2.0",
+    "int17": "~0.3.0"
+  }
 }

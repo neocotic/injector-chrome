@@ -16,7 +16,7 @@ module.exports = (grunt) ->
 
     clean:
       build:      'bin/*'
-      buildAfter: 'bin/less/'
+      buildAfter: [ 'bin/less/', 'bin/coffee/' ]
 
       dist:      'dist/*'
       distAfter: 'dist/temp/'
@@ -39,26 +39,26 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    ['**', '!lib/*.coffee']
+        src:    [ '**', '!coffee/*' ]
         dest:   'bin/'
 
       dist:
         expand: yes
         cwd:    'bin/'
-        src:    ['**', '!lib/*.js']
+        src:    [ '**', '!js/*' ]
         dest:   'dist/temp/'
 
     coffee:
       build:
         expand: yes
-        cwd:    'src/lib/'
+        cwd:    'src/coffee/'
         src:    '*.coffee'
-        dest:   'bin/lib/'
+        dest:   'bin/js/'
         ext:    '.js'
 
     docco:
       dist:
-        src: 'src/lib/*.coffee'
+        src: 'src/coffee/*'
         options:
           output: 'docs/'
 
@@ -86,9 +86,9 @@ module.exports = (grunt) ->
       dist:
         files: [
           expand: yes
-          cwd:    'bin/lib/'
+          cwd:    'bin/js/'
           src:    '*.js'
-          dest:   'dist/temp/lib/'
+          dest:   'dist/temp/js/'
         ]
         options:
           banner: """
