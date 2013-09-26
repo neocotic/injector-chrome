@@ -229,6 +229,14 @@
     "message": "Scripts",
     "description": "Header of the Scripts tab."
   },
+  "skip_navigation": {
+    "message": "Skip navigation",
+    "description": "Text for link to skip main navigation (screen reader only)."
+  },
+  "toggle_navigation": {
+    "message": "Toggle navigation",
+    "description": "Text for link to toggle main navigation (screen reader only)."
+  },
   "top_button": {
     "message": "Back to top",
     "description": "Text for the link in the footer that takes the user to the top of the page."

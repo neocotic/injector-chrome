@@ -25,19 +25,19 @@ models.Scripts.fetch (scripts) ->
 
   unless _.isEmpty scripts
     # Ensure all code requiring compilation are compiled prior to evaluated.
-    compilation = _(scripts).map (script) ->
+    compilation = _.map scripts, (script) ->
       code = script.get 'code'
       code = CoffeeScript.compile code if script.get('mode') is 'coffee'
 
       """
         (function() {
           #{code}
-        }).call(this);
+        })();
       """
 
     # Execute the specified code with as limited a scope as possible, removing all unnecessary or
     # dangerous global variables.
-    _(variables).each (variable) ->
+    _.each variables, (variable) ->
       window[variable] = undefined
 
     exec compilation.join '\n'

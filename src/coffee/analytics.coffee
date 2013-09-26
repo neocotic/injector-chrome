@@ -18,13 +18,14 @@ analytics = window.analytics =
   add: (account) ->
     # Setup tracking details for analytics.
     _gaq = window._gaq ?= []
-    _gaq.push ['_setAccount', account]
-    _gaq.push ['_trackPageview']
+    _gaq.push [ '_setAccount', account ]
+    _gaq.push [ '_trackPageview' ]
 
     # Inject script to capture analytics.
     ga = document.createElement 'script'
     ga.async = 'async'
     ga.src   = analytics.source
+
     script = document.getElementsByTagName('script')[0]
     script.parentNode.insertBefore ga, script
 
@@ -41,7 +42,7 @@ analytics = window.analytics =
   track: (category, action, label, value, nonInteraction) ->
     return unless window._gaq
 
-    event = ['_trackEvent']
+    event = [ '_trackEvent' ]
     # Add the required information.
     event.push category
     event.push action

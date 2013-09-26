@@ -85,20 +85,25 @@ EditorControls = Backbone.View.extend
     @options.ace.gotoLine 0
 
   save: (e) ->
-    $btn = $ e.currentTarget
-    return if $btn.hasClass('disabled') or not @model?
+    $button = $ e.currentTarget
+
+    return if $button.hasClass('disabled') or not @model?
 
     code = @options.ace.getValue()
 
     @model.save({ code }).then =>
       @model.trigger 'modified', no, code
 
-      $btn.html(i18n.get 'update_button_alt').delay(800).queue ->
-        $btn.html(i18n.get 'update_button').dequeue()
+      $button.html(i18n.get 'update_button_alt').delay(800).queue ->
+        $button.html(i18n.get 'update_button').dequeue()
 
   update: (@model) ->
-    action = if @model? then 'removeClass' else 'addClass'
-    @$('#reset_button, #update_button')[action] 'disabled'
+    $buttons = @$ '#reset_button, #update_button'
+
+    if @model?
+      $buttons.removeClass 'disabled'
+    else
+      $buttons.addClass 'disabled'
 
 # A selection of available modes/languages that are supported by this extension for executing
 # scripts.
@@ -112,10 +117,11 @@ EditorModes = Backbone.View.extend
     'change': 'updateMode'
 
   render: ->
-    _(options.config.editor.modes).each (mode) =>
+    _.each options.config.editor.modes, (mode) =>
       @$el.append @template
         html:  i18n.get "editor_mode_#{mode}"
         value: mode
+
     do @update
 
     this
@@ -125,6 +131,7 @@ EditorModes = Backbone.View.extend
     mode or= Script.defaultMode
 
     @$("option[value='#{mode}']").prop 'selected', yes
+
     do @updateMode
 
   updateMode: ->
@@ -141,6 +148,7 @@ EditorSettings = Backbone.View.extend
 
   template: _.template '<option value="<%- value %>"><%= html %></option>'
 
+  # TODO: Would `'change': 'update'` suffice?
   events:
     'change #editor_indent_size': 'update'
     'change #editor_line_wrap':   'update'
@@ -148,17 +156,17 @@ EditorSettings = Backbone.View.extend
     'change #editor_theme':       'update'
 
   initialize: ->
-    group = @$ '#editor_indent_size optgroup'
-    _(options.config.editor.indentSizes).each (size) =>
-      group.append @template
+    $sizes = @$ '#editor_indent_size optgroup'
+    _.each options.config.editor.indentSizes, (size) =>
+      $sizes.append @template
         html:  size
         value: size
 
-    group = @$ '#editor_theme optgroup'
-    _(options.config.editor.themes).each (theme) =>
-      group.append @template
-        html:  i18n.get "editor_theme_#{theme}"
-        value: theme
+    $themes = @$ '#editor_theme optgroup'
+    _.each options.config.editor.themes, (theme) =>
+      $themes.append @template
+        $html:  i18n.get "editor_theme_#{theme}"
+        $value: theme
 
     @listenTo @model, """
       change:indentSize
@@ -272,8 +280,10 @@ GeneralSettingsView = Backbone.View.extend
     @model.save { analytics: $analytics.is ':checked' }
 
   updateAnalytics: ->
-    action = if @model.get 'analytics' then 'add' else 'remove'
-    analytics[action] options.config.analytics
+    if @model.get 'analytics'
+      analytics.add options.config.analytics
+    else
+      analytics.remove()
 
 # Parent view for all configurable settings.
 SettingsView = Backbone.View.extend
@@ -297,8 +307,8 @@ ScriptControls = Backbone.View.extend
   el: '#scripts_controls'
 
   template: _.template """
-    <form class="form-inline" id="<%- id %>">
-      <div class="control-group">
+    <form id="<%- id %>" class="form-inline" role="form">
+      <div class="form-group">
         <%= html %>
       </div>
     </form>
@@ -316,30 +326,30 @@ ScriptControls = Backbone.View.extend
 
   initialize: ->
     @$('#add_button, #clone_button, #edit_button').popover
-      container: 'body'
       html:      yes
-      placement: 'bottom'
       trigger:   'manual'
+      placement: 'bottom'
+      container: 'body'
       content:   @template
-        html: '<input type="text" spellcheck="false" placeholder="yourdomain.com">'
         id:   'edit_script'
+        html: '<input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com">'
 
     @$('#delete_button').popover
-      container: 'body'
       html:      yes
-      placement: 'bottom'
       trigger:   'manual'
+      placement: 'bottom'
+      container: 'body'
       content:   @template
+        id:   'remove_script'
         html: """
           <p>#{i18n.get 'delete_confirm_text'}</p>
-          <div style="text-align: right">
+          <div class="text-right">
             <div class="btn-group">
-              <button class="btn btn-mini" id="delete_cancel_button">#{i18n.get 'delete_cancel_button'}</button>
-              <button class="btn btn-mini" id="delete_confirm_button">#{i18n.get 'delete_confirm_button'}</button>
+              <button id="delete_cancel_button" class="btn btn-xs">#{i18n.get 'delete_cancel_button'}</button>
+              <button id="delete_confirm_button" class="btn btn-xs">#{i18n.get 'delete_confirm_button'}</button>
             </div>
           </div>
         """
-        id:   'remove_script'
 
   promptAdd: (e) ->
     @promptDomain e
@@ -352,36 +362,35 @@ ScriptControls = Backbone.View.extend
   promptDelete: ->
     return if not @model?
 
-    $btn = @$ '#delete_button'
+    $button = @$ '#delete_button'
+    $form   = $ '#remove_script'
 
-    $('#remove_script').on('submit', (e) =>
-      false
-    ).find(':button').first().focus()
+    $form.on 'submit', (e) => false
+    $form.find(':button').first().focus()
 
     $('#delete_cancel_button').on 'click', ->
-      $btn.popover 'hide'
+      $button.popover 'hide'
 
     $('#delete_confirm_button').on 'click', =>
       model = @model
       model.deactivate().done ->
         model.destroy()
 
-      $btn.popover 'hide'
+      $button.popover 'hide'
 
   promptDomain: (e, options = {}) ->
-    $btn  = $ e.currentTarget
-    value = if options.clone or options.edit then @model.get 'host' else ''
+    $button = $ e.currentTarget
+    $form   = $ '#edit_script'
+    value   = if options.clone or options.edit then @model.get 'host' else ''
 
-    $('#edit_script').on('submit', (e) =>
-      e.preventDefault()
-      $form = $ e.target
-      group = $form.find '.control-group'
+    $('#edit_script').on 'submit', (e) =>
+      $group = $form.find '.form-group'
       host  = $form.find(':text').val().replace /\s+/g, ''
 
       if not host
-        group.addClass 'error'
+        $group.addClass 'has-error'
       else
-        group.removeClass 'error'
+        $group.removeClass 'has-error'
 
         if options.edit
           @model.save { host }
@@ -395,10 +404,11 @@ ScriptControls = Backbone.View.extend
           }, success: (model) ->
             model.activate()
 
-      $btn.popover 'hide'
+      $button.popover 'hide'
 
       false
-    ).find(':input').focus().val value
+
+    $form.find(':input').focus().val value
 
   promptEdit: (e) ->
     return if not @model?
@@ -406,16 +416,19 @@ ScriptControls = Backbone.View.extend
     @promptDomain e, edit: yes
 
   togglePrompt: (e) ->
-    $btn = $ e.currentTarget
-    $btn.popover 'toggle' unless $btn.hasClass 'disabled'
+    $button = $ e.currentTarget
+
+    $button.popover 'toggle' unless $button.hasClass 'disabled'
 
   update: (@model) ->
+    $modelButtons = @$ '#clone_button, #delete_button, #edit_button'
+
     @$('#add_button').removeClass 'disabled'
 
     if @model?
-      @$('#clone_button, #delete_button, #edit_button').removeClass 'disabled'
+      $modelButtons.removeClass 'disabled'
     else
-      @$('#clone_button, #delete_button, #edit_button').addClass('disabled').popover 'hide'
+      $modelButtons.addClass('disabled').popover 'hide'
 
 # Menu item which, when selected, makes the underlying script *active*, enabling the user to manage
 # it and modify it's code.
@@ -429,9 +442,9 @@ ScriptItem = Backbone.View.extend
     'click a': 'activate'
 
   initialize: ->
-    @listenTo @model, 'change:active change:host', @render
     @listenTo @model, 'destroy', @remove
     @listenTo @model, 'modified', @modified
+    @listenTo @model, 'change:active change:host', @render
 
   activate: (e) ->
     if e.ctrlKey
@@ -440,13 +453,18 @@ ScriptItem = Backbone.View.extend
       @model.activate()
 
   modified: (changed) ->
-    action = if changed then 'addClass' else 'removeClass'
-    @$el[action] 'modified'
+    if changed
+      @$el.addClass 'modified'
+    else
+      @$el.removeClass 'modified'
 
   render: ->
-    action = if @model.get 'active' then 'addClass' else 'removeClass'
     @$el.html @template @model.attributes
-    @$el[action] 'active'
+
+    if @model.get 'active'
+      @$el.addClass 'active'
+    else
+      @$el.removeClass 'active'
 
     this
 
@@ -483,7 +501,8 @@ ScriptsView = Backbone.View.extend
 
   render: ->
     @controls.render()
-    @$('#scripts_nav').append @list.render().$el
+
+    @$('#scripts_list').append @list.render().$el
 
     this
 
@@ -510,8 +529,8 @@ activateTooltips = (selector) ->
     $this = $ this
 
     $this.tooltip
-      container: $this.attr('data-container') ? 'body'
-      placement: $this.attr('data-placement') ? 'top'
+      container: $this.attr('data-container') or 'body'
+      placement: $this.attr('data-placement') or 'top'
 
 # Options page setup
 # ------------------
@@ -558,13 +577,13 @@ options = window.options = new class Options
         @update activeScript if activeScript
 
         # Ensure the current year is displayed throughout, where appropriate.
-        $('.year-repl').html "#{new Date().getFullYear()}"
+        $('.js-insert-year').html "#{new Date().getFullYear()}"
 
         # Bind tab selection event to all tabs.
         initialTabChange = yes
         $('a[data-tabify]').on 'click', ->
           target = $(this).data 'tabify'
-          nav    = $ "#navigation a[data-tabify='#{target}']"
+          nav    = $ "header.navbar .nav a[data-tabify='#{target}']"
           parent = nav.parent 'li'
 
           unless parent.hasClass 'active'
@@ -600,8 +619,8 @@ options = window.options = new class Options
           analytics.track 'Footer', 'Clicked', 'Homepage'
 
         # Setup and configure the donation button in the footer.
-        $('#donation input[name="hosted_button_id"]').val @config.options.payPal
-        $('#donation').on 'submit', ->
+        $('.donation input[name="hosted_button_id"]').val @config.options.payPal
+        $('.donation').on 'submit', ->
           $(this).find(':submit').tooltip 'hide'
 
           analytics.track 'Footer', 'Clicked', 'Donate'
