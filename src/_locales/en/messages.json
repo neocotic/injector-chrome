@@ -32,8 +32,8 @@
     "description": "Text for the Donate button.",
     "placeholders": {
       "icon": {
-        "content": "<i class=\"icon-heart icon-white\"></i>",
-        "example": "<i class=\"icon-heart icon-white\"></i>"
+        "content": "<span class=\"glyphicon glyphicon-heart\"></span>",
+        "example": "<span class=\"glyphicon glyphicon-heart\"></span>"
       }
     }
   },
