@@ -111,15 +111,15 @@ module.exports = (grunt) ->
 
     watch:
       build:
-        files: [ 'src/**', '!src/css/**', '!src/less**', '!src/js/**', '!src/coffee/**' ]
+        files: [ 'src/_locales/**', 'src/fonts/**', 'src/*.json', 'src/*.html' ]
         tasks: [ 'clean:build', 'copy:build' ]
 
       buildStyles:
-        files: [ 'src/css/**', '!src/less**' ]
+        files: [ 'src/css/**', 'src/less**' ]
         tasks: [ 'clean:buildStyles', 'copy:buildStyles', 'less' ]
 
       buildScripts:
-        files: [ 'src/js/**', '!src/coffee/**' ]
+        files: [ 'src/js/**', 'src/coffee/**' ]
         tasks: [ 'clean:buildScripts', 'copy:buildScripts', 'coffee' ]
 
   }
