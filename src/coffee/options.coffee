@@ -315,14 +315,15 @@ ScriptControls = Backbone.View.extend
   """
 
   events:
-    'click #add_button':    'togglePrompt'
-    'shown #add_button':    'promptAdd'
-    'click #edit_button':   'togglePrompt'
-    'shown #edit_button':   'promptEdit'
-    'click #clone_button':  'togglePrompt'
-    'shown #clone_button':  'promptClone'
-    'click #delete_button': 'togglePrompt'
-    'shown #delete_button': 'promptDelete'
+    'show.bs.popover .btn':           'closeOtherPrompts'
+    'click #delete_menu .btn':        'closeOtherPrompts'
+    'click #add_button':              'togglePrompt'
+    'shown.bs.popover #add_button':   'promptAdd'
+    'click #edit_button':             'togglePrompt'
+    'shown.bs.popover #edit_button':  'promptEdit'
+    'click #clone_button':            'togglePrompt'
+    'shown.bs.popover #clone_button': 'promptClone'
+    'click #delete_menu .js-resolve': 'removeScript'
 
   initialize: ->
     @$('#add_button, #clone_button, #edit_button').popover
@@ -334,22 +335,9 @@ ScriptControls = Backbone.View.extend
         id:   'edit_script'
         html: '<input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com">'
 
-    @$('#delete_button').popover
-      html:      yes
-      trigger:   'manual'
-      placement: 'bottom'
-      container: 'body'
-      content:   @template
-        id:   'remove_script'
-        html: """
-          <p>#{i18n.get 'delete_confirm_text'}</p>
-          <div class="text-right">
-            <div class="btn-group">
-              <button id="delete_cancel_button" class="btn btn-xs">#{i18n.get 'delete_cancel_button'}</button>
-              <button id="delete_confirm_button" class="btn btn-xs">#{i18n.get 'delete_confirm_button'}</button>
-            </div>
-          </div>
-        """
+  closeOtherPrompts: (e) ->
+    @$('.js-popover-toggle').not(e.currentTarget).popover 'hide'
+    $('.popover').remove()
 
   promptAdd: (e) ->
     @promptDomain e
@@ -359,33 +347,14 @@ ScriptControls = Backbone.View.extend
 
     @promptDomain e, clone: yes
 
-  promptDelete: ->
-    return if not @model?
-
-    $button = @$ '#delete_button'
-    $form   = $ '#remove_script'
-
-    $form.on 'submit', (e) => false
-    $form.find(':button').first().focus()
-
-    $('#delete_cancel_button').on 'click', ->
-      $button.popover 'hide'
-
-    $('#delete_confirm_button').on 'click', =>
-      model = @model
-      model.deactivate().done ->
-        model.destroy()
-
-      $button.popover 'hide'
-
   promptDomain: (e, options = {}) ->
     $button = $ e.currentTarget
     $form   = $ '#edit_script'
     value   = if options.clone or options.edit then @model.get 'host' else ''
 
-    $('#edit_script').on 'submit', (e) =>
+    $form.on 'submit', (e) =>
       $group = $form.find '.form-group'
-      host  = $form.find(':text').val().replace /\s+/g, ''
+      host   = $form.find(':text').val().replace /\s+/g, ''
 
       if not host
         $group.addClass 'has-error'
@@ -408,12 +377,19 @@ ScriptControls = Backbone.View.extend
 
       false
 
-    $form.find(':input').focus().val value
+    $form.find(':text').focus().val value
 
   promptEdit: (e) ->
     return if not @model?
 
     @promptDomain e, edit: yes
+
+  removeScript: ->
+    return if not @model?
+
+    model = @model
+    model.deactivate().done ->
+      model.destroy()
 
   togglePrompt: (e) ->
     $button = $ e.currentTarget
@@ -421,7 +397,7 @@ ScriptControls = Backbone.View.extend
     $button.popover 'toggle' unless $button.hasClass 'disabled'
 
   update: (@model) ->
-    $modelButtons = @$ '#clone_button, #delete_button, #edit_button'
+    $modelButtons = @$ '#clone_button, #delete_menu .btn, #edit_button'
 
     @$('#add_button').removeClass 'disabled'
 
@@ -619,9 +595,11 @@ options = window.options = new class Options
           analytics.track 'Footer', 'Clicked', 'Homepage'
 
         # Setup and configure the donation button in the footer.
-        $('.donation input[name="hosted_button_id"]').val @config.options.payPal
-        $('.donation').on 'submit', ->
-          $(this).find(':submit').tooltip 'hide'
+        $('#donation input[name="hosted_button_id"]').val @config.options.payPal
+        $('.js-donate').on 'click', ->
+          $(this).tooltip 'hide'
+
+          $('#donation').submit()
 
           analytics.track 'Footer', 'Clicked', 'Donate'
 

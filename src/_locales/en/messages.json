@@ -11,35 +11,25 @@
     "message": "Send anonymous usage statistics",
     "description": "Text for the Analytics field."
   },
-  "delete_cancel_button": {
-    "message": "No",
-    "description": "Text for the cancel delete button."
-  },
-  "delete_confirm_button": {
-    "message": "Yes",
-    "description": "Text for the confirm delete button."
-  },
-  "delete_confirm_text": {
+  "delete_confirmation_text": {
     "message": "Are you sure?",
     "description": "Text for the delete confirmation."
+  },
+  "delete_reject_item": {
+    "message": "No",
+    "description": "Text for the reject deletion menu item."
+  },
+  "delete_resolve_item": {
+    "message": "Yes",
+    "description": "Text for the resolve deletion menu item."
   },
   "description": {
     "message": "Runs your own scripts based for specific websites",
     "description": "Brief description of the extension."
   },
-  "donate_button": {
-    "message": "$ICON$ Donate",
-    "description": "Text for the Donate button.",
-    "placeholders": {
-      "icon": {
-        "content": "<span class=\"glyphicon glyphicon-heart\"></span>",
-        "example": "<span class=\"glyphicon glyphicon-heart\"></span>"
-      }
-    }
-  },
-  "donate_button_title": {
+  "donate_title": {
     "message": "Share the love!",
-    "description": "Hover text for the Donate button."
+    "description": "Hover text for donation links/buttons."
   },
   "editor_indent_mode_label": {
     "message": "Indent Mode",

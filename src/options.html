@@ -43,6 +43,10 @@
             <li><a id="general_nav" data-tabify="#general_tab" data-i18n-content="general_header"></a></li>
             <li><a id="scripts_nav" data-tabify="#scripts_tab" data-i18n-content="scripts_header"></a></li>
           </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a class="btn js-donate" data-placement="bottom" data-i18n-values="title:donate_title"><span class="glyphicon glyphicon-heart"></span></a></li>
+          </ul>
         </nav>
       </div>
     </header>
@@ -87,7 +91,14 @@
                     <div class="btn-toolbar" id="scripts_controls">
                       <div class="btn-group">
                         <a id="add_button" class="btn btn-default js-popover-toggle"><span class="glyphicon glyphicon-plus"></span></a>
-                        <a id="delete_button" class="btn btn-default disabled js-popover-toggle"><span class="glyphicon glyphicon-minus"></span></a>
+                        <div id="delete_menu" class="btn-group">
+                          <a class="btn btn-default disabled dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-minus"></span></a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="dropdown-header" data-i18n-content="delete_confirmation_text"></li>
+                            <li role="presentation"><a class="js-resolve" role="menuitem" tabindex="-1" data-i18n-content="delete_resolve_item"></a></li>
+                            <li role="presentation"><a class="js-reject" role="menuitem" tabindex="-1" data-i18n-content="delete_reject_item"></a></li>
+                          </ul>
+                        </div>
                       </div>
 
                       <div class="btn-group">
@@ -166,13 +177,12 @@
         <span class="glyphicon glyphicon-copyright-mark"></span>
         <span class="js-insert-year"></span>
         <a href="http://neocotic.com" target="_blank">Alasdair Mercer</a>
-
-        <form class="donation" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-          <input type="hidden" name="cmd" value="_s-xclick">
-          <input type="hidden" name="hosted_button_id" value="">
-          <button type="submit" class="btn btn-xs btn-warning" data-placement="top" data-i18n-values=".innerHTML:donate_button;title:donate_button_title"></button>
-        </form>
       </footer>
     </main>
+
+    <form id="donation" class="hide" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+      <input type="hidden" name="cmd" value="_s-xclick">
+      <input type="hidden" name="hosted_button_id" value="">
+    </form>
   </body>
 </html>

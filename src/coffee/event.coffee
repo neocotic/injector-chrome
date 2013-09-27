@@ -29,6 +29,6 @@ activateTab = (url, callback) ->
 # Events
 # ------
 
-# TODO: Document
+# Open the Options page when the browser action is clicked.
 chrome.browserAction.onClicked.addListener (tab) ->
   activateTab chrome.extension.getURL 'options.html'
