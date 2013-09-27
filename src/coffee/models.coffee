@@ -15,8 +15,8 @@ models = window.models =
   fetch: (callback) ->
     Settings.fetch (settings) ->
       EditorSettings.fetch (editorSettings) ->
-        Scripts.fetch (scripts) ->
-          callback { settings, editorSettings, scripts }
+        Snippets.fetch (snippets) ->
+          callback { settings, editorSettings, snippets }
 
 # Editor
 # ------
@@ -82,26 +82,42 @@ SettingsLookup = Backbone.Collection.extend
 
   model: Settings
 
-# Scripts
-# -------
+# Snippets
+# --------
 
 # Default Ace editor mode/language.
 DEFAULT_MODE = 'javascript'
 
-# A script to be executed on a specific host.  
-# The script's code can be written in any supported language that compiles to JavaScript.
-Script = models.Script = Backbone.Model.extend {
+# A snippet to be injected into a specific host.  
+# The snippet's code can be written in a number of supported languages and can be either be a
+# script to be executed on the page or contain styles to be applied to it.
+Snippet = models.Snippet = Backbone.Model.extend {
 
   defaults:
-    active: no
-    code:   ''
-    mode:   DEFAULT_MODE
+    code:     ''
+    mode:     DEFAULT_MODE
+    selected: no
 
-  activate: ->
-    @collection.activate this
+  deselect: ->
+    return $.Deferred().resolve() unless @get 'selected'
 
-  deactivate: ->
-    @collection.deactivate this
+    @save(selected: no).done =>
+      @trigger 'deselected', this
+
+  groupName: ->
+    _.chain(Snippet.modeGroups).keys().find(@inGroup, this).value()
+
+  inGroup: (name) ->
+    _.contains Snippet.modeGroups[name], @get 'mode'
+
+  select: ->
+    return $.Deferred().resolve() if @get 'selected'
+
+    @save(selected: yes).done =>
+      if @collection
+        @collection.chain().without(this).invoke 'save', selected: no
+
+      @trigger 'selected', this
 
   validate: (attributes) ->
     { host, mode } = attributes
@@ -115,31 +131,56 @@ Script = models.Script = Backbone.Model.extend {
 
   defaultMode: DEFAULT_MODE
 
+  # Map of mode groups.
+  modeGroups: {}
+
+  # Add all of the mode `groups` that are provided in their object form.
+  mapModeGroups: (groups) ->
+    _.each groups, (group) =>
+      @modeGroups[group.name] = group.modes
+
+  # Populates the map of mode groups with the values from `configuration.json`.  
+  # Nothing happens if `Snippet.modeGroups` has already been populated.
+  populateModeGroups: (callback) ->
+    if _.isEmpty @modeGroups
+      chrome.runtime.sendMessage { type: 'config' }, (config) =>
+        @mapModeGroups config.editor.modeGroups
+
+        do callback
+    else
+      do callback
 }
 
-# Collection of scripts created by the user.
-Scripts = models.Scripts = Backbone.Collection.extend {
+# Collection of snippets created by the user.
+Snippets = models.Snippets = Backbone.Collection.extend {
 
-  chromeStorage: new Backbone.ChromeStorage 'Scripts', 'local'
+  chromeStorage: new Backbone.ChromeStorage 'Snippets', 'local'
 
-  model: Script
+  model: Snippet
 
-  activate: (model) ->
-    model.save(active: yes).done =>
-      @chain().without(model).invoke 'save', { active: no }
-      model.trigger 'activate', model
-
-  deactivate: (model) ->
-    xhr = model.save active: no
-    model.trigger 'deactivate', model
-
-    xhr
+  group: (name) ->
+    Snippets.group this, name
 
 }, {
 
-  # Retrieve the **all** instances of `Script`.
+  # Retrieve the **all** instances of `Snippet`.
   fetch: (callback) ->
-    (scripts = new Scripts).fetch().then ->
-      callback scripts
+    Snippet.populateModeGroups ->
+      (snippets = new Snippets).fetch().then ->
+        callback snippets
+
+  # TODO: Document
+  group: (snippets, name) ->
+    if name
+      snippets.filter (snippet) ->
+        snippet.inGroup name
+    else
+      groups = {}
+
+      _.each Snippet.modeGroups, (modes, name) =>
+        groups[name] = snippets.filter (snippet) ->
+          snippet.inGroup name
+
+      groups
 
 }

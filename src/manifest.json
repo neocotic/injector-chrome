@@ -19,8 +19,9 @@
         "js/vendor/backbone.js",
         "js/vendor/backbone.chromestorage.js",
         "js/vendor/coffee-script.js",
+        "js/vendor/less.js",
         "js/models.js",
-        "js/runner.js"
+        "js/injector.js"
       ],
       "run_at": "document_start",
       "matches": [ "*://*/*" ],
@@ -38,7 +39,10 @@
     "unlimitedStorage"
   ],
   "background": {
-    "scripts": [ "js/event.js" ],
+    "scripts": [
+      "js/vendor/jquery.js",
+      "js/events.js"
+    ],
     "persistent": false
   },
   "version": "1.0.0"

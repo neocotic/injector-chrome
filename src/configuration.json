@@ -1,9 +1,21 @@
 {
   "editor": {
     "indentSizes": [ 2, 4, 8 ],
-    "modes": [
-      "coffee",
-      "javascript"
+    "modeGroups": [
+      {
+        "name": "scripts",
+        "modes": [
+          "coffee",
+          "javascript"
+        ]
+      },
+      {
+        "name": "styles",
+        "modes": [
+          "css",
+          "less"
+        ]
+      }
     ],
     "themes": [
       "ambiance",

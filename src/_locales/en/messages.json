@@ -24,7 +24,7 @@
     "description": "Text for the resolve deletion menu item."
   },
   "description": {
-    "message": "Runs your own scripts based for specific websites",
+    "message": "Runs your custom code snippets on any website",
     "description": "Brief description of the extension."
   },
   "donate_title": {
@@ -63,13 +63,25 @@
     "message": "CoffeeScript",
     "description": "Text for the CoffeeScript editor mode."
   },
+  "editor_mode_css": {
+    "message": "CSS",
+    "description": "Text for the CSS editor mode."
+  },
+  "editor_mode_group_scripts": {
+    "message": "Scripts",
+    "description": "Label for the Scripts group in the editor mode field."
+  },
+  "editor_mode_group_styles": {
+    "message": "Styles",
+    "description": "Label for the Styles group in the editor mode field."
+  },
   "editor_mode_javascript": {
     "message": "JavaScript",
     "description": "Text for the JavaScript editor mode."
   },
-  "editor_mode_label": {
-    "message": "Language",
-    "description": "Label for the editor Language field."
+  "editor_mode_less": {
+    "message": "LESS",
+    "description": "Text for the LESS editor mode."
   },
   "editor_theme_ambiance": {
     "message": "Ambiance",
@@ -215,9 +227,9 @@
     "message": "Reset",
     "description": "Text for the Reset button."
   },
-  "scripts_header": {
-    "message": "Scripts",
-    "description": "Header of the Scripts tab."
+  "snippets_header": {
+    "message": "Snippets",
+    "description": "Header of the Snippets tab."
   },
   "skip_navigation": {
     "message": "Skip navigation",

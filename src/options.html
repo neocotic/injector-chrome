@@ -41,7 +41,7 @@
         <nav class="collapse navbar-collapse" role="navigation">
           <ul class="nav navbar-nav">
             <li><a id="general_nav" data-tabify="#general_tab" data-i18n-content="general_header"></a></li>
-            <li><a id="scripts_nav" data-tabify="#scripts_tab" data-i18n-content="scripts_header"></a></li>
+            <li><a id="snippets_nav" data-tabify="#snippets_tab" data-i18n-content="snippets_header"></a></li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
@@ -79,16 +79,16 @@
         </div>
       </section>
 
-      <section id="scripts_tab" class="tab hide">
+      <section id="snippets_tab" class="tab hide">
         <div class="row">
           <div class="col-lg-12">
             <form class="form-inline" role="form">
               <fieldset>
-                <legend data-i18n-content="scripts_header"></legend>
+                <legend data-i18n-content="snippets_header"></legend>
 
                 <div class="form-inline-group row">
                   <div class="col-xs-3">
-                    <div class="btn-toolbar" id="scripts_controls">
+                    <div class="btn-toolbar" id="snippets_controls">
                       <div class="btn-group">
                         <a id="add_button" class="btn btn-default js-popover-toggle"><span class="glyphicon glyphicon-plus"></span></a>
                         <div id="delete_menu" class="btn-group">
@@ -111,9 +111,7 @@
                   <div class="col-xs-9">
                     <div class="row">
                       <div class="col-sm-3">
-                        <select id="editor_modes" class="form-control">
-                          <optgroup data-i18n-values="label:editor_mode_label"></optgroup>
-                        </select>
+                        <select id="editor_modes" class="form-control"></select>
                       </div>
 
                       <div id="editor_settings" class="col-sm-9">
@@ -148,8 +146,8 @@
                 </div>
 
                 <div class="form-inline-group row">
-                  <div id="scripts_list" class="col-xs-3">
-                    <ul class="nav nav-pills nav-stacked"></ul>
+                  <div class="col-xs-3">
+                    <ul id="snippets_list" class="nav nav-pills nav-stacked"></ul>
                   </div>
 
                   <div class="col-xs-9">
@@ -158,7 +156,7 @@
                     </div>
 
                     <div id="editor_controls" class="pull-right">
-                      <a id="reset_button" class="btn btn-default disabled" data-i18n-content="reset_button"></a>
+                      <a id="reset_button" class="btn btn-warning disabled" data-i18n-content="reset_button"></a>
                       <a id="update_button" class="btn btn-success disabled" data-i18n-content="update_button"></a>
                     </div>
                   </div>

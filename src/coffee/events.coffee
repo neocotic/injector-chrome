@@ -32,3 +32,12 @@ activateTab = (url, callback) ->
 # Open the Options page when the browser action is clicked.
 chrome.browserAction.onClicked.addListener (tab) ->
   activateTab chrome.extension.getURL 'options.html'
+
+# Add message listener to communicate with other pages within the extension.
+chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
+  # Retrieve the data configuration from the configuration file.
+  if request.type is 'config'
+    $.getJSON chrome.extension.getURL('configuration.json'), (config) ->
+      sendResponse config
+
+  true

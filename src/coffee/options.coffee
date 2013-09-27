@@ -5,7 +5,7 @@
 # TODO: Capture more analytics
 
 # Extract the models and collections that are required by the options page.
-{ EditorSettings, EditorSettings, Script, Scripts } = models
+{ EditorSettings, EditorSettings, Snippet, Snippets } = models
 
 # Utilities
 # ---------
@@ -35,6 +35,7 @@ loadFeedback = (options) ->
   uv       = document.createElement 'script'
   uv.async = 'async'
   uv.src   = "https://widget.uservoice.com/#{options.id}.js"
+
   # Insert the script element into the DOM.
   script = document.getElementsByTagName('script')[0]
   script.parentNode.insertBefore uv, script
@@ -63,8 +64,8 @@ loadFeedback = (options) ->
 # Editor
 # ------
 
-# View containing buttons for saving/resetting the code of the active script from the contents of
-# the Ace editor.
+# View containing buttons for saving/resetting the code of the selected snippet from the contents
+# of the Ace editor.
 EditorControls = Backbone.View.extend
 
   el: '#editor_controls'
@@ -105,22 +106,30 @@ EditorControls = Backbone.View.extend
     else
       $buttons.addClass 'disabled'
 
-# A selection of available modes/languages that are supported by this extension for executing
-# scripts.
+# A selection of available modes/languages that are supported by this extension for injecting
+# snippets.
 EditorModes = Backbone.View.extend
 
   el: '#editor_modes'
 
-  template: _.template '<option value="<%- value %>"><%= html %></option>'
+  groupTemplate: _.template '<optgroup label="<%- label %>"></optgroup>'
+
+  modeTemplate: _.template '<option value="<%- value %>"><%= html %></option>'
 
   events:
     'change': 'updateMode'
 
   render: ->
-    _.each options.config.editor.modes, (mode) =>
-      @$el.append @template
-        html:  i18n.get "editor_mode_#{mode}"
-        value: mode
+    _.each Snippet.modeGroups, (modes, name) =>
+      $group = $ @groupTemplate
+        label: i18n.get "editor_mode_group_#{name}"
+
+      _.each modes, (mode) =>
+        $group.append @modeTemplate
+          html:  i18n.get "editor_mode_#{mode}"
+          value: mode
+
+      @$el.append $group
 
     do @update
 
@@ -128,7 +137,7 @@ EditorModes = Backbone.View.extend
 
   update: (@model) ->
     mode   = if @model? then @model.get 'mode'
-    mode or= Script.defaultMode
+    mode or= Snippet.defaultMode
 
     @$("option[value='#{mode}']").prop 'selected', yes
 
@@ -148,7 +157,6 @@ EditorSettings = Backbone.View.extend
 
   template: _.template '<option value="<%- value %>"><%= html %></option>'
 
-  # TODO: Would `'change': 'update'` suffice?
   events:
     'change #editor_indent_size': 'update'
     'change #editor_line_wrap':   'update'
@@ -157,13 +165,13 @@ EditorSettings = Backbone.View.extend
 
   initialize: ->
     $sizes = @$ '#editor_indent_size optgroup'
-    _.each options.config.editor.indentSizes, (size) =>
+    _.each page.config.editor.indentSizes, (size) =>
       $sizes.append @template
         html:  size
         value: size
 
     $themes = @$ '#editor_theme optgroup'
-    _.each options.config.editor.themes, (theme) =>
+    _.each page.config.editor.themes, (theme) =>
       $themes.append @template
         html:  i18n.get "editor_theme_#{theme}"
         value: theme
@@ -202,7 +210,7 @@ EditorSettings = Backbone.View.extend
       softTabs:   $softTabs.val() is 'true'
       theme:      $theme.val()
 
-# Contains the Ace editor that allows the user to modify a script's code.
+# Contains the Ace editor that allows the user to modify a snippet's code.
 EditorView = Backbone.View.extend
 
   el: '#editor'
@@ -281,7 +289,7 @@ GeneralSettingsView = Backbone.View.extend
 
   updateAnalytics: ->
     if @model.get 'analytics'
-      analytics.add options.config.analytics
+      analytics.add page.config.analytics
     else
       analytics.remove()
 
@@ -298,21 +306,13 @@ SettingsView = Backbone.View.extend
 
     this
 
-# Scripts
-# -------
+# Snippets
+# --------
 
-# View contains buttons used to control/manage the user's scripts.
-ScriptControls = Backbone.View.extend
+# View contains buttons used to control/manage the user's snippets.
+SnippetControls = Backbone.View.extend
 
-  el: '#scripts_controls'
-
-  template: _.template """
-    <form id="<%- id %>" class="form-inline" role="form">
-      <div class="form-group">
-        <%= html %>
-      </div>
-    </form>
-  """
+  el: '#snippets_controls'
 
   events:
     'show.bs.popover .btn':           'closeOtherPrompts'
@@ -323,7 +323,7 @@ ScriptControls = Backbone.View.extend
     'shown.bs.popover #edit_button':  'promptEdit'
     'click #clone_button':            'togglePrompt'
     'shown.bs.popover #clone_button': 'promptClone'
-    'click #delete_menu .js-resolve': 'removeScript'
+    'click #delete_menu .js-resolve': 'removeSnippet'
 
   initialize: ->
     @$('#add_button, #clone_button, #edit_button').popover
@@ -331,26 +331,33 @@ ScriptControls = Backbone.View.extend
       trigger:   'manual'
       placement: 'bottom'
       container: 'body'
-      content:   @template
-        id:   'edit_script'
-        html: '<input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com">'
+      content:   """
+        <form id="edit_snippet" class="form-inline" role="form">
+          <div class="form-group">
+            <input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com">
+          </div>
+        </form>
+      """
 
   closeOtherPrompts: (e) ->
-    @$('.js-popover-toggle').not(e.currentTarget).popover 'hide'
-    $('.popover').remove()
+    hidePopovers e.currentTarget
 
-  promptAdd: (e) ->
-    @promptDomain e
+  promptAdd: ->
+    do @promptHost
 
-  promptClone: (e) ->
+  promptClone: ->
     return if not @model?
 
-    @promptDomain e, clone: yes
+    @promptHost clone: yes
 
-  promptDomain: (e, options = {}) ->
-    $button = $ e.currentTarget
-    $form   = $ '#edit_script'
-    value   = if options.clone or options.edit then @model.get 'host' else ''
+  promptEdit: ->
+    return if not @model?
+
+    @promptHost edit: yes
+
+  promptHost: (options = {}) ->
+    $form = $ '#edit_snippet'
+    value = if options.clone or options.edit then @model.get 'host' else ''
 
     $form.on 'submit', (e) =>
       $group = $form.find '.form-group'
@@ -364,31 +371,26 @@ ScriptControls = Backbone.View.extend
         if options.edit
           @model.save { host }
         else
-          base = if options.clone then @model else new Script
+          base = if options.clone then @model else new Snippet
 
           @collection.create {
             host
             code: base.get('code') or ''
-            mode: base.get('mode') or Script.defaultMode
+            mode: base.get('mode') or Snippet.defaultMode
           }, success: (model) ->
-            model.activate()
+            model.select()
 
-      $button.popover 'hide'
+      do hidePopovers
 
       false
 
     $form.find(':text').focus().val value
 
-  promptEdit: (e) ->
-    return if not @model?
-
-    @promptDomain e, edit: yes
-
-  removeScript: ->
+  removeSnippet: ->
     return if not @model?
 
     model = @model
-    model.deactivate().done ->
+    model.deselect().done ->
       model.destroy()
 
   togglePrompt: (e) ->
@@ -404,29 +406,25 @@ ScriptControls = Backbone.View.extend
     if @model?
       $modelButtons.removeClass 'disabled'
     else
-      $modelButtons.addClass('disabled').popover 'hide'
+      $modelButtons.addClass 'disabled'
 
-# Menu item which, when selected, makes the underlying script *active*, enabling the user to manage
-# it and modify it's code.
-ScriptItem = Backbone.View.extend
+      do hidePopovers
+
+# Menu item which, when selected, enables the user to manage and modify the code of the underlying
+# snippet.
+SnippetItem = Backbone.View.extend
 
   tagName: 'li'
 
   template: _.template '<a><%= host %></a>'
 
   events:
-    'click a': 'activate'
+    'click a': 'toggleSelection'
 
   initialize: ->
     @listenTo @model, 'destroy', @remove
     @listenTo @model, 'modified', @modified
-    @listenTo @model, 'change:active change:host', @render
-
-  activate: (e) ->
-    if e.ctrlKey
-      @model.deactivate()
-    else unless @$el.hasClass 'active'
-      @model.activate()
+    @listenTo @model, 'change:host change:selected', @render
 
   modified: (changed) ->
     if changed
@@ -437,22 +435,26 @@ ScriptItem = Backbone.View.extend
   render: ->
     @$el.html @template @model.attributes
 
-    if @model.get 'active'
+    if @model.get 'selected'
       @$el.addClass 'active'
     else
-      @$el.removeClass 'active'
+      @$el.removeClass 'active modified'
 
     this
 
-# A menu of scripts that allows the user to easily manage them.
-ScriptsList = Backbone.View.extend
+  toggleSelection: (e) ->
+    if e.ctrlKey
+      @model.deselect()
+    else unless @$el.hasClass 'active'
+      @model.select()
 
-  tagName: 'ul'
+# A menu of snippets that allows the user to easily manage them.
+SnippetsList = Backbone.View.extend
 
-  className: 'nav nav-pills nav-stacked'
+  el: '#snippets_list'
 
   addOne: (model) ->
-    @$el.append new ScriptItem({ model }).render().$el
+    @$el.append new SnippetItem({ model }).render().$el
 
   addAll: ->
     @collection.each @addOne, this
@@ -466,19 +468,18 @@ ScriptsList = Backbone.View.extend
 
     this
 
-# The primary view for managing scripts.
-ScriptsView = Backbone.View.extend
+# The primary view for managing snippets.
+SnippetsView = Backbone.View.extend
 
-  el: '#scripts_tab'
+  el: '#snippets_tab'
 
   initialize: ->
-    @controls = new ScriptControls { @collection }
-    @list     = new ScriptsList { @collection }
+    @controls = new SnippetControls { @collection }
+    @list     = new SnippetsList { @collection }
 
   render: ->
     @controls.render()
-
-    @$('#scripts_list').append @list.render().$el
+    @list.render()
 
     this
 
@@ -508,10 +509,19 @@ activateTooltips = (selector) ->
       container: $this.attr('data-container') or 'body'
       placement: $this.attr('data-placement') or 'top'
 
+# Hide all visibile popovers and remove them from the DOM with the option to exclude specific
+# `exceptions`.
+hidePopovers = (exceptions) ->
+  $toggles = $ '.js-popover-toggle'
+  $toggles = $toggles.not except if except?
+
+  $toggles.popover 'hide'
+  $('.popover').remove()
+
 # Options page setup
 # ------------------
 
-options = window.options = new class Options
+page = window.page = new class Options
 
   # Create a new instance of `Options`.
   constructor: ->
@@ -529,28 +539,32 @@ options = window.options = new class Options
     { @version } = chrome.runtime.getManifest()
 
     # Load the configuration data from the file before storing it locally.
-    $.getJSON chrome.extension.getURL('configuration.json'), (@config) =>
+    chrome.runtime.sendMessage { type: 'config' }, (@config) =>
+      # Map the mode groups now to save the configuration data from being loaded again by
+      # `Snippets.fetch`.
+      Snippet.mapModeGroups @config.editor.modeGroups
+
       # Add the user feedback feature to the page.
       loadFeedback @config.options.userVoice
 
       # Begin initialization.
       i18n.traverse()
 
-      # Retrieve all singleton instances as well as the collection for user-created scripts.
+      # Retrieve all singleton instances as well as the collection for user-created snippets.
       models.fetch (result) =>
-        { settings, editorSettings, scripts } = result
+        { settings, editorSettings, snippets } = result
 
         # Create views for the important models and collections.
         @editor   = new EditorView(settings: editorSettings).render()
         @settings = new SettingsView(model: settings).render()
-        @scripts  = new ScriptsView(collection: scripts).render()
+        @snippets = new SnippetsView(collection: snippets).render()
 
-        # Ensure that views are updated accordingly when scripts are activated and deactivated.
-        scripts.on 'activate deactivate', (script) =>
-          if script.get 'active' then @update script else do @update
+        # Ensure that views are updated accordingly when snippets are selected/deselected.
+        snippets.on 'selected deselected', (snippet) =>
+          if snippet.get 'selected' then @update snippet else do @update
 
-        activeScript = scripts.findWhere { active: yes }
-        @update activeScript if activeScript
+        selectedSnippet = snippets.findWhere selected: yes
+        @update selectedSnippet if selectedSnippet
 
         # Ensure the current year is displayed throughout, where appropriate.
         $('.js-insert-year').html "#{new Date().getFullYear()}"
@@ -581,9 +595,9 @@ options = window.options = new class Options
         # Ensure that form submissions don't reload the page.
         $('form:not([target="_blank"])').on 'submit', -> false
 
-        # Ensure that popovers are closed when the Esc key is pressed anywhere.
+        # Ensure that popovers are closed when the `Esc` key is pressed anywhere.
         $(document).on 'keydown', (e) ->
-          $('.js-popover-toggle').popover 'hide' if e.keyCode is 27
+          do hidePopovers if e.keyCode is 27
 
         # Support *goto* navigation elements that change the current scroll position when clicked.
         $('[data-goto]').on 'click', ->
@@ -594,21 +608,21 @@ options = window.options = new class Options
         $('footer a[href*="neocotic.com"]').on 'click', ->
           analytics.track 'Footer', 'Clicked', 'Homepage'
 
-        # Setup and configure the donation button in the footer.
+        # Setup and configure donation buttons.
         $('#donation input[name="hosted_button_id"]').val @config.options.payPal
         $('.js-donate').on 'click', ->
           $(this).tooltip 'hide'
 
           $('#donation').submit()
 
-          analytics.track 'Footer', 'Clicked', 'Donate'
+          analytics.track 'Donate', 'Clicked'
 
         do activateTooltips
 
-  # Update the primary views with the active `script` provided.
-  update: (script) ->
-    @editor.update script
-    @scripts.update script
+  # Update the primary views with the selected `snippet` provided.
+  update: (snippet) ->
+    @editor.update snippet
+    @snippets.update snippet
 
-# Initialize `options` when the DOM is ready.
-$ -> options.init()
+# Initialize the `page` when the DOM is ready.
+$ -> page.init()
