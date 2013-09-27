@@ -115,7 +115,7 @@ module.exports = (grunt) ->
         tasks: [ 'clean:build', 'copy:build' ]
 
       buildStyles:
-        files: [ 'src/css/**', 'src/less**' ]
+        files: [ 'src/css/**', 'src/less/**' ]
         tasks: [ 'clean:buildStyles', 'copy:buildStyles', 'less' ]
 
       buildScripts:
