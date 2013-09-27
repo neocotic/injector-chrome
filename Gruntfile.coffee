@@ -110,7 +110,7 @@ module.exports = (grunt) ->
           """
 
     watch:
-      html:
+      build:
         files: [ 'src/**', '!src/css/**', '!src/js/**' ]
         tasks: [ 'clean:build', 'copy:build' ]
 
