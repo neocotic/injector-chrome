@@ -28,7 +28,8 @@ models.Snippets.fetch (snippets) ->
 
   # Inject `<style>` elements for each style, containing its (potentially compiled) CSS.
   unless _.isEmpty styles
-    $head = $ 'head'
+    $head  = $ 'head'
+    parser = new less.Parser
 
     applyStyle = (code) ->
       $head.append $ '<style>', html: code
@@ -37,10 +38,10 @@ models.Snippets.fetch (snippets) ->
       mode = style.get 'mode'
       code = style.get 'code'
 
-      if mode is 'less' then less.render code, (error, css) ->
+      if mode is 'less' then parser.parse code, (error, tree) ->
         throw error if error
 
-        applyStyle css
+        applyStyle tree.toCSS()
       else
         applyStyle code
 
