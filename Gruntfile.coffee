@@ -15,8 +15,9 @@ module.exports = (grunt) ->
     pkg
 
     clean:
-      build:      'bin/*'
-      buildAfter: [ 'bin/less/', 'bin/coffee/' ]
+      build:        [ 'bin/_locales/**', 'bin/fonts/**', 'bin/*.json', 'bin/*.html' ]
+      buildStyles:  'bin/css/*'
+      buildScripts: 'bin/js/*'
 
       dist:      'dist/*'
       distAfter: 'dist/temp/'
@@ -39,7 +40,19 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    [ '**', '!coffee/*' ]
+        src:    [ '_locales/**', 'fonts/**', '*.json', '*.html' ]
+        dest:   'bin/'
+
+      buildStyles:
+        expand: yes
+        cwd:    'src/'
+        src:    [ 'css/**' ]
+        dest:   'bin/'
+
+      buildScripts:
+        expand: yes
+        cwd:    'src/'
+        src:    [ 'js/**' ]
         dest:   'bin/'
 
       dist:
@@ -96,6 +109,19 @@ module.exports = (grunt) ->
 
           """
 
+    watch:
+      html:
+        files: [ 'src/**', '!src/css/**', '!src/js/**' ]
+        tasks: [ 'clean:build', 'copy:build' ]
+
+      buildStyles:
+        files: [ 'src/css/**' ]
+        tasks: [ 'clean:buildStyles', 'copy:buildStyles', 'less' ]
+
+      buildScripts:
+        files: [ 'src/js/**' ]
+        tasks: [ 'clean:buildScripts', 'copy:buildScripts', 'coffee' ]
+
   }
 
   # Tasks
@@ -106,8 +132,11 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build', [
     'clean:build'
+    'clean:buildScripts'
+    'clean:buildStyles'
     'copy:build'
-    'clean:buildAfter'
+    'copy:buildScripts'
+    'copy:buildStyles'
     'coffee'
     'less'
   ]
@@ -127,7 +156,7 @@ module.exports = (grunt) ->
     'docco'
   ]
 
-  grunt.registerTask 'default', ['build']
+  grunt.registerTask 'default', [ 'build' ]
 
   # Remove all of the long message descriptions and placeholder examples as they're not required by
   # users and Chrome Web Store has a size limit for locale files.

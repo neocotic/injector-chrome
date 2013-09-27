@@ -27,12 +27,19 @@
       "all_frames": true
     }
   ],
-  "options_page": "html/options.html",
+  "browser_action": {
+    "default_title": "__MSG_name__"
+  },
+  "options_page": "options.html",
   "permissions": [
     "<all_urls>",
     "tabs",
     "storage",
     "unlimitedStorage"
   ],
+  "background": {
+    "scripts": [ "js/event.js" ],
+    "persistent": false
+  },
   "version": "1.0.0"
 }

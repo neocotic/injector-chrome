@@ -165,8 +165,8 @@ EditorSettings = Backbone.View.extend
     $themes = @$ '#editor_theme optgroup'
     _.each options.config.editor.themes, (theme) =>
       $themes.append @template
-        $html:  i18n.get "editor_theme_#{theme}"
-        $value: theme
+        html:  i18n.get "editor_theme_#{theme}"
+        value: theme
 
     @listenTo @model, """
       change:indentSize
@@ -588,7 +588,7 @@ options = window.options = new class Options
 
           unless parent.hasClass 'active'
             parent.addClass('active').siblings().removeClass 'active'
-            $(target).show().siblings('.tab').hide()
+            $(target).removeClass('hide').siblings('.tab').addClass 'hide'
 
             id = nav.attr 'id'
             settings.save(tab: id).then ->

@@ -2,55 +2,36 @@
 // (c) 2013 Alasdair Mercer  
 // Freely distributable under the MIT license
 
-.transition(@transition) {
-  -webkit-transition: @transition;
-     -moz-transition: @transition;
-       -o-transition: @transition;
-          transition: @transition;
-}
-
 body {
-  padding-top: 60px;
-  padding-bottom: 10px;
-
-  @media (max-width: 979px) {
-    padding-top: 0;
-  }
+  padding-top: 50px;
+  position: relative;
 }
 
 a {
   cursor: pointer;
 }
-
-abbr[data-original-title] {
+abbr {
   cursor: help;
-  border-bottom: 1px dotted #ddd;
+  border-bottom: 1px dotted #999;
 }
 
-.navbar-fixed-top .brand {
-  padding-right: 0;
-  padding-left: 0;
-  margin-left: 20px;
-  float: right;
-  font-weight: bold;
-  color: black;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125); 
-  .transition(all .2s linear);
+.tab {
+  margin-top: 40px;
+}
+
+.form-inline-group {
+  margin-bottom: 15px;
 }
 
 .popover {
-  form, .control-group {
+  form, .form-group {
     margin: 0;
   }
 }
 
-.donation {
-  display: inline;
+form.donation {
+  display: inline-block;
   margin: 0;
-
-  .btn {
-    margin: -4px 0 0 12px;
-  }
 }
 
 #editor {
@@ -58,6 +39,30 @@ abbr[data-original-title] {
   border: 1px solid lightgrey;
   margin: auto;
   height: 200px;
+}
+
+// .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle)
+#scripts_controls .btn {
+  @media (max-width: 991px) {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+
+    &:first-child:not(:last-child):not(.dropdown-toggle) {
+      border-bottom-left-radius: 3px;
+      border-top-left-radius: 3px;
+    }
+
+    &:last-child:not(:first-child),
+    &.dropdown-toggle:not(:first-child) {
+      border-bottom-right-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding: 1px 5px;
+  }
 }
 
 #scripts_list .modified {
