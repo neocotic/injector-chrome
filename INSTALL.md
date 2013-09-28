@@ -29,7 +29,7 @@ Follow these steps to build [Injector][];
 
 ### Important
 
-If you're planning on contributing to [Injetor][] please do **NOT** update the distributable file
+If you're planning on contributing to [Injector][] please do **NOT** update the distributable file
 or documentation (steps 6 and 7 respectively) when submitting a pull request. We will not accept
 pull requests when these files have been changed as we run these ourselves when creating a new
 release.
