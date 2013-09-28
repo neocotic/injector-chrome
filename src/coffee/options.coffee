@@ -217,6 +217,7 @@ EditorView = Backbone.View.extend
 
   initialize: ->
     @ace = ace.edit 'editor'
+    @ace.setReadOnly not @model?
     @ace.setShowPrintMargin no
     @ace.getSession().on 'change', =>
       @model.trigger 'modified', @hasUnsavedChanges(), @ace.getValue() if @model?
