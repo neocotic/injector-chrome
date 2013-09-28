@@ -139,6 +139,7 @@ EditorModes = Backbone.View.extend
     mode   = if @model? then @model.get 'mode'
     mode or= Snippet.defaultMode
 
+    @$el.prop 'disabled', not @model?
     @$("option[value='#{mode}']").prop 'selected', yes
 
     do @updateMode
@@ -198,11 +199,11 @@ EditorSettings = Backbone.View.extend
 
     this
 
-  update: ->
-    $indentSize = @$ '#editor_indent_size'
-    $lineWrap   = @$ '#editor_line_wrap'
-    $softTabs   = @$ '#editor_soft_tabs'
-    $theme      = @$ '#editor_theme'
+  update: (model) ->
+    $indentSize = @$('#editor_indent_size').prop 'disabled', not model?
+    $lineWrap   = @$('#editor_line_wrap').prop 'disabled', not model?
+    $softTabs   = @$('#editor_soft_tabs').prop 'disabled', not model?
+    $theme      = @$('#editor_theme').prop 'disabled', not model?
 
     @model.save
       indentSize: parseInt $indentSize.val(), 0
@@ -250,6 +251,7 @@ EditorView = Backbone.View.extend
     @ace.setValue @model?.get('code') or ''
     @ace.gotoLine 0
 
+    @settings.update @model
     @controls.update @model
     @modes.update @model
 
