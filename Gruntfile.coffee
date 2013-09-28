@@ -15,9 +15,10 @@ module.exports = (grunt) ->
     pkg
 
     clean:
-      build:        [ 'bin/_locales/**', 'bin/fonts/**', 'bin/*.json', 'bin/*.html' ]
-      buildStyles:  'bin/css/*'
-      buildScripts: 'bin/js/*'
+      build:        [ 'bin/_locales/**', 'bin/vendor/**', 'bin/*.json', 'bin/*.html' ]
+      buildAll:     'bin/*'
+      buildStyles:  'bin/less/*'
+      buildScripts: 'bin/coffee/*'
 
       dist:      'dist/*'
       distAfter: 'dist/temp/'
@@ -40,7 +41,7 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    [ '_locales/**', 'fonts/**', '*.json', '*.html' ]
+        src:    [ '_locales/**', 'vendor/**', '*.json', '*.html' ]
         dest:   'bin/'
 
       buildStyles:
@@ -111,7 +112,7 @@ module.exports = (grunt) ->
 
     watch:
       build:
-        files: [ 'src/_locales/**', 'src/fonts/**', 'src/*.json', 'src/*.html' ]
+        files: [ 'src/_locales/**', 'src/vendor/**', 'src/*.json', 'src/*.html' ]
         tasks: [ 'clean:build', 'copy:build' ]
 
       buildStyles:
@@ -131,9 +132,7 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks dependency
 
   grunt.registerTask 'build', [
-    'clean:build'
-    'clean:buildScripts'
-    'clean:buildStyles'
+    'clean:buildAll'
     'copy:build'
     'copy:buildScripts'
     'copy:buildStyles'

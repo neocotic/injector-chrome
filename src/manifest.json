@@ -14,12 +14,12 @@
     },
     {
       "js": [
-        "js/vendor/jquery.js",
-        "js/vendor/underscore.js",
-        "js/vendor/backbone.js",
-        "js/vendor/backbone.chromestorage.js",
-        "js/vendor/coffee-script.js",
-        "js/vendor/less.js",
+        "vendor/js/jquery.min.js",
+        "vendor/js/underscore-min.js",
+        "vendor/js/backbone-min.js",
+        "vendor/js/backbone.chromestorage.min.js",
+        "vendor/js/coffee-script.min.js",
+        "vendor/js/less.min.js",
         "js/models.js",
         "js/injector.js"
       ],
@@ -40,7 +40,7 @@
   ],
   "background": {
     "scripts": [
-      "js/vendor/jquery.js",
+      "vendor/js/jquery.min.js",
       "js/events.js"
     ],
     "persistent": false
