@@ -2,6 +2,8 @@
 // (c) 2013 Alasdair Mercer  
 // Freely distributable under the MIT license
 
+@editorHeight: 335px;
+
 body {
   padding-top: 50px;
   position: relative;
@@ -33,7 +35,7 @@ abbr {
   position: relative !important;
   border: 1px solid #ccc;
   margin: auto;
-  height: 200px;
+  height: @editorHeight;
 }
 
 #snippets_controls .btn {
@@ -60,10 +62,16 @@ abbr {
 }
 
 #snippets_list {
-  height: 200px;
-  overflow: auto;
+  height: @editorHeight;
+  overflow-x: hidden;
+  overflow-y: auto;
 
-  .modified {
+  li > a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  li.modified {
     font-style: italic;
   }
 }

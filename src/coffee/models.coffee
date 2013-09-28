@@ -61,7 +61,7 @@ settingsLookup = null
 Settings = models.Settings = Backbone.Model.extend {
 
   defaults:
-    tab:       'general_nav'
+    tab:       'snippets_nav'
     analytics: yes
 
 }, {
@@ -158,6 +158,9 @@ Snippets = models.Snippets = Backbone.Collection.extend {
 
   model: Snippet
 
+  comparator: (snippet) ->
+    snippet.get 'host'
+
   group: (name) ->
     Snippets.group this, name
 
@@ -169,7 +172,9 @@ Snippets = models.Snippets = Backbone.Collection.extend {
       (snippets = new Snippets).fetch().then ->
         callback snippets
 
-  # TODO: Document
+  # Map the specified `snippets` based on their mode groups.  
+  # Optionally, when a group `name` is provided, only a list of the snippets that are associated
+  # with a mode under that group will be returned.
   group: (snippets, name) ->
     if name
       snippets.filter (snippet) ->

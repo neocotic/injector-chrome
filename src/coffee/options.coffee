@@ -369,7 +369,8 @@ SnippetControls = Backbone.View.extend
         $group.removeClass 'has-error'
 
         if options.edit
-          @model.save { host }
+          @model.save({ host }).done ->
+            page.snippets.list.sort()
         else
           base = if options.clone then @model else new Snippet
 
@@ -378,9 +379,8 @@ SnippetControls = Backbone.View.extend
             code: base.get('code') or ''
             mode: base.get('mode') or Snippet.defaultMode
           }, success: (model) ->
-            model.select()
-
-            page.snippets.list.showSelected()
+            model.select().done ->
+              page.snippets.list.sort().showSelected()
 
       do hidePopovers
 
@@ -445,12 +445,10 @@ SnippetItem = Backbone.View.extend
     this
 
   toggleSelection: (e) ->
-    if e.ctrlKey
+    if e.ctrlKey or e.metaKey and /^mac/i.test navigator.platform
       @model.deselect()
     else unless @$el.hasClass 'active'
       @model.select()
-
-      page.snippets.list.showSelected()
 
 # A menu of snippets that allows the user to easily manage them.
 SnippetsList = Backbone.View.extend
@@ -472,11 +470,17 @@ SnippetsList = Backbone.View.extend
 
     this
 
-  # TODO: Fix as currently not working
   showSelected: ->
-    $selectedItem = @$ 'li.active a'
+    $selectedItem = @$ 'li.active'
 
     @$el.scrollTop $selectedItem.offset().top - @$el.offset().top
+
+    this
+
+  sort: ->
+    @$el.append _.sortBy @$('li').detach(), 'textContent'
+
+    this
 
 # The primary view for managing snippets.
 SnippetsView = Backbone.View.extend
@@ -574,30 +578,31 @@ page = window.page = new class Options
           if snippet.get 'selected' then @update snippet else do @update
 
         selectedSnippet = snippets.findWhere selected: yes
-        if selectedSnippet
-          @update selectedSnippet
-
-          @snippets.list.showSelected()
+        @update selectedSnippet if selectedSnippet
 
         # Ensure the current year is displayed throughout, where appropriate.
         $('.js-insert-year').html "#{new Date().getFullYear()}"
 
         # Bind tab selection event to all tabs.
-        initialTabChange = yes
+        initialSnippetDisplay = initialTabChange = yes
         $('a[data-tabify]').on 'click', ->
-          target = $(this).data 'tabify'
-          nav    = $ "header.navbar .nav a[data-tabify='#{target}']"
-          parent = nav.parent 'li'
+          target  = $(this).data 'tabify'
+          $nav    = $ "header.navbar .nav a[data-tabify='#{target}']"
+          $parent = $nav.parent 'li'
 
-          unless parent.hasClass 'active'
-            parent.addClass('active').siblings().removeClass 'active'
+          unless $parent.hasClass 'active'
+            $parent.addClass('active').siblings().removeClass 'active'
             $(target).removeClass('hide').siblings('.tab').addClass 'hide'
 
-            id = nav.attr 'id'
+            id = $nav.attr 'id'
             settings.save(tab: id).then ->
-              unless initialTabChange
-                id = _.capitalize id.match(/(\S*)_nav$/)[1]
-                analytics.track 'Tabs', 'Changed', id
+              id = _.capitalize id.match(/(\S*)_nav$/)[1]
+
+              analytics.track 'Tabs', 'Changed', id unless initialTabChange
+
+              if id is 'Snippets' and initialSnippetDisplay
+                initialSnippetDisplay = no
+                page.snippets.list.showSelected()
 
               initialTabChange = no
               $(document.body).scrollTop 0
