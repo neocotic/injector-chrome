@@ -1,0 +1,51 @@
+<!DOCTYPE html>  <html> <head>   <title>injector.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="analytics.html">                 analytics.coffee               </a>                                           <a class="source" href="events.html">                 events.coffee               </a>                                           <a class="source" href="i18n.html">                 i18n.coffee               </a>                                           <a class="source" href="injector.html">                 injector.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               injector.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/injector">Injector</a> <br />
+(c) 2013 Alasdair Mercer <br />
+Freely distributable under the MIT license</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Snippet Injector</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Execute the given code. <br />
+The code is provided as an unnamed argument to avoid it being included in the scope of the
+execution.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">executeScript = </span><span class="nf">-&gt;</span>
+  <span class="nb">eval</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Attempt to retrieve each <code>Snippet</code> for the current host domain and inject them as safely as
+possible.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">models</span><span class="p">.</span><span class="nx">Snippets</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(snippets) -&gt;</span>
+  <span class="nv">host      = </span><span class="nx">location</span><span class="p">.</span><span class="nx">host</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^www\./</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+  <span class="nv">snippets  = </span><span class="nx">snippets</span><span class="p">.</span><span class="nx">where</span> <span class="p">{</span> <span class="nx">host</span> <span class="p">}</span>
+  <span class="nv">variables = </span><span class="p">[</span>
+    <span class="s">&#39;Backbone&#39;</span>
+    <span class="s">&#39;CoffeeScript&#39;</span>
+    <span class="s">&#39;less&#39;</span>
+    <span class="s">&#39;chrome&#39;</span>
+    <span class="s">&#39;models&#39;</span>
+  <span class="p">]</span>
+
+  <span class="p">{</span> <span class="nx">scripts</span><span class="p">,</span> <span class="nx">styles</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">models</span><span class="p">.</span><span class="nx">Snippets</span><span class="p">.</span><span class="nx">group</span> <span class="nx">snippets</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Inject <code>&lt;style&gt;</code> elements for each style, containing its (potentially compiled) CSS.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span> <span class="nx">styles</span>
+    <span class="nv">$head  = </span><span class="nx">$</span> <span class="s">&#39;head&#39;</span>
+    <span class="nv">parser = </span><span class="k">new</span> <span class="nx">less</span><span class="p">.</span><span class="nx">Parser</span>
+
+    <span class="nv">applyStyle = </span><span class="nf">(code) -&gt;</span>
+      <span class="nx">$head</span><span class="p">.</span><span class="nx">append</span> <span class="nx">$</span> <span class="s">&#39;&lt;style&gt;&#39;</span><span class="p">,</span> <span class="nv">html: </span><span class="nx">code</span>
+
+    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">styles</span><span class="p">,</span> <span class="nf">(style) -&gt;</span>
+      <span class="nv">mode = </span><span class="nx">style</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;mode&#39;</span>
+      <span class="nv">code = </span><span class="nx">style</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;code&#39;</span>
+
+      <span class="k">if</span> <span class="nx">mode</span> <span class="o">is</span> <span class="s">&#39;less&#39;</span> <span class="k">then</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">code</span><span class="p">,</span> <span class="nf">(error, tree) -&gt;</span>
+        <span class="k">throw</span> <span class="nx">error</span> <span class="k">if</span> <span class="nx">error</span>
+
+        <span class="nx">applyStyle</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">toCSS</span><span class="p">()</span>
+      <span class="k">else</span>
+        <span class="nx">applyStyle</span> <span class="nx">code</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Execute the JavaScript code for each script. <br />
+In some cases, the code may have been a result of a compilation.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span> <span class="nx">snippets</span>
+    <span class="nv">js = </span><span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">snippets</span><span class="p">,</span> <span class="nf">(snippet) -&gt;</span>
+      <span class="nv">mode = </span><span class="nx">snippet</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;mode&#39;</span>
+      <span class="nv">code = </span><span class="nx">snippet</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;code&#39;</span>
+      <span class="nv">code = </span><span class="nx">CoffeeScript</span><span class="p">.</span><span class="nx">compile</span> <span class="nx">code</span> <span class="k">if</span> <span class="nx">mode</span> <span class="o">is</span> <span class="s">&#39;less&#39;</span>
+
+      <span class="s">&quot;&quot;&quot;</span>
+<span class="s">        (function() {</span>
+<span class="s">          </span><span class="si">#{</span><span class="nx">code</span><span class="si">}</span><span class="s"></span>
+<span class="s">        })();</span>
+<span class="s">      &quot;&quot;&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Execute the specified code with as limited a scope as possible, removing all unnecessary or
+dangerous global variables.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">variables</span><span class="p">,</span> <span class="nf">(variable) -&gt;</span>
+      <span class="nb">window</span><span class="p">[</span><span class="nx">variable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">undefined</span>
+
+    <span class="nx">executeScript</span> <span class="nx">js</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

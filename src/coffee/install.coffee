@@ -1,11 +1,11 @@
-# [Script Runner](http://neocotic.com/script-runner)  
+# [Injector](http://neocotic.com/injector)  
 # (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license
 
 # Inline installation
 # -------------------
 
-# Script Runner's extension ID is currently using.
+# Injector's extension ID is currently using.
 id         = chrome.i18n.getMessage '@@extension_id'
 # Names of the classes to be added to the targeted elements.
 newClasses = [ 'disabled' ]

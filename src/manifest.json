@@ -1,7 +1,7 @@
 {
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "homepage_url": "http://neocotic.com/script-runner",
+  "homepage_url": "http://neocotic.com/injector",
   "default_locale": "en",
   "manifest_version": 2,
   "minimum_chrome_version": "22",
@@ -10,7 +10,7 @@
     {
       "js": [ "js/install.js" ],
       "run_at": "document_end",
-      "matches": [ "http://*.neocotic.com/script-runner/*" ]
+      "matches": [ "http://*.neocotic.com/injector/*" ]
     },
     {
       "js": [

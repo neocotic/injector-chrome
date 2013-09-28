@@ -220,7 +220,7 @@
     "description": "Header of the Miscellaneous section."
   },
   "name": {
-    "message": "Script Runner",
+    "message": "Injector",
     "description": "Name of the extension."
   },
   "reset_button": {

@@ -1,10 +1,10 @@
 {
-  "name": "script-runner-chrome",
-  "description": "Google Chrome extension that allows you to create scripts that are executed when you visit specific websites",
+  "name": "injector-chrome",
+  "description": "Chrome extension that allows you to create custom code snippets to be injected into any website",
   "version": "1.0.0",
-  "homepage": "http://neocotic.com/script-runner",
+  "homepage": "http://neocotic.com/injector",
   "bugs": {
-    "url": "https://github.com/neocotic/script-runner-chrome/issues"
+    "url": "https://github.com/neocotic/injector-chrome/issues"
   },
   "author": {
     "url": "http://neocotic.com",
@@ -13,22 +13,25 @@
   },
   "licenses": [
     {
-      "url": "https://raw.github.com/neocotic/script-runner-chrome/master/LICENSE.md",
+      "url": "https://raw.github.com/neocotic/injector-chrome/master/LICENSE.md",
       "type": "MIT"
     }
   ],
   "private": true,
   "keywords": [
-    "script",
-    "runner",
+    "injector",
+    "snippet",
+    "code",
     "browser",
     "chrome",
     "extension",
     "javascript",
-    "coffeescript"
+    "coffeescript",
+    "css",
+    "less"
   ],
   "repository": {
-    "url": "git://github.com/neocotic/script-runner-chrome.git",
+    "url": "git://github.com/neocotic/injector-chrome.git",
     "type": "git"
   },
   "devDependencies": {

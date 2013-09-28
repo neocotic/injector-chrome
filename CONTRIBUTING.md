@@ -50,7 +50,7 @@ problem when applied.
 
 # Additional Resources
 
-* [Script Runner repository](https://github.com/neocotic/script-runner-chrome)
-* [Issue tracker](https://github.com/neocotic/script-runner-chrome/issues)
+* [Injector repository](https://github.com/neocotic/injector-chrome)
+* [Issue tracker](https://github.com/neocotic/injector-chrome/issues)
 * [General GitHub documentation](http://help.github.com)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests)

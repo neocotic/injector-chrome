@@ -32,7 +32,7 @@ module.exports = (grunt) ->
           src:    '**/*'
         ]
         options:
-          archive: 'dist/ScriptRunner.zip'
+          archive: 'dist/Injector.zip'
           level:   9
           pretty:  yes
 
@@ -105,7 +105,7 @@ module.exports = (grunt) ->
         ]
         options:
           banner: """
-            /*! Script Runner v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License */
+            /*! Injector v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License */
 
           """
 

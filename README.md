@@ -1,15 +1,15 @@
-     ____                               __        ____
-    /\  _`\                  __        /\ \__    /\  _`\
-    \ \,\L\_\    ___   _ __ /\_\  _____\ \ ,_\   \ \ \L\ \  __  __    ___     ___      __   _ __
-     \/_\__ \   /'___\/\`'__\/\ \/\ '__`\ \ \/    \ \ ,  / /\ \/\ \ /' _ `\ /' _ `\  /'__`\/\`'__\
-       /\ \L\ \/\ \__/\ \ \/ \ \ \ \ \L\ \ \ \_    \ \ \\ \\ \ \_\ \/\ \/\ \/\ \/\ \/\  __/\ \ \/
-       \ `\____\ \____\\ \_\  \ \_\ \ ,__/\ \__\    \ \_\ \_\ \____/\ \_\ \_\ \_\ \_\ \____\\ \_\
-        \/_____/\/____/ \/_/   \/_/\ \ \/  \/__/     \/_/\/ /\/___/  \/_/\/_/\/_/\/_/\/____/ \/_/
-                                    \ \_\
-                                     \/_/
+     ______                               __
+    /\__  _\            __               /\ \__
+    \/_/\ \/     ___   /\_\     __    ___\ \ ,_\   ___   _ __
+       \ \ \   /' _ `\ \/\ \  /'__`\ /'___\ \ \/  / __`\/\`'__\
+        \_\ \__/\ \/\ \ \ \ \/\  __//\ \__/\ \ \_/\ \L\ \ \ \/
+        /\_____\ \_\ \_\_\ \ \ \____\ \____\\ \__\ \____/\ \_\
+        \/_____/\/_/\/_/\ \_\ \/____/\/____/ \/__/\/___/  \/_/
+                       \ \____/
+                        \/___/
 
-[Script Runner][] is a browser extension that allows you to create scripts that are executed when
-you visit specific websites.
+[Injector][] is a browser extension that allows you to create custom code snippets to be injected
+into any website.
 
 This is the version that runs on the [Google Chrome][] web browser.
 
@@ -27,9 +27,9 @@ If that doesn't help, feel free to follow me on Twitter, [@neocotic][].
 However, if you want more information or examples of using this extension please visit our
 homepage;
 
-http://neocotic.com/script-runner
+http://neocotic.com/injector
 
 [@neocotic]: https://twitter.com/neocotic
 [google chrome]: https://www.google.com/chrome
 [help desk]: https://scriptrunner.uservoice.com
-[script runner]: http://neocotic.com/script-runner
+[injector]: http://neocotic.com/injector
