@@ -53,7 +53,7 @@ loadFeedback = (options) ->
       forum_id:      options.forum
       tab_label:     i18n.get 'feedback_button'
       tab_color:     '#333'
-      tab_position:  'middle-left'
+      tab_position:  'middle-right'
       tab_inverted:  yes
     }
   ]
@@ -380,6 +380,8 @@ SnippetControls = Backbone.View.extend
           }, success: (model) ->
             model.select()
 
+            page.snippets.list.showSelected()
+
       do hidePopovers
 
       false
@@ -448,6 +450,8 @@ SnippetItem = Backbone.View.extend
     else unless @$el.hasClass 'active'
       @model.select()
 
+      page.snippets.list.showSelected()
+
 # A menu of snippets that allows the user to easily manage them.
 SnippetsList = Backbone.View.extend
 
@@ -467,6 +471,12 @@ SnippetsList = Backbone.View.extend
     do @addAll
 
     this
+
+  # TODO: Fix as currently not working
+  showSelected: ->
+    $selectedItem = @$ 'li.active a'
+
+    @$el.scrollTop $selectedItem.offset().top - @$el.offset().top
 
 # The primary view for managing snippets.
 SnippetsView = Backbone.View.extend
@@ -564,7 +574,10 @@ page = window.page = new class Options
           if snippet.get 'selected' then @update snippet else do @update
 
         selectedSnippet = snippets.findWhere selected: yes
-        @update selectedSnippet if selectedSnippet
+        if selectedSnippet
+          @update selectedSnippet
+
+          @snippets.list.showSelected()
 
         # Ensure the current year is displayed throughout, where appropriate.
         $('.js-insert-year').html "#{new Date().getFullYear()}"
