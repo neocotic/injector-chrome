@@ -26,8 +26,73 @@ activateTab = (url, callback) ->
       chrome.tabs.create { windowId: win.id, url, active: yes }, (tab) ->
         callback? tab
 
+# Compilers
+# ---------
+
+# Reusable instance of the LESS parser used to compile LESS code in to CSS.
+lessParser = null
+
+# Compilers that map to supported editor modes.  
+# Each compiler should compile into either JavaScript or CSS code, depending on the nature of the
+# language.
+compilers =
+
+  # Compile the CoffeeScript `code` provided in to JavaScript.
+  coffee: (code, callback) ->
+    try
+      code = CoffeeScript.compile code, bare: yes
+      callback null, code
+    catch error
+      callback error
+
+  # Compile the LESS `code` provided in to CSS.
+  less: (code, callback) ->
+    lessParser ?= new less.Parser
+    lessParser.parse code, (error, tree) ->
+      if error then callback error
+      else          callback null, tree.toCSS()
+
+# Compile the code of the specified `snippet`, if required.  
+# If the `snippet` mode does not require compilation, the `code` will be passed back as-is.
+compileSnippet = (snippet, callback) ->
+  code = snippet.get 'code'
+  mode = snippet.get 'mode'
+
+  if compilers[mode]
+    compilers[mode] code, callback
+  else
+    callback null, code
+
 # Events
 # ------
+
+# Retrieve the contents of the specified JSON `file` that is relative to this extension.
+fetchJSON = (file, callback) ->
+  $.getJSON(chrome.extension.getURL(file))
+    .done (data) ->
+      callback null, data
+    .fail (jqXHR, textStatus, error) ->
+      callback error
+
+  true
+
+# Retrieve all of the snippets that are associated with a given `host`.  
+# The snippets are grouped based on their modes (languages) and compiled so that their code can be
+# quickly and easily injected in to the requesting page.
+fetchSnippets = (host, callback) ->
+  models.Snippets.fetch (snippets) ->
+    snippets            = snippets.where { host }
+    { scripts, styles } = models.Snippets.group snippets
+
+    async.parallel
+      css: (done) ->
+        async.mapSeries styles, compileSnippet, done
+
+      js: (done) ->
+        async.mapSeries scripts, compileSnippet, done
+    , callback
+
+  true
 
 # Open the Options page when the browser action is clicked.
 chrome.browserAction.onClicked.addListener (tab) ->
@@ -35,9 +100,14 @@ chrome.browserAction.onClicked.addListener (tab) ->
 
 # Add message listener to communicate with other pages within the extension.
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
-  # Retrieve the data configuration from the configuration file.
-  if request.type is 'config'
-    $.getJSON chrome.extension.getURL('configuration.json'), (config) ->
-      sendResponse config
+  # Wrapper for incorporating the asynchronous pattern of the `async` library.
+  callback = (error, args...) ->
+    throw error if error?
 
-  true
+    sendResponse args...
+
+  # The request needs to be handled differently based on its type.
+  switch request.type
+    when 'config'    then fetchJSON 'configuration.json', callback
+    when 'injection' then fetchSnippets request.host, callback
+    else false

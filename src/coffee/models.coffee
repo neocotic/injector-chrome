@@ -143,7 +143,7 @@ Snippet = models.Snippet = Backbone.Model.extend {
   # Nothing happens if `Snippet.modeGroups` has already been populated.
   populateModeGroups: (callback) ->
     if _.isEmpty @modeGroups
-      chrome.runtime.sendMessage { type: 'config' }, (config) =>
+      $.getJSON chrome.extension.getURL('configuration.json'), (config) =>
         @mapModeGroups config.editor.modeGroups
 
         do callback

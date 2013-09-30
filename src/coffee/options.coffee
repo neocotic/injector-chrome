@@ -599,11 +599,10 @@ page = window.page = new class Options
 
             id = $nav.attr 'id'
             settings.save(tab: id).then ->
-              id = _.capitalize id.match(/(\S*)_nav$/)[1]
+              unless initialTabChange
+                analytics.track 'Tabs', 'Changed', _.capitalize id.match(/(\S*)_nav$/)[1]
 
-              analytics.track 'Tabs', 'Changed', id unless initialTabChange
-
-              if id is 'Snippets' and initialSnippetDisplay
+              if id is 'snippets' and initialSnippetDisplay
                 initialSnippetDisplay = no
                 page.snippets.list.showSelected()
 
