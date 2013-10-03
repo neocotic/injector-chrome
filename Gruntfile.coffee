@@ -15,7 +15,13 @@ module.exports = (grunt) ->
     pkg
 
     clean:
-      build:        [ 'bin/_locales/**', 'bin/vendor/**', 'bin/*.json', 'bin/*.html' ]
+      build:        [
+        'bin/_locales/**'
+        'bin/img/**'
+        'bin/vendor/**'
+        'bin/*.json'
+        'bin/*.html'
+      ]
       buildAll:     'bin/*'
       buildStyles:  'bin/less/*'
       buildScripts: 'bin/coffee/*'
@@ -41,7 +47,7 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    [ '_locales/**', 'vendor/**', '*.json', '*.html' ]
+        src:    [ '_locales/**', 'img/**', 'vendor/**', '*.json', '*.html' ]
         dest:   'bin/'
 
       buildStyles:
@@ -112,7 +118,7 @@ module.exports = (grunt) ->
 
     watch:
       build:
-        files: [ 'src/_locales/**', 'src/vendor/**', 'src/*.json', 'src/*.html' ]
+        files: [ 'src/_locales/**', 'src/img/**', 'src/vendor/**', 'src/*.json', 'src/*.html' ]
         tasks: [ 'clean:build', 'copy:build' ]
 
       buildStyles:
