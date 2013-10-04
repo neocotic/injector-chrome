@@ -8,17 +8,19 @@
                        \ \____/
                         \/___/
 
+<img align="right" width="128" height="128" src="https://raw.github.com/neocotic/injector-chrome/master/src/img/icon128.png">
+
 [Injector][] is a browser extension that allows you to create custom code snippets to be injected
 into any website.
 
 This is the version that runs on the [Google Chrome][] web browser.
 
-## Help Desk
+### Help Desk
 
 If you have any problems with this extension or would like give us your feedback you can do so on
 our [Help Desk][].
 
-## Questions?
+### Questions?
 
 Take a look at `docs/*.html` to try and get a better understanding of what the code is doing.
 
