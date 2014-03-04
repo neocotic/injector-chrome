@@ -1,5 +1,5 @@
 # [Injector](http://neocotic.com/injector)  
-# (c) 2013 Alasdair Mercer  
+# (c) 2014 Alasdair Mercer  
 # Freely distributable under the MIT license
 
 # Analytics
@@ -26,7 +26,7 @@ analytics = window.analytics =
     ga.async = 'async'
     ga.src   = analytics.source
 
-    script = document.getElementsByTagName('script')[0]
+    script = document.querySelector 'script'
     script.parentNode.insertBefore ga, script
 
   # Remove analytics from the current page.

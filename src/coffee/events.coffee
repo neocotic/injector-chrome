@@ -1,5 +1,5 @@
 # [Injector](http://neocotic.com/injector)  
-# (c) 2013 Alasdair Mercer  
+# (c) 2014 Alasdair Mercer  
 # Freely distributable under the MIT license
 
 # Helpers
@@ -68,7 +68,7 @@ compileSnippet = (snippet, callback) ->
 
 # Retrieve the contents of the specified JSON `file` that is relative to this extension.
 fetchJSON = (file, callback) ->
-  $.getJSON(chrome.extension.getURL(file))
+  $.getJSON chrome.extension.getURL file
     .done (data) ->
       callback null, data
     .fail (jqXHR, textStatus, error) ->

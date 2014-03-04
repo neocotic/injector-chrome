@@ -1,5 +1,5 @@
 # [Injector](http://neocotic.com/injector)  
-# (c) 2013 Alasdair Mercer  
+# (c) 2014 Alasdair Mercer  
 # Freely distributable under the MIT license
 
 # Snippet Injector
@@ -13,22 +13,24 @@ chrome.runtime.sendMessage { host, type: 'injection' }, (response) ->
   head        = document.querySelector 'head'
   { css, js } = response
 
-  # Insert `<style>` elements in to the DOM for each CSS code.
-  for code in css
-    el = document.createElement 'style'
-    el.innerHTML = code
+  # Create an element with the given name and insert it in to the document `<head>`.
+  # The new element will contain only the `html` provided.
+  appendNewElement = (tagName, html) ->
+    el = document.createElement tagName
+    el.innerHTML = html
 
     head.appendChild el
+
+  # Insert `<style>` elements in to the DOM for each CSS code.
+  for code in css
+    appendNewElement 'style', code
 
   # Insert `<script>` elements in to the DOM for each JavaScript code.  
   # Scripts are executed within a closed function to prevent variables accidentally becoming
   # global and potentially causing conflicts with libraries used on the current page.
   for code in js
-    el = document.createElement 'script'
-    el.innerHTML = """
+    appendNewElement 'script', """
       (function() {
-        #{code}
+      #{code}
       })();
     """
-
-    head.appendChild el
