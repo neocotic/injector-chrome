@@ -103,7 +103,9 @@ fetchSnippets = (host, callback) ->
 
 # Open the Options page when the browser action is clicked.
 chrome.browserAction.onClicked.addListener (tab) ->
-  activateTab chrome.extension.getURL 'options.html'
+  {options_page} = chrome.runtime.getManifest()
+
+  activateTab chrome.extension.getURL options_page
 
 # Add message listener to communicate with other pages within the extension.
 chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->

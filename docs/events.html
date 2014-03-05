@@ -397,7 +397,9 @@ quickly and easily injected in to the requesting page.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>chrome.browserAction.onClicked.addListener <span class="hljs-function"><span class="hljs-params">(tab)</span> -&gt;</span>
-  activateTab chrome.extension.getURL <span class="hljs-string">'options.html'</span></pre></div></div>
+  {options_page} = chrome.runtime.getManifest()
+
+  activateTab chrome.extension.getURL options_page</pre></div></div>
             
         </li>
         
