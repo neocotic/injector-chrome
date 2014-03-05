@@ -25,6 +25,12 @@ abbr {
   margin-bottom: 15px;
 }
 
+.form-toolbar select:not(:only-child) {
+  @media (max-width: 991px) {
+    margin-top: 5px;
+  }
+}
+
 .popover {
   form, .form-group {
     margin: 0;
@@ -36,6 +42,12 @@ abbr {
   border: 1px solid #ccc;
   margin: auto;
   height: @editorHeight;
+}
+
+#editor_settings {
+  @media (min-width: 992px) {
+    text-align: right;
+  }
 }
 
 #snippets_controls .btn {
@@ -73,5 +85,11 @@ abbr {
 
   li.modified {
     font-style: italic;
+  }
+}
+
+#uvTab {
+  @media (max-width: 991px) {
+    display: none;
   }
 }

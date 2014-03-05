@@ -1,16 +1,20 @@
-# [Injector](http://neocotic.com/injector)  
-# (c) 2014 Alasdair Mercer  
+# [Injector](http://neocotic.com/injector)
+#
+# (c) 2014 Alasdair Mercer
+#
 # Freely distributable under the MIT license
 
 # Models
 # ------
 
-# Expose all models (and collections) that are used throughout the extension.  
+# Expose all models (and collections) that are used throughout the extension.
+#
 # These are intentionally not added to the global object (i.e. `window`) to avoid cluttering that
 # *namespace*.
 models = window.models =
 
-  # Convenience short-hand method for retrieving all common models and collections.  
+  # Convenience short-hand method for retrieving all common models and collections.
+  #
   # The `callback` function will be passed a map of the fetched instances.
   fetch: (callback) ->
     Settings.fetch (settings) ->
@@ -21,66 +25,40 @@ models = window.models =
 # Editor
 # ------
 
-# Singleton instance of the `EditorSettingsLookup` collection.
-editorSettingsLookup = null
-
 # The settings associated with the Ace editor.
-EditorSettings = models.EditorSettings = Backbone.Model.extend {
+EditorSettings = models.EditorSettings = Injector.SingletonModel.extend {
 
+  # Store the editor settings remotely.
+  storage:
+    name: 'EditorSettings'
+    type: 'sync'
+
+  # Default attributes for the editor settings.
   defaults:
     indentSize: 2
     lineWrap:   no
     softTabs:   yes
-    theme:      'github'
-
-}, {
-
-  # Retrieve the singleton instance of the `EditorSettings` model.
-  fetch: (callback) ->
-    (editorSettingsLookup ?= new EditorSettingsLookup).fetch().then ->
-      editorSettingsLookup.add new EditorSettings unless editorSettingsLookup.length
-
-      callback editorSettingsLookup.first()
+    theme:      'chrome'
 
 }
-
-# Lookup collection used for retrieving a singleton instance of the `EditorSettings` model.
-EditorSettingsLookup = Backbone.Collection.extend
-
-  chromeStorage: new Backbone.ChromeStorage 'EditorSettings', 'sync'
-
-  model: EditorSettings
 
 # Settings
 # --------
 
-# Singleton instance of the `SettingsLookup` collection.
-settingsLookup = null
-
 # The general settings that can be configured (or are related to) the options page.
-Settings = models.Settings = Backbone.Model.extend {
+Settings = models.Settings = Injector.SingletonModel.extend {
 
+  # Store the general settings remotely.
+  storage:
+    name: 'Settings'
+    type: 'sync'
+
+  # Default attributes for the general settings.
   defaults:
-    tab:       'snippets_nav'
     analytics: yes
-
-}, {
-
-  # Retrieve the singleton instance of the `Settings` model.
-  fetch: (callback) ->
-    (settingsLookup ?= new SettingsLookup).fetch().then ->
-      settingsLookup.add new Settings unless settingsLookup.length
-
-      callback settingsLookup.first()
+    tab:       'snippets_nav'
 
 }
-
-# Lookup collection used for retrieving a singleton instance of the `Settings` model.
-SettingsLookup = Backbone.Collection.extend
-
-  chromeStorage: new Backbone.ChromeStorage 'Settings', 'sync'
-
-  model: Settings
 
 # Snippets
 # --------
@@ -88,39 +66,66 @@ SettingsLookup = Backbone.Collection.extend
 # Default Ace editor mode/language.
 DEFAULT_MODE = 'javascript'
 
-# A snippet to be injected into a specific host.  
+# A snippet to be injected into a specific host.
+#
 # The snippet's code can be written in a number of supported languages and can be either be a
 # script to be executed on the page or contain styles to be applied to it.
-Snippet = models.Snippet = Backbone.Model.extend {
+Snippet = models.Snippet = Injector.Model.extend {
 
+  # Default attributes for a snippet.
   defaults:
     code:     ''
     mode:     DEFAULT_MODE
     selected: no
 
+  # Attribute mutators for a snippet.
+  mutators:
+    # Retrieve the group associated with the mode of this snippet.
+    group:
+      get: ->
+        _.find Snippet.modeGroups, @inGroup, @
+      transient: yes
+
+    # Determine the name of the group associated with the mode of this snippet.
+    groupName:
+      get: ->
+        _.chain Snippet.modeGroups
+        .keys()
+        .find @inGroup, @
+        .value()
+      transient: yes
+
+  # Deselect this snippet, but only if it is currently selected.
   deselect: ->
-    return $.Deferred().resolve() unless @get 'selected'
+    if @get 'selected'
+      @save selected: no
+      .done =>
+        @trigger 'deselected', @
+    else
+      $.Deferred().resolve()
 
-    @save(selected: no).done =>
-      @trigger 'deselected', this
+  # Indicate whether or not the mode of this snippet falls under a group with the given `name`.
+  inGroup: (group, name) ->
+    name = group if _.isString group
 
-  groupName: ->
-    _.chain(Snippet.modeGroups).keys().find(@inGroup, this).value()
-
-  inGroup: (name) ->
     _.contains Snippet.modeGroups[name], @get 'mode'
 
+  # Select this snippet, but only if it is *not* already selected.
   select: ->
-    return $.Deferred().resolve() if @get 'selected'
+    if @get 'selected'
+      $.Deferred().resolve()
+    else
+      @save selected: yes
+      .done =>
+        @collection?.chain()
+        .without @
+        .invoke 'save', selected: no
 
-    @save(selected: yes).done =>
-      if @collection
-        @collection.chain().without(this).invoke 'save', selected: no
+        @trigger 'selected', @
 
-      @trigger 'selected', this
-
+  # Validate that the attributes of this snippet are valid.
   validate: (attributes) ->
-    { host, mode } = attributes
+    {host, mode} = attributes
 
     unless host
       'host is required'
@@ -129,17 +134,20 @@ Snippet = models.Snippet = Backbone.Model.extend {
 
 }, {
 
+  # Expose the default Ace editor mode/language publically.
   defaultMode: DEFAULT_MODE
 
   # Map of mode groups.
   modeGroups: {}
 
   # Add all of the mode `groups` that are provided in their object form.
+  #
+  # If a group already exists, it's original value will be overridden.
   mapModeGroups: (groups) ->
-    _.each groups, (group) =>
-      @modeGroups[group.name] = group.modes
+    @modeGroups[group.name] = group.modes for group in groups
 
-  # Populates the map of mode groups with the values from `configuration.json`.  
+  # Populates the map of mode groups with the values from the configuration file.
+  #
   # Nothing happens if `Snippet.modeGroups` has already been populated.
   populateModeGroups: (callback) ->
     if _.isEmpty @modeGroups
@@ -152,27 +160,34 @@ Snippet = models.Snippet = Backbone.Model.extend {
 }
 
 # Collection of snippets created by the user.
-Snippets = models.Snippets = Backbone.Collection.extend {
+Snippets = models.Snippets = Injector.Collection.extend {
 
-  chromeStorage: new Backbone.ChromeStorage 'Snippets', 'local'
+  # Store the snippets locally.
+  storage:
+    name: 'Snippets'
+    type: 'local'
 
+  # Model class contained by this collection.
   model: Snippet
 
-  comparator: (snippet) ->
-    snippet.get 'host'
+  # Sort snippets based on the `host` attribute.
+  comparator: 'host'
 
+  # List the snippets that are associated with a mode under the group witht the given `name`.
   group: (name) ->
-    Snippets.group this, name
+    Snippets.group @, name
 
 }, {
 
-  # Retrieve the **all** instances of `Snippet`.
+  # Retrieve **all** `Snippet` models.
   fetch: (callback) ->
     Snippet.populateModeGroups ->
-      (snippets = new Snippets).fetch().then ->
-        callback snippets
+      collection = new Snippets
+      collection.fetch().then ->
+        callback collection
 
-  # Map the specified `snippets` based on their mode groups.  
+  # Map the specified `snippets` based on their mode groups.
+  #
   # Optionally, when a group `name` is provided, only a list of the snippets that are associated
   # with a mode under that group will be returned.
   group: (snippets, name) ->
@@ -182,7 +197,7 @@ Snippets = models.Snippets = Backbone.Collection.extend {
     else
       groups = {}
 
-      _.each Snippet.modeGroups, (modes, name) =>
+      for name, modes of Snippet.modeGroups
         groups[name] = snippets.filter (snippet) ->
           snippet.inGroup name
 

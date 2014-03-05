@@ -1,51 +1,633 @@
-<!DOCTYPE html>  <html> <head>   <title>injector.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="analytics.html">                 analytics.coffee               </a>                                           <a class="source" href="events.html">                 events.coffee               </a>                                           <a class="source" href="i18n.html">                 i18n.coffee               </a>                                           <a class="source" href="injector.html">                 injector.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               injector.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/injector">Injector</a> <br />
-(c) 2013 Alasdair Mercer <br />
-Freely distributable under the MIT license</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Snippet Injector</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Execute the given code. <br />
-The code is provided as an unnamed argument to avoid it being included in the scope of the
-execution.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">executeScript = </span><span class="nf">-&gt;</span>
-  <span class="nb">eval</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Attempt to retrieve each <code>Snippet</code> for the current host domain and inject them as safely as
-possible.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">models</span><span class="p">.</span><span class="nx">Snippets</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(snippets) -&gt;</span>
-  <span class="nv">host      = </span><span class="nx">location</span><span class="p">.</span><span class="nx">host</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^www\./</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-  <span class="nv">snippets  = </span><span class="nx">snippets</span><span class="p">.</span><span class="nx">where</span> <span class="p">{</span> <span class="nx">host</span> <span class="p">}</span>
-  <span class="nv">variables = </span><span class="p">[</span>
-    <span class="s">&#39;Backbone&#39;</span>
-    <span class="s">&#39;CoffeeScript&#39;</span>
-    <span class="s">&#39;less&#39;</span>
-    <span class="s">&#39;chrome&#39;</span>
-    <span class="s">&#39;models&#39;</span>
-  <span class="p">]</span>
+<!DOCTYPE html>
 
-  <span class="p">{</span> <span class="nx">scripts</span><span class="p">,</span> <span class="nx">styles</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">models</span><span class="p">.</span><span class="nx">Snippets</span><span class="p">.</span><span class="nx">group</span> <span class="nx">snippets</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Inject <code>&lt;style&gt;</code> elements for each style, containing its (potentially compiled) CSS.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span> <span class="nx">styles</span>
-    <span class="nv">$head  = </span><span class="nx">$</span> <span class="s">&#39;head&#39;</span>
-    <span class="nv">parser = </span><span class="k">new</span> <span class="nx">less</span><span class="p">.</span><span class="nx">Parser</span>
+<html>
+<head>
+  <title>injector.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="analytics.html">
+                analytics.coffee
+              </a>
+            
+              
+              <a class="source" href="content.html">
+                content.coffee
+              </a>
+            
+              
+              <a class="source" href="events.html">
+                events.coffee
+              </a>
+            
+              
+              <a class="source" href="i18n.html">
+                i18n.coffee
+              </a>
+            
+              
+              <a class="source" href="injector.html">
+                injector.coffee
+              </a>
+            
+              
+              <a class="source" href="install.html">
+                install.coffee
+              </a>
+            
+              
+              <a class="source" href="models.html">
+                models.coffee
+              </a>
+            
+              
+              <a class="source" href="options.html">
+                options.coffee
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>injector.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/injector">Injector</a></p>
+<p>(c) 2014 Alasdair Mercer</p>
+<p>Freely distributable under the MIT license</p>
 
-    <span class="nv">applyStyle = </span><span class="nf">(code) -&gt;</span>
-      <span class="nx">$head</span><span class="p">.</span><span class="nx">append</span> <span class="nx">$</span> <span class="s">&#39;&lt;style&gt;&#39;</span><span class="p">,</span> <span class="nv">html: </span><span class="nx">code</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="injector">Injector</h2>
 
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">styles</span><span class="p">,</span> <span class="nf">(style) -&gt;</span>
-      <span class="nv">mode = </span><span class="nx">style</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;mode&#39;</span>
-      <span class="nv">code = </span><span class="nx">style</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;code&#39;</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Primary global namespace.</p>
 
-      <span class="k">if</span> <span class="nx">mode</span> <span class="o">is</span> <span class="s">&#39;less&#39;</span> <span class="k">then</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">code</span><span class="p">,</span> <span class="nf">(error, tree) -&gt;</span>
-        <span class="k">throw</span> <span class="nx">error</span> <span class="k">if</span> <span class="nx">error</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Injector = <span class="hljs-built_in">window</span>.Injector = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Retrieve the value of the given <code>property</code> from the “parent” of the context class.</p>
+<p>If that value is a function, then invoke it with the additional <code>args</code> and retrieve the return
+value of that call instead.</p>
 
-        <span class="nx">applyStyle</span> <span class="nx">tree</span><span class="p">.</span><span class="nx">toCSS</span><span class="p">()</span>
-      <span class="k">else</span>
-        <span class="nx">applyStyle</span> <span class="nx">code</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Execute the JavaScript code for each script. <br />
-In some cases, the code may have been a result of a compilation.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span> <span class="nx">snippets</span>
-    <span class="nv">js = </span><span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">snippets</span><span class="p">,</span> <span class="nf">(snippet) -&gt;</span>
-      <span class="nv">mode = </span><span class="nx">snippet</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;mode&#39;</span>
-      <span class="nv">code = </span><span class="nx">snippet</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;code&#39;</span>
-      <span class="nv">code = </span><span class="nx">CoffeeScript</span><span class="p">.</span><span class="nx">compile</span> <span class="nx">code</span> <span class="k">if</span> <span class="nx">mode</span> <span class="o">is</span> <span class="s">&#39;less&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">getSuper</span> = <span class="hljs-params">(property, args...)</span> -&gt;</span>
+  result = <span class="hljs-property">@constructor</span>.__super__[property]
 
-      <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        (function() {</span>
-<span class="s">          </span><span class="si">#{</span><span class="nx">code</span><span class="si">}</span><span class="s"></span>
-<span class="s">        })();</span>
-<span class="s">      &quot;&quot;&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Execute the specified code with as limited a scope as possible, removing all unnecessary or
-dangerous global variables.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">variables</span><span class="p">,</span> <span class="nf">(variable) -&gt;</span>
-      <span class="nb">window</span><span class="p">[</span><span class="nx">variable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">undefined</span>
+  <span class="hljs-keyword">if</span> _.isFunction result <span class="hljs-keyword">then</span> result.apply @, args <span class="hljs-keyword">else</span> result</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Setup the Chrome storage for the specified <code>model</code> (may also be a collection) based on the
+<code>storage</code> property, if it exists.</p>
 
-    <span class="nx">executeScript</span> <span class="nx">js</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">setupStorage</span> = <span class="hljs-params">(model)</span> -&gt;</span>
+  {name, type} = model.storage ? {}
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+  <span class="hljs-keyword">if</span> name <span class="hljs-keyword">and</span> type
+    model.chromeStorage = <span class="hljs-keyword">new</span> Backbone.ChromeStorage name, type</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="model">Model</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Base model to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Model = Injector.Model = Backbone.Model.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Override <code>initialize</code> to hook in our own custom model initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
+    setupStorage @
+
+    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Allow models to access “parent” properties easily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">super</span>: getSuper
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>The identifier used by single models.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>singletonId = <span class="hljs-string">'singleton'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>A singleton model where implementations should only have one persisted instance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SingletonModel = Injector.SingletonModel = Injector.Model.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Override <code>initialize</code> to set the singleton identifier.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>: <span class="hljs-function"><span class="hljs-params">(attributes, options)</span> -&gt;</span>
+    <span class="hljs-property">@set</span> <span class="hljs-property">@idAttribute</span>, singletonId, options
+
+    Injector.<span class="hljs-attribute">Model</span>::initialize.apply @, arguments
+
+}, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Retrieve a singleton instance of the model.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fetch</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    model = <span class="hljs-keyword">new</span> @
+    model.fetch().<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
+      callback model
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h2 id="collection">Collection</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Base collection to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Collection = Injector.Collection = Backbone.Collection.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>The default model for a collection. This should be overridden in most cases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Model</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Override <code>initialize</code> to hook in our own custom collection initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
+    setupStorage @
+
+    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Allow collections to access “parent” properties easily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">super</span>: getSuper
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="view">View</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Base view to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>View = Injector.View = Backbone.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Override <code>initialize</code> to hook in our own custom view initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@options</span>)</span> -&gt;</span>
+    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Indicate whether or not this view has an underlying collection associated with it.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">hasCollection</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@collection</span>?</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Indicate whether or not this view has an underlying model associated with it.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">hasModel</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@model</span>?</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Allow views to access “parent” properties easily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">super</span>: getSuper
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h2 id="router">Router</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Base router to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Router = Injector.Router = Backbone.Router.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Override <code>initialize</code> to hook in our own custom model initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Allow routers to access “parent” properties easily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">super</span>: getSuper
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2 id="history">History</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Base history implementation to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>History = Injector.History = Backbone.History.extend</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Allow history implementations to access “parent” properties easily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">super</span>: getSuper</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

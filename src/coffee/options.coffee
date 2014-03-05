@@ -1,24 +1,13 @@
-# [Injector](http://neocotic.com/injector)  
-# (c) 2014 Alasdair Mercer  
+# [Injector](http://neocotic.com/injector)
+#
+# (c) 2014 Alasdair Mercer
+#
 # Freely distributable under the MIT license
 
 # TODO: Capture more analytics
 
 # Extract the models and collections that are required by the options page.
-{ EditorSettings, EditorSettings, Snippet, Snippets } = models
-
-# Utilities
-# ---------
-
-# Extend `_` with our utility functions.
-_.mixin
-
-  # Transform the given string into title case.
-  capitalize: (str) ->
-    return str unless str
-
-    str.replace /\w+/g, (word) ->
-      word[0].toUpperCase() + word[1..].toLowerCase()
+{EditorSettings, EditorSettings, Snippet, Snippets} = models
 
 # Feedback
 # --------
@@ -37,7 +26,7 @@ loadFeedback = (options) ->
   uv.src   = "https://widget.uservoice.com/#{options.id}.js"
 
   # Insert the script element into the DOM.
-  script = document.getElementsByTagName('script')[0]
+  script = document.querySelector 'script'
   script.parentNode.insertBefore uv, script
 
   # Configure the widget as it's loading.
@@ -66,113 +55,146 @@ loadFeedback = (options) ->
 
 # View containing buttons for saving/resetting the code of the selected snippet from the contents
 # of the Ace editor.
-EditorControls = Backbone.View.extend
+EditorControls = Injector.View.extend {
 
+  # Overlay the editor controls on top of this element.
   el: '#editor_controls'
 
+  # Register DOM events for the editor controls
   events:
-    'click #reset_button':  'reset'
-    'click #update_button': 'save'
+    'click #reset_button:not(:disabled)':  'reset'
+    'click #update_button:not(:disabled)': 'save'
 
+  # Render the editor controls.
   render: ->
     do @update
 
-    this
+    @
 
-  reset: (e) ->
-    return if $(e.currentTarget).hasClass('disabled') or not @model?
+  # Reset the Ace editor so that it is empty.
+  #
+  # Nothing happens if there is no snippet selected.
+  reset: ->
+    return unless @hasModel()
 
-    @options.ace.setValue @model.get 'code'
-    @options.ace.gotoLine 0
+    {ace} = @options
 
-  save: (e) ->
-    $button = $ e.currentTarget
+    ace.setValue @model.get 'code'
+    ace.gotoLine 0
 
-    return if $button.hasClass('disabled') or not @model?
+  # Save the contents of the Ace editor as the snippet code.
+  save: (event) ->
+    return unless @hasModel()
 
-    code = @options.ace.getValue()
+    $button = $ event.currentTarget
+    code    = @options.ace.getValue()
 
-    @model.save({ code }).then =>
+    $button.button 'loading'
+
+    @model.save { code }
+    .then =>
       @model.trigger 'modified', no, code
 
-      $button.html(i18n.get 'update_button_alt').delay(800).queue ->
-        $button.html(i18n.get 'update_button').dequeue()
+      $button.button 'reset'
 
+  # Update the state of the editor controls.
   update: (@model) ->
     $buttons = @$ '#reset_button, #update_button'
 
-    if @model?
-      $buttons.removeClass 'disabled'
-    else
-      $buttons.addClass 'disabled'
+    # Ensure that specific buttons are only enabled when a snippet is selected.
+    $buttons.prop 'disabled', not @hasModel()
+
+}
 
 # A selection of available modes/languages that are supported by this extension for injecting
 # snippets.
-EditorModes = Backbone.View.extend
+EditorModes = Injector.View.extend {
 
+  # Overlay the editor modes on top of this element.
   el: '#editor_modes'
 
-  groupTemplate: _.template '<optgroup label="<%- label %>"></optgroup>'
+  # Template for mode group option groups.
+  groupTemplate: _.template """
+    <optgroup label="<%- ctx.label %>"></optgroup>
+  """
 
-  modeTemplate: _.template '<option value="<%- value %>"><%= html %></option>'
+  # Template for mode options.
+  modeTemplate: _.template """
+    <option value="<%- ctx.value %>"><%= ctx.html %></option>
+  """
 
+  # Register DOM events for the editor modes.
   events:
-    'change': 'updateMode'
+    'change': 'save'
 
+  # Render the editor modes.
   render: ->
-    _.each Snippet.modeGroups, (modes, name) =>
-      $group = $ @groupTemplate
-        label: i18n.get "editor_mode_group_#{name}"
+    for name, modes of Snippet.modeGroups
+      do (name, modes) =>
+        $group = $ @groupTemplate
+          label: i18n.get "editor_mode_group_#{name}"
 
-      _.each modes, (mode) =>
-        $group.append @modeTemplate
-          html:  i18n.get "editor_mode_#{mode}"
-          value: mode
+        for mode in modes
+          $group.append @modeTemplate
+            html:  i18n.get "editor_mode_#{mode}"
+            value: mode
 
-      @$el.append $group
+        @$el.append $group
 
     do @update
 
-    this
+    @
 
-  update: (@model) ->
-    mode   = if @model? then @model.get 'mode'
-    mode or= Snippet.defaultMode
-
-    @$el.prop 'disabled', not @model?
-    @$("option[value='#{mode}']").prop 'selected', yes
-
-    do @updateMode
-
-  updateMode: ->
+  # Save the selected mode as the snippet mode.
+  save: ->
     mode = @$el.val()
 
     @options.ace.getSession().setMode "ace/mode/#{mode}"
 
-    @model.save { mode } if @model?
+    @model.save { mode } if @hasModel()
+
+  # Update the state of the editor modes.
+  update: (@model) ->
+    mode   = @model?.get 'mode'
+    mode or= Snippet.defaultMode
+
+    @$el.prop 'disabled', not @hasModel()
+
+    @$("option[value='#{mode}']").prop 'selected', yes
+
+    do @save
+
+}
 
 # View containing options that allow the user to configure the Ace editor.
-EditorSettings = Backbone.View.extend
+EditorSettings = Injector.View.extend {
 
+  # Overlay the editor settings on top of this element.
   el: '#editor_settings'
 
-  template: _.template '<option value="<%- value %>"><%= html %></option>'
+  # Template for setting options.
+  template: _.template """
+    <option value="<%- ctx.value %>"><%= ctx.html %></option>
+  """
 
+  # Register DOM events for the editor settings.
   events:
     'change #editor_indent_size': 'update'
     'change #editor_line_wrap':   'update'
     'change #editor_soft_tabs':   'update'
     'change #editor_theme':       'update'
 
-  initialize: ->
-    $sizes = @$ '#editor_indent_size optgroup'
-    _.each page.config.editor.indentSizes, (size) =>
+  # Initialize the editor settings.
+  init: ->
+    $sizes  = @$ '#editor_indent_size optgroup'
+    $themes = @$ '#editor_theme optgroup'
+
+    for size in page.config.editor.indentSizes
       $sizes.append @template
         html:  size
         value: size
 
-    $themes = @$ '#editor_theme optgroup'
-    _.each page.config.editor.themes, (theme) =>
+    for theme in page.config.editor.themes
       $themes.append @template
         html:  i18n.get "editor_theme_#{theme}"
         value: theme
@@ -184,26 +206,29 @@ EditorSettings = Backbone.View.extend
       change:theme
     """, @render
 
+  # Render the editor settings.
   render: ->
     indentSize = @model.get 'indentSize'
     lineWrap   = @model.get 'lineWrap'
     softTabs   = @model.get 'softTabs'
     theme      = @model.get 'theme'
 
-    @$("""
+    @$ """
       #editor_indent_size option[value='#{indentSize}'],
       #editor_line_wrap   option[value='#{lineWrap}'],
       #editor_soft_tabs   option[value='#{softTabs}'],
       #editor_theme       option[value='#{theme}']
-    """).prop 'selected', yes
+    """
+    .prop 'selected', yes
 
-    this
+    @
 
+  # Update the state of the editor settings.
   update: (model) ->
-    $indentSize = @$('#editor_indent_size').prop 'disabled', not model?
-    $lineWrap   = @$('#editor_line_wrap').prop 'disabled', not model?
-    $softTabs   = @$('#editor_soft_tabs').prop 'disabled', not model?
-    $theme      = @$('#editor_theme').prop 'disabled', not model?
+    $indentSize = @$('#editor_indent_size').prop 'disabled', not @hasModel()
+    $lineWrap   = @$('#editor_line_wrap').prop 'disabled', not @hasModel()
+    $softTabs   = @$('#editor_soft_tabs').prop 'disabled', not @hasModel()
+    $theme      = @$('#editor_theme').prop 'disabled', not @hasModel()
 
     @model.save
       indentSize: parseInt $indentSize.val(), 0
@@ -211,17 +236,21 @@ EditorSettings = Backbone.View.extend
       softTabs:   $softTabs.val() is 'true'
       theme:      $theme.val()
 
-# Contains the Ace editor that allows the user to modify a snippet's code.
-EditorView = Backbone.View.extend
+}
 
+# Contains the Ace editor that allows the user to modify a snippet's code.
+EditorView = Injector.View.extend {
+
+  # Overlay the editor on top of this element.
   el: '#editor'
 
-  initialize: ->
+  # Initialize the editor.
+  init: ->
     @ace = ace.edit 'editor'
-    @ace.setReadOnly not @model?
+    @ace.setReadOnly not @hasModel()
     @ace.setShowPrintMargin no
     @ace.getSession().on 'change', =>
-      @model.trigger 'modified', @hasUnsavedChanges(), @ace.getValue() if @model?
+      @model.trigger 'modified', @hasUnsavedChanges(), @ace.getValue() if @hasModel()
 
     @settings = new EditorSettings { model: @options.settings }
     @controls = new EditorControls { @ace }
@@ -232,22 +261,25 @@ EditorView = Backbone.View.extend
       change:lineWrap
       change:softTabs
       change:theme
-    """, @updateSettings
+    """, @updateEditor
 
-    do @updateSettings
+    do @updateEditor
 
+  # Determine whether or not the contents of the Ace editor is different from the snippet code.
   hasUnsavedChanges: ->
-    @model? and @model.get('code') isnt @ace.getValue()
+    @ace.getValue() isnt @model?.get 'code'
 
+  # Render the editor.
   render: ->
     @settings.render()
     @controls.render()
     @modes.render()
 
-    this
+    @
 
+  # Update the state of the editor.
   update: (@model) ->
-    @ace.setReadOnly not @model?
+    @ace.setReadOnly not @hasModel()
     @ace.setValue @model?.get('code') or ''
     @ace.gotoLine 0
 
@@ -255,81 +287,102 @@ EditorView = Backbone.View.extend
     @controls.update @model
     @modes.update @model
 
-  updateSettings: ->
-    { settings } = @options
+  # Update the Ace editor with the selected options.
+  updateEditor: ->
+    {settings} = @options
+    aceSession = @ace.getSession()
 
-    @ace.getSession().setUseWrapMode settings.get 'lineWrap'
-    @ace.getSession().setUseSoftTabs settings.get 'softTabs'
-    @ace.getSession().setTabSize     settings.get 'indentSize'
+    aceSession.setUseWrapMode settings.get 'lineWrap'
+    aceSession.setUseSoftTabs settings.get 'softTabs'
+    aceSession.setTabSize     settings.get 'indentSize'
     @ace.setTheme "ace/theme/#{settings.get 'theme'}"
+
+}
 
 # Settings
 # --------
 
 # Allows the user to modify the general settings of the extension.
-GeneralSettingsView = Backbone.View.extend
+GeneralSettingsView = Injector.View.extend {
 
+  # Overlay the general settings on top of this element.
   el: '#general_tab'
 
+  # Register DOM events for the general settings.
   events:
-    'change #analytics': 'update'
+    'change #analytics': 'save'
 
-  initialize: ->
+  # Initialize the general settings.
+  init: ->
     @listenTo @model, 'change:analytics', @render
     @listenTo @model, 'change:analytics', @updateAnalytics
 
     do @updateAnalytics
 
+  # Render the general settings.
   render: ->
     @$('#analytics').prop 'checked', @model.get 'analytics'
 
-    this
+    @
 
-  update: ->
+  # Save the settings.
+  save: ->
     $analytics = @$ '#analytics'
 
     @model.save { analytics: $analytics.is ':checked' }
 
+  # Add or remove analytics from the page depending on settings.
   updateAnalytics: ->
     if @model.get 'analytics'
       analytics.add page.config.analytics
     else
       analytics.remove()
 
-# Parent view for all configurable settings.
-SettingsView = Backbone.View.extend
+}
 
+# Parent view for all configurable settings.
+SettingsView = Injector.View.extend {
+
+  # Overlay the settings on top of this element.
   el: 'body'
 
-  initialize: ->
+  # Initialize the settings.
+  init: ->
     @general = new GeneralSettingsView { @model }
 
+  # Render the settings.
   render: ->
     @general.render()
 
-    this
+    @
+
+}
 
 # Snippets
 # --------
 
 # View contains buttons used to control/manage the user's snippets.
-SnippetControls = Backbone.View.extend
+SnippetControls = Injector.View.extend {
 
+  # Overlay the snippet controls on top of this element.
   el: '#snippets_controls'
 
+  # Register DOM events for the snippet controls.
   events:
-    'show.bs.popover .btn':           'closeOtherPrompts'
-    'click #delete_menu .btn':        'closeOtherPrompts'
-    'click #add_button':              'togglePrompt'
-    'shown.bs.popover #add_button':   'promptAdd'
-    'click #edit_button':             'togglePrompt'
-    'shown.bs.popover #edit_button':  'promptEdit'
-    'click #clone_button':            'togglePrompt'
-    'shown.bs.popover #clone_button': 'promptClone'
-    'click #delete_menu .js-resolve': 'removeSnippet'
+    'show.bs.popover .btn':               'closeOtherPrompts'
+    'click #delete_menu .btn':            'closeOtherPrompts'
+    'click #add_button:not(:disabled)':   'togglePrompt'
+    'shown.bs.popover #add_button':       'promptAdd'
+    'click #edit_button:not(:disabled)':  'togglePrompt'
+    'shown.bs.popover #edit_button':      'promptEdit'
+    'click #clone_button:not(:disabled)': 'togglePrompt'
+    'shown.bs.popover #clone_button':     'promptClone'
+    'click #delete_menu .js-resolve':     'removeSnippet'
 
-  initialize: ->
-    @$('#add_button, #clone_button, #edit_button').popover
+  # Initialize the snippet controls.
+  init: ->
+    @$ '#add_button, #clone_button, #edit_button'
+    .popover
       html:      yes
       trigger:   'manual'
       placement: 'bottom'
@@ -342,37 +395,48 @@ SnippetControls = Backbone.View.extend
         </form>
       """
 
-  closeOtherPrompts: (e) ->
-    hidePopovers e.currentTarget
+  # Hide all popovers other than the one associated with the current target of the given `event`.
+  closeOtherPrompts: (event) ->
+    hidePopovers event.currentTarget
 
+  # Display the popover containing the form to add a new snippet.
   promptAdd: ->
     do @promptHost
 
+  # Display the popover containing the form to clone an existing snippet.
+  #
+  # Nothing happens if no snippet is active.
   promptClone: ->
-    return if not @model?
+    return unless @hasModel()
 
     @promptHost clone: yes
 
+  # Display the popover containing the form to edit an existing snippet.
+  #
+  # Nothing happens if no snippet is active.
   promptEdit: ->
-    return if not @model?
+    return unless @hasModel()
 
     @promptHost edit: yes
 
+  # Display the popover containing the form based on the specified `options`.
   promptHost: (options = {}) ->
     $form = $ '#edit_snippet'
     value = if options.clone or options.edit then @model.get 'host' else ''
 
-    $form.on 'submit', (e) =>
+    # Handle the form submission depending on the purpose of the prompt.
+    $form.on 'submit', =>
       $group = $form.find '.form-group'
       host   = $form.find(':text').val().replace /\s+/g, ''
 
-      if not host
+      unless host
         $group.addClass 'has-error'
       else
         $group.removeClass 'has-error'
 
         if options.edit
-          @model.save({ host }).done ->
+          @model.save { host }
+          .done ->
             page.snippets.list.sort()
         else
           base = if options.clone then @model else new Snippet
@@ -391,117 +455,162 @@ SnippetControls = Backbone.View.extend
 
     $form.find(':text').focus().val value
 
+  # Deselect and destroy the active snippet.
   removeSnippet: ->
-    return if not @model?
+    return unless @hasModel()
 
     model = @model
     model.deselect().done ->
       model.destroy()
 
-  togglePrompt: (e) ->
-    $button = $ e.currentTarget
+  # Toggle the display of the popover associated with the current target of the given `event`.
+  togglePrompt: (event) ->
+    $(event.currentTarget).popover 'toggle'
 
-    $button.popover 'toggle' unless $button.hasClass 'disabled'
-
+  # Update the state of the snippet controls.
   update: (@model) ->
     $modelButtons = @$ '#clone_button, #delete_menu .btn, #edit_button'
 
-    @$('#add_button').removeClass 'disabled'
+    @$('#add_button').prop 'disabled', no
+    $modelButtons.prop 'disabled', not @hasModel()
 
-    if @model?
-      $modelButtons.removeClass 'disabled'
-    else
-      $modelButtons.addClass 'disabled'
+    do hidePopovers unless @hasModel()
 
-      do hidePopovers
+}
 
 # Menu item which, when selected, enables the user to manage and modify the code of the underlying
 # snippet.
-SnippetItem = Backbone.View.extend
+SnippetItem = Injector.View.extend {
 
+  # Tag name for the element to be created for the snippet item.
   tagName: 'li'
 
-  template: _.template '<a><%= host %></a>'
+  # Template for the snippet item.
+  template: _.template '<a><%= ctx.host %></a>'
 
+  # Register DOM events for the snippet item.
   events:
-    'click a': 'toggleSelection'
+    'click a': 'updateSelection'
 
-  initialize: ->
+  # Initialize the snippet item.
+  init: ->
     @listenTo @model, 'destroy', @remove
     @listenTo @model, 'modified', @modified
     @listenTo @model, 'change:host change:selected', @render
 
+  # Highlight that the snippet code has been modified in the editor.
   modified: (changed) ->
     if changed
       @$el.addClass 'modified'
     else
       @$el.removeClass 'modified'
 
+  # Render the snippet item.
   render: ->
-    @$el.html @template @model.attributes
+    @$el.html @template @model.pick 'host'
 
     if @model.get 'selected'
       @$el.addClass 'active'
     else
       @$el.removeClass 'active modified'
 
-    this
+    @
 
-  toggleSelection: (e) ->
-    if e.ctrlKey or e.metaKey and /^mac/i.test navigator.platform
+  # Update the selected state of the snippet depending on the given `event`.
+  updateSelection: (event) ->
+    if event.ctrlKey or event.metaKey and /^mac/i.test navigator.platform
       @model.deselect()
     else unless @$el.hasClass 'active'
       @model.select()
 
-# A menu of snippets that allows the user to easily manage them.
-SnippetsList = Backbone.View.extend
+}
 
+# A menu of snippets that allows the user to easily manage them.
+SnippetsList = Injector.View.extend {
+
+  # Overlay the snippets list on top of this element.
   el: '#snippets_list'
 
-  addOne: (model) ->
-    @$el.append new SnippetItem({ model }).render().$el
+  # Create and add a `SnippetItem` for the specified `model`.
+  addItem: (model) ->
+    item = new SnippetItem { model }
 
-  addAll: ->
-    @collection.each @addOne, this
+    @items.push item
 
-  initialize: ->
-    @listenTo @collection, 'add', @addOne
-    @listenTo @collection, 'reset', @addAll
+    @$el.append item.render().$el
 
+    item
+
+  # Initialize the snippets list.
+  init: ->
+    @items = []
+
+    @listenTo @collection, 'add', @addItem
+    @listenTo @collection, 'reset', @resetItems
+
+  # Override `remove` to ensure that managed sub-views are removed as well.
+  remove: ->
+    do @removeItems
+
+    @super 'remove'
+
+  # Remove all managed sub-views.
+  removeItems: ->
+    @items.shift().remove() while @items.length > 0
+
+  # Render the snippets list.
   render: ->
-    do @addAll
+    do @resetItems
 
-    this
+    @
 
+  # Remove any existing managed sub-views before creating and adding new `SnippetItem` views for
+  # each snippet model in the collection.
+  resetItems: ->
+    do @removeItems
+
+    @collection.each @addItem, @
+
+  # Scroll to the selected snippet in the list.
   showSelected: ->
     $selectedItem = @$ 'li.active'
 
     @$el.scrollTop $selectedItem.offset().top - @$el.offset().top
 
-    this
+    @
 
+  # Detach each snippet item in the list and sort them based on their text contents before
+  # re-appending them.
   sort: ->
     @$el.append _.sortBy @$('li').detach(), 'textContent'
 
-    this
+    @
+
+}
 
 # The primary view for managing snippets.
-SnippetsView = Backbone.View.extend
+SnippetsView = Injector.View.extend {
 
+  # Overlay the snippets on top of this element.
   el: '#snippets_tab'
 
-  initialize: ->
+  # Initialize the snippets.
+  init: ->
     @controls = new SnippetControls { @collection }
     @list     = new SnippetsList { @collection }
 
+  # Render the snippets.
   render: ->
     @controls.render()
     @list.render()
 
-    this
+    @
 
+  # Update the state of the snippets.
   update: (model) ->
     @controls.update model
+
+}
 
 # Miscellaneous
 # -------------
@@ -511,16 +620,19 @@ activateTooltips = (selector) ->
   base = $ selector or document
 
   # Reset all previously treated tooltips.
-  base.find('[data-original-title]').each ->
-    $this = $ this
+  base.find '[data-original-title]'
+  .each ->
+    $this = $ @
 
-    $this.tooltip 'destroy'
-    $this.attr 'title', $this.attr 'data-original-title'
-    $this.removeAttr 'data-original-title'
+    $this
+    .tooltip 'destroy'
+    .attr 'title', $this.attr 'data-original-title'
+    .removeAttr 'data-original-title'
 
   # Apply tooltips to all relevant elements.
-  base.find('[title]').each ->
-    $this = $ this
+  base.find '[title]'
+  .each ->
+    $this = $ @
 
     $this.tooltip
       container: $this.attr('data-container') or 'body'
@@ -530,7 +642,7 @@ activateTooltips = (selector) ->
 # `exceptions`.
 hidePopovers = (exceptions) ->
   $toggles = $ '.js-popover-toggle'
-  $toggles = $toggles.not except if except?
+  $toggles = $toggles.not exceptions if exceptions?
 
   $toggles.popover 'hide'
   $('.popover').remove()
@@ -538,22 +650,28 @@ hidePopovers = (exceptions) ->
 # Options page setup
 # ------------------
 
-page = window.page = new class Options
+# Responsible for managing the options page.
+class OptionsPage
 
-  # Create a new instance of `Options`.
+  # The current version of the extension.
+  #
+  # This will be updated with the actual value during the page's initialization.
+  version: ''
+
+  # Create a new instance of `OptionsPage`.
   constructor: ->
-    @config  = {}
-    @version = ''
+    @config = {}
 
   # Public functions
   # ----------------
 
-  # Initialize the options page.  
+  # Initialize the options page.
+  #
   # This will involve inserting and configuring the UI elements as well as loading the current
   # settings.
   init: ->
     # It's nice knowing what version is running.
-    { @version } = chrome.runtime.getManifest()
+    {@version} = chrome.runtime.getManifest()
 
     # Load the configuration data from the file before storing it locally.
     chrome.runtime.sendMessage { type: 'config' }, (@config) =>
@@ -569,12 +687,17 @@ page = window.page = new class Options
 
       # Retrieve all singleton instances as well as the collection for user-created snippets.
       models.fetch (result) =>
-        { settings, editorSettings, snippets } = result
+        {settings, editorSettings, snippets} = result
 
         # Create views for the important models and collections.
-        @editor   = new EditorView(settings: editorSettings).render()
-        @settings = new SettingsView(model: settings).render()
-        @snippets = new SnippetsView(collection: snippets).render()
+        @editor   = new EditorView settings: editorSettings
+        @settings = new SettingsView model: settings
+        @snippets = new SnippetsView collection: snippets
+
+        # Render these new views.
+        @editor.render()
+        @settings.render()
+        @snippets.render()
 
         # Ensure that views are updated accordingly when snippets are selected/deselected.
         snippets.on 'selected deselected', (snippet) =>
@@ -588,8 +711,9 @@ page = window.page = new class Options
 
         # Bind tab selection event to all tabs.
         initialSnippetDisplay = initialTabChange = yes
+
         $('a[data-tabify]').on 'click', ->
-          target  = $(this).data 'tabify'
+          target  = $(@).data 'tabify'
           $nav    = $ "header.navbar .nav a[data-tabify='#{target}']"
           $parent = $nav.parent 'li'
 
@@ -598,7 +722,9 @@ page = window.page = new class Options
             $(target).removeClass('hide').siblings('.tab').addClass 'hide'
 
             id = $nav.attr 'id'
-            settings.save(tab: id).then ->
+
+            settings.save tab: id
+            .then ->
               unless initialTabChange
                 analytics.track 'Tabs', 'Changed', _.capitalize id.match(/(\S*)_nav$/)[1]
 
@@ -607,6 +733,7 @@ page = window.page = new class Options
                 page.snippets.list.showSelected()
 
               initialTabChange = no
+
               $(document.body).scrollTop 0
 
         # Reflect the previously persisted tab initially.
@@ -621,7 +748,7 @@ page = window.page = new class Options
 
         # Support *goto* navigation elements that change the current scroll position when clicked.
         $('[data-goto]').on 'click', ->
-          switch $(this).data 'goto'
+          switch $(@).data 'goto'
             when 'top' then $(document.body).scrollTop 0
 
         # Bind analytical tracking events to key footer buttons and links.
@@ -631,7 +758,7 @@ page = window.page = new class Options
         # Setup and configure donation buttons.
         $('#donation input[name="hosted_button_id"]').val @config.options.payPal
         $('.js-donate').on 'click', ->
-          $(this).tooltip 'hide'
+          $(@).tooltip 'hide'
 
           $('#donation').submit()
 
@@ -644,5 +771,7 @@ page = window.page = new class Options
     @editor.update snippet
     @snippets.update snippet
 
-# Initialize the `page` when the DOM is ready.
+# Create an global instance of `OptionsPage` and initialize it once the DOM is ready.
+page = window.page = new OptionsPage
+
 $ -> page.init()

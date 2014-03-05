@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>i18n.coffee</title>
+  <title>content.coffee</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -71,7 +71,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>i18n.coffee</h1>
+                  <h1>content.coffee</h1>
               </div>
           </li>
         
@@ -98,7 +98,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="compatibility">Compatibility</h2>
+              <h2 id="content-script">Content Script</h2>
 
             </div>
             
@@ -111,14 +111,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Although we could easily just use <code>int17</code> as-is, it’s probably best to integrate Chrome’s
-internationalization implementation as it’ll already be optimized using native code.</p>
-<p>For this reason, modify the internal classes of the <code>int17</code> library so that it interfaces with
-the Chrome API.</p>
+              <p>Derive the host name for the current page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>{Internationalization} = int17</pre></div></div>
+            <div class="content"><div class='highlight'><pre>host = location.host.replace <span class="hljs-regexp">/^www\./</span>, <span class="hljs-string">''</span></pre></div></div>
             
         </li>
         
@@ -129,16 +126,13 @@ the Chrome API.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Use <code>chrome.i18n.getMessage</code> to retrieve the localized message for the specified <code>name</code>.</p>
+              <p>Retrieve any JavaScript and CSS code that is to be injected into the current page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-attribute">Internationalization</span>::<span class="hljs-function"><span class="hljs-title">get</span> = <span class="hljs-params">(name, subs...)</span> -&gt;</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> name
-
-  message = chrome.i18n.getMessage name, subs
-
-  <span class="hljs-keyword">if</span> <span class="hljs-property">@escaping</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@_</span>.escape message <span class="hljs-keyword">else</span> message</pre></div></div>
+            <div class="content"><div class='highlight'><pre>chrome.runtime.sendMessage { host, <span class="hljs-attribute">type</span>: <span class="hljs-string">'injection'</span> }, <span class="hljs-function"><span class="hljs-params">(response)</span> -&gt;</span>
+  head      = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'head'</span>
+  {css, js} = response</pre></div></div>
             
         </li>
         
@@ -149,31 +143,16 @@ the Chrome API.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Use <code>chrome.i18n.getAcceptLanguages</code> to asynchronously fetch all of the supported languages,
-optional specifying a <code>parent</code> locale for which only it’s <em>children</em> should be retrieved.</p>
+              <p>Create an element with the given name and insert it in to the document <code>&lt;head&gt;</code>.</p>
+<p>The new element will contain only the <code>html</code> provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-attribute">Internationalization</span>::<span class="hljs-function"><span class="hljs-title">languages</span> = <span class="hljs-params">(parent, callback)</span> -&gt;</span>
-  <span class="hljs-keyword">if</span> _.isFunction parent
-    callback = parent
-    parent   = <span class="hljs-literal">null</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-title">appendNewElement</span> = <span class="hljs-params">(tagName, html)</span> -&gt;</span>
+    el = <span class="hljs-built_in">document</span>.createElement tagName
+    el.innerHTML = html
 
-  {languages}                    = <span class="hljs-property">@messenger</span>
-  {callOrThrow, filterLanguages} = <span class="hljs-property">@_</span>
-
-  <span class="hljs-keyword">if</span> parent
-    <span class="hljs-keyword">return</span> <span class="hljs-property">@languages</span> <span class="hljs-function"><span class="hljs-params">(err, languages)</span> =&gt;</span>
-      <span class="hljs-keyword">if</span> err <span class="hljs-keyword">then</span> callOrThrow @, callback, err
-      <span class="hljs-keyword">else</span>        callOrThrow @, callback, <span class="hljs-literal">null</span>, filterLanguages parent, languages
-
-  <span class="hljs-keyword">if</span> languages.length
-    <span class="hljs-keyword">return</span> callOrThrow @, callback, <span class="hljs-literal">null</span>, languages[..]
-
-  chrome.i18n.getAcceptLanguages <span class="hljs-function"><span class="hljs-params">(languages)</span> =&gt;</span>
-    <span class="hljs-property">@messenger</span>.languages = languages.sort()
-
-    callOrThrow @, callback, <span class="hljs-literal">null</span>, languages[..]</pre></div></div>
+    head.appendChild el</pre></div></div>
             
         </li>
         
@@ -184,9 +163,12 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="internalization-setup">Internalization setup</h2>
+              <p>Insert <code>&lt;style&gt;</code> elements in to the DOM for each CSS code.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> code <span class="hljs-keyword">in</span> css
+    appendNewElement <span class="hljs-string">'style'</span>, code</pre></div></div>
             
         </li>
         
@@ -197,15 +179,18 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Ensure that the default value of the <code>messages</code> option is <em>not</em> an empty object in order to
-prevent any attempts to load message bundle resources.</p>
-<p>Also, use <code>chrome.i18n.getMessage</code> to derive the active locale.</p>
+              <p>Insert <code>&lt;script&gt;</code> elements in to the DOM for each JavaScript code.</p>
+<p>Scripts are executed within a closed function to prevent variables accidentally becoming global
+and potentially causing conflicts with libraries used on the current page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.i18n = int17.create().initSync
-  <span class="hljs-attribute">locale</span>:   chrome.i18n.getMessage <span class="hljs-string">'@@ui_locale'</span>
-  <span class="hljs-attribute">messages</span>: <span class="hljs-attribute">prevent</span>: {}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> code <span class="hljs-keyword">in</span> js
+    appendNewElement <span class="hljs-string">'script'</span>, <span class="hljs-string">"""
+      (function() {
+      <span class="hljs-subst">#{code}</span>
+      })();
+    """</span></pre></div></div>
             
         </li>
         

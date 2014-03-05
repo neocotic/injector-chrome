@@ -1,16 +1,19 @@
-# [Injector](http://neocotic.com/injector)  
-# (c) 2014 Alasdair Mercer  
+# [Injector](http://neocotic.com/injector)
+#
+# (c) 2014 Alasdair Mercer
+#
 # Freely distributable under the MIT license
 
 # Helpers
 # -------
 
-# Attempt to select a tab in the current window displaying a page whose location begins with `url`.  
-# If no existing tab exists a new one is created.
+# Attempt to select a tab in the current window displaying a page whose location begins with `url`.
+#
+# If no existing tab exists, a new one is created.
 activateTab = (url, callback) ->
   # Retrieve the tabs of last focused window to check for an existing one with a *matching* URL.
   chrome.windows.getLastFocused populate: yes, (win) ->
-    { tabs } = win
+    {tabs} = win
 
     # Try to find an existing tab that begins with `url`.
     for tab in tabs when not tab.url.indexOf url
@@ -32,7 +35,8 @@ activateTab = (url, callback) ->
 # Reusable instance of the LESS parser used to compile LESS code in to CSS.
 lessParser = null
 
-# Compilers that map to supported editor modes.  
+# Compilers that map to supported editor modes.
+#
 # Each compiler should compile into either JavaScript or CSS code, depending on the nature of the
 # language.
 compilers =
@@ -52,11 +56,11 @@ compilers =
       if error then callback error
       else          callback null, tree.toCSS()
 
-# Compile the code of the specified `snippet`, if required.  
+# Compile the code of the specified `snippet`, if required.
+#
 # If the `snippet` mode does not require compilation, the `code` will be passed back as-is.
 compileSnippet = (snippet, callback) ->
-  code = snippet.get 'code'
-  mode = snippet.get 'mode'
+  {code, mode} = snippet.pick 'code', 'mode'
 
   if compilers[mode]
     compilers[mode] code, callback
@@ -69,20 +73,22 @@ compileSnippet = (snippet, callback) ->
 # Retrieve the contents of the specified JSON `file` that is relative to this extension.
 fetchJSON = (file, callback) ->
   $.getJSON chrome.extension.getURL file
-    .done (data) ->
-      callback null, data
-    .fail (jqXHR, textStatus, error) ->
-      callback error
+  .done (data) ->
+    callback null, data
+  .fail (jqXHR, textStatus, error) ->
+    callback error
 
+  # Indicate that we intend on responding to the request.
   true
 
-# Retrieve all of the snippets that are associated with a given `host`.  
+# Retrieve all of the snippets that are associated with a given `host`.
+#
 # The snippets are grouped based on their modes (languages) and compiled so that their code can be
 # quickly and easily injected in to the requesting page.
 fetchSnippets = (host, callback) ->
   models.Snippets.fetch (snippets) ->
-    snippets            = snippets.where { host }
-    { scripts, styles } = models.Snippets.group snippets
+    snippets          = snippets.where { host }
+    {scripts, styles} = models.Snippets.group snippets
 
     async.parallel
       css: (done) ->
@@ -92,6 +98,7 @@ fetchSnippets = (host, callback) ->
         async.mapSeries scripts, compileSnippet, done
     , callback
 
+  # Indicate that we intend on responding to the request.
   true
 
 # Open the Options page when the browser action is clicked.

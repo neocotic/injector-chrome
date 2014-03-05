@@ -1,484 +1,2308 @@
-<!DOCTYPE html>  <html> <head>   <title>options.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="analytics.html">                 analytics.coffee               </a>                                           <a class="source" href="events.html">                 events.coffee               </a>                                           <a class="source" href="i18n.html">                 i18n.coffee               </a>                                           <a class="source" href="injector.html">                 injector.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               options.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/injector">Injector</a> <br />
-(c) 2013 Alasdair Mercer <br />
-Freely distributable under the MIT license</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>TODO: Capture more analytics</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Extract the models and collections that are required by the options page.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">{</span> <span class="nx">EditorSettings</span><span class="p">,</span> <span class="nx">EditorSettings</span><span class="p">,</span> <span class="nx">Snippet</span><span class="p">,</span> <span class="nx">Snippets</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">models</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Utilities</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Extend <code>_</code> with our utility functions.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Transform the given string into title case.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">capitalize: </span><span class="nf">(str) -&gt;</span>
-    <span class="k">return</span> <span class="nx">str</span> <span class="k">unless</span> <span class="nx">str</span>
-
-    <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\w+/g</span><span class="p">,</span> <span class="nf">(word) -&gt;</span>
-      <span class="nx">word</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">toUpperCase</span><span class="p">()</span> <span class="o">+</span> <span class="nx">word</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">toLowerCase</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Feedback</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Indicate whether the user feedback feature has been added to the page.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">feedbackAdded = </span><span class="kc">no</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Add the user feedback feature to the page using the <code>options</code> provided.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">loadFeedback = </span><span class="nf">(options) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Only load and configure the feedback widget once.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="k">if</span> <span class="nx">feedbackAdded</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Create a script element to load the UserVoice widget.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">uv       = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span> <span class="s">&#39;script&#39;</span>
-  <span class="nv">uv.async = </span><span class="s">&#39;async&#39;</span>
-  <span class="nv">uv.src   = </span><span class="s">&quot;https://widget.uservoice.com/</span><span class="si">#{</span><span class="nx">options</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="s">.js&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Insert the script element into the DOM.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">script = </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s">&#39;script&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-  <span class="nx">script</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span> <span class="nx">uv</span><span class="p">,</span> <span class="nx">script</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Configure the widget as it's loading.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">UserVoice = </span><span class="nb">window</span><span class="p">.</span><span class="nx">UserVoice</span> <span class="o">or=</span> <span class="p">[]</span>
-  <span class="nx">UserVoice</span><span class="p">.</span><span class="nx">push</span> <span class="p">[</span>
-    <span class="s">&#39;showTab&#39;</span>
-    <span class="s">&#39;classic_widget&#39;</span>
-    <span class="p">{</span>
-      <span class="nv">mode: </span>         <span class="s">&#39;full&#39;</span>
-      <span class="nv">primary_color: </span><span class="s">&#39;#333&#39;</span>
-      <span class="nv">link_color: </span>   <span class="s">&#39;#08c&#39;</span>
-      <span class="nv">default_mode: </span> <span class="s">&#39;feedback&#39;</span>
-      <span class="nv">forum_id: </span>     <span class="nx">options</span><span class="p">.</span><span class="nx">forum</span>
-      <span class="nv">tab_label: </span>    <span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;feedback_button&#39;</span>
-      <span class="nv">tab_color: </span>    <span class="s">&#39;#333&#39;</span>
-      <span class="nv">tab_position: </span> <span class="s">&#39;middle-right&#39;</span>
-      <span class="nv">tab_inverted: </span> <span class="kc">yes</span>
-    <span class="p">}</span>
-  <span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Ensure that the widget isn't loaded again.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">feedbackAdded = </span><span class="kc">yes</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h2>Editor</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>View containing buttons for saving/resetting the code of the selected snippet from the contents
-of the Ace editor.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorControls = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#editor_controls&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;click #reset_button&#39;</span><span class="o">:</span>  <span class="s">&#39;reset&#39;</span>
-    <span class="s">&#39;click #update_button&#39;</span><span class="o">:</span> <span class="s">&#39;save&#39;</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">do</span> <span class="nx">@update</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">reset: </span><span class="nf">(e) -&gt;</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span><span class="p">).</span><span class="nx">hasClass</span><span class="p">(</span><span class="s">&#39;disabled&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="nx">@options</span><span class="p">.</span><span class="nx">ace</span><span class="p">.</span><span class="nx">setValue</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;code&#39;</span>
-    <span class="nx">@options</span><span class="p">.</span><span class="nx">ace</span><span class="p">.</span><span class="nx">gotoLine</span> <span class="mi">0</span>
-
-  <span class="nv">save: </span><span class="nf">(e) -&gt;</span>
-    <span class="nv">$button = </span><span class="nx">$</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span>
-
-    <span class="k">return</span> <span class="k">if</span> <span class="nx">$button</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s">&#39;disabled&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="nv">code = </span><span class="nx">@options</span><span class="p">.</span><span class="nx">ace</span><span class="p">.</span><span class="nx">getValue</span><span class="p">()</span>
-
-    <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span> <span class="nx">code</span> <span class="p">}).</span><span class="nx">then</span> <span class="o">=&gt;</span>
-      <span class="nx">@model</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;modified&#39;</span><span class="p">,</span> <span class="kc">no</span><span class="p">,</span> <span class="nx">code</span>
-
-      <span class="nx">$button</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;update_button_alt&#39;</span><span class="p">).</span><span class="nx">delay</span><span class="p">(</span><span class="mi">800</span><span class="p">).</span><span class="nx">queue</span> <span class="nf">-&gt;</span>
-        <span class="nx">$button</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;update_button&#39;</span><span class="p">).</span><span class="nx">dequeue</span><span class="p">()</span>
-
-  <span class="nv">update: </span><span class="nf">(@model) -&gt;</span>
-    <span class="nv">$buttons = </span><span class="nx">@$</span> <span class="s">&#39;#reset_button, #update_button&#39;</span>
-
-    <span class="k">if</span> <span class="nx">@model</span><span class="o">?</span>
-      <span class="nx">$buttons</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;disabled&#39;</span>
-    <span class="k">else</span>
-      <span class="nx">$buttons</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;disabled&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>A selection of available modes/languages that are supported by this extension for injecting
-snippets.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorModes = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#editor_modes&#39;</span>
-
-  <span class="nv">groupTemplate: </span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span> <span class="s">&#39;&lt;optgroup label=&quot;&lt;%- label %&gt;&quot;&gt;&lt;/optgroup&gt;&#39;</span>
-
-  <span class="nv">modeTemplate: </span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span> <span class="s">&#39;&lt;option value=&quot;&lt;%- value %&gt;&quot;&gt;&lt;%= html %&gt;&lt;/option&gt;&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;change&#39;</span><span class="o">:</span> <span class="s">&#39;updateMode&#39;</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">Snippet</span><span class="p">.</span><span class="nx">modeGroups</span><span class="p">,</span> <span class="nf">(modes, name) =&gt;</span>
-      <span class="nv">$group = </span><span class="nx">$</span> <span class="nx">@groupTemplate</span>
-        <span class="nv">label: </span><span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&quot;editor_mode_group_</span><span class="si">#{</span><span class="nx">name</span><span class="si">}</span><span class="s">&quot;</span>
-
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">modes</span><span class="p">,</span> <span class="nf">(mode) =&gt;</span>
-        <span class="nx">$group</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@modeTemplate</span>
-          <span class="nv">html: </span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&quot;editor_mode_</span><span class="si">#{</span><span class="nx">mode</span><span class="si">}</span><span class="s">&quot;</span>
-          <span class="nv">value: </span><span class="nx">mode</span>
-
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">append</span> <span class="nx">$group</span>
-
-    <span class="nx">do</span> <span class="nx">@update</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">update: </span><span class="nf">(@model) -&gt;</span>
-    <span class="nv">mode   = </span><span class="k">if</span> <span class="nx">@model</span><span class="o">?</span> <span class="k">then</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;mode&#39;</span>
-    <span class="nx">mode</span> <span class="o">or=</span> <span class="nx">Snippet</span><span class="p">.</span><span class="nx">defaultMode</span>
-
-    <span class="nx">@$</span><span class="p">(</span><span class="s">&quot;option[value=&#39;</span><span class="si">#{</span><span class="nx">mode</span><span class="si">}</span><span class="s">&#39;]&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">yes</span>
-
-    <span class="nx">do</span> <span class="nx">@updateMode</span>
-
-  <span class="nv">updateMode: </span><span class="nf">-&gt;</span>
-    <span class="nv">mode = </span><span class="nx">@$el</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span>
-
-    <span class="nx">@options</span><span class="p">.</span><span class="nx">ace</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">setMode</span> <span class="s">&quot;ace/mode/</span><span class="si">#{</span><span class="nx">mode</span><span class="si">}</span><span class="s">&quot;</span>
-
-    <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span> <span class="p">{</span> <span class="nx">mode</span> <span class="p">}</span> <span class="k">if</span> <span class="nx">@model</span><span class="o">?</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>View containing options that allow the user to configure the Ace editor.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorSettings = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#editor_settings&#39;</span>
-
-  <span class="nv">template: </span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span> <span class="s">&#39;&lt;option value=&quot;&lt;%- value %&gt;&quot;&gt;&lt;%= html %&gt;&lt;/option&gt;&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;change #editor_indent_size&#39;</span><span class="o">:</span> <span class="s">&#39;update&#39;</span>
-    <span class="s">&#39;change #editor_line_wrap&#39;</span><span class="o">:</span>   <span class="s">&#39;update&#39;</span>
-    <span class="s">&#39;change #editor_soft_tabs&#39;</span><span class="o">:</span>   <span class="s">&#39;update&#39;</span>
-    <span class="s">&#39;change #editor_theme&#39;</span><span class="o">:</span>       <span class="s">&#39;update&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="nv">$sizes = </span><span class="nx">@$</span> <span class="s">&#39;#editor_indent_size optgroup&#39;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">page</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">indentSizes</span><span class="p">,</span> <span class="nf">(size) =&gt;</span>
-      <span class="nx">$sizes</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@template</span>
-        <span class="nv">html: </span> <span class="nx">size</span>
-        <span class="nv">value: </span><span class="nx">size</span>
-
-    <span class="nv">$themes = </span><span class="nx">@$</span> <span class="s">&#39;#editor_theme optgroup&#39;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">page</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">themes</span><span class="p">,</span> <span class="nf">(theme) =&gt;</span>
-      <span class="nx">$themes</span><span class="p">.</span><span class="nx">append</span> <span class="nx">@template</span>
-        <span class="nv">html: </span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">get</span> <span class="s">&quot;editor_theme_</span><span class="si">#{</span><span class="nx">theme</span><span class="si">}</span><span class="s">&quot;</span>
-        <span class="nv">value: </span><span class="nx">theme</span>
-
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">      change:indentSize</span>
-<span class="s">      change:lineWrap</span>
-<span class="s">      change:softTabs</span>
-<span class="s">      change:theme</span>
-<span class="s">    &quot;&quot;&quot;</span><span class="p">,</span> <span class="nx">@render</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nv">indentSize = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;indentSize&#39;</span>
-    <span class="nv">lineWrap   = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;lineWrap&#39;</span>
-    <span class="nv">softTabs   = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;softTabs&#39;</span>
-    <span class="nv">theme      = </span><span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;theme&#39;</span>
-
-    <span class="nx">@$</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
-
-<span class="err">#</span><span class="s">DIVIDER</span>
-<span class="s">    &quot;&quot;&quot;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">yes</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">update: </span><span class="nf">-&gt;</span>
-    <span class="nv">$indentSize = </span><span class="nx">@$</span> <span class="s">&#39;#editor_indent_size&#39;</span>
-    <span class="nv">$lineWrap   = </span><span class="nx">@$</span> <span class="s">&#39;#editor_line_wrap&#39;</span>
-    <span class="nv">$softTabs   = </span><span class="nx">@$</span> <span class="s">&#39;#editor_soft_tabs&#39;</span>
-    <span class="nv">$theme      = </span><span class="nx">@$</span> <span class="s">&#39;#editor_theme&#39;</span>
-
-    <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span>
-      <span class="nv">indentSize: </span><span class="nb">parseInt</span> <span class="nx">$indentSize</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span> <span class="mi">0</span>
-      <span class="nv">lineWrap: </span>  <span class="nx">$lineWrap</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span> <span class="o">is</span> <span class="s">&#39;true&#39;</span>
-      <span class="nv">softTabs: </span>  <span class="nx">$softTabs</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span> <span class="o">is</span> <span class="s">&#39;true&#39;</span>
-      <span class="nv">theme: </span>     <span class="nx">$theme</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>editor<em>indent</em>size option[value='#{indentSize}'],
-editor<em>line</em>wrap   option[value='#{lineWrap}'],
-editor<em>soft</em>tabs   option[value='#{softTabs}'],
-editor_theme       option[value='#{theme}']</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#editor&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="vi">@ace = </span><span class="nx">ace</span><span class="p">.</span><span class="nx">edit</span> <span class="s">&#39;editor&#39;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">setShowPrintMargin</span> <span class="kc">no</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">on</span> <span class="s">&#39;change&#39;</span><span class="p">,</span> <span class="o">=&gt;</span>
-      <span class="nx">@model</span><span class="p">.</span><span class="nx">trigger</span> <span class="s">&#39;modified&#39;</span><span class="p">,</span> <span class="nx">@hasUnsavedChanges</span><span class="p">(),</span> <span class="nx">@ace</span><span class="p">.</span><span class="nx">getValue</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="vi">@settings = </span><span class="k">new</span> <span class="nx">EditorSettings</span> <span class="p">{</span> <span class="nv">model: </span><span class="nx">@options</span><span class="p">.</span><span class="nx">settings</span> <span class="p">}</span>
-    <span class="vi">@controls = </span><span class="k">new</span> <span class="nx">EditorControls</span> <span class="p">{</span> <span class="nx">@ace</span> <span class="p">}</span>
-    <span class="vi">@modes    = </span><span class="k">new</span> <span class="nx">EditorModes</span>    <span class="p">{</span> <span class="nx">@ace</span> <span class="p">}</span>
-
-    <span class="nx">@listenTo</span> <span class="nx">@options</span><span class="p">.</span><span class="nx">settings</span><span class="p">,</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">      change:indentSize</span>
-<span class="s">      change:lineWrap</span>
-<span class="s">      change:softTabs</span>
-<span class="s">      change:theme</span>
-<span class="s">    &quot;&quot;&quot;</span><span class="p">,</span> <span class="nx">@updateSettings</span>
-
-    <span class="nx">do</span> <span class="nx">@updateSettings</span>
-
-  <span class="nv">hasUnsavedChanges: </span><span class="nf">-&gt;</span>
-    <span class="nx">@model</span><span class="o">?</span> <span class="o">and</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">)</span> <span class="o">isnt</span> <span class="nx">@ace</span><span class="p">.</span><span class="nx">getValue</span><span class="p">()</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">@settings</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-    <span class="nx">@controls</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-    <span class="nx">@modes</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">update: </span><span class="nf">(@model) -&gt;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">setReadOnly</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">setValue</span> <span class="nx">@model</span><span class="o">?</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="s">&#39;&#39;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">gotoLine</span> <span class="mi">0</span>
-
-    <span class="nx">@controls</span><span class="p">.</span><span class="nx">update</span> <span class="nx">@model</span>
-    <span class="nx">@modes</span><span class="p">.</span><span class="nx">update</span> <span class="nx">@model</span>
-
-  <span class="nv">updateSettings: </span><span class="nf">-&gt;</span>
-    <span class="p">{</span> <span class="nx">settings</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">@options</span>
-
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">setUseWrapMode</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;lineWrap&#39;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">setUseSoftTabs</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;softTabs&#39;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">getSession</span><span class="p">().</span><span class="nx">setTabSize</span>     <span class="nx">settings</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;indentSize&#39;</span>
-    <span class="nx">@ace</span><span class="p">.</span><span class="nx">setTheme</span> <span class="s">&quot;ace/theme/</span><span class="si">#{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;theme&#39;</span><span class="si">}</span><span class="s">&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Contains the Ace editor that allows the user to modify a snippet's code.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h2>Settings</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">GeneralSettingsView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#general_tab&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;change #analytics&#39;</span><span class="o">:</span> <span class="s">&#39;update&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&#39;change:analytics&#39;</span><span class="p">,</span> <span class="nx">@render</span>
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&#39;change:analytics&#39;</span><span class="p">,</span> <span class="nx">@updateAnalytics</span>
-
-    <span class="nx">do</span> <span class="nx">@updateAnalytics</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">@$</span><span class="p">(</span><span class="s">&#39;#analytics&#39;</span><span class="p">).</span><span class="nx">prop</span> <span class="s">&#39;checked&#39;</span><span class="p">,</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;analytics&#39;</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">update: </span><span class="nf">-&gt;</span>
-    <span class="nv">$analytics = </span><span class="nx">@$</span> <span class="s">&#39;#analytics&#39;</span>
-
-    <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span> <span class="p">{</span> <span class="nv">analytics: </span><span class="nx">$analytics</span><span class="p">.</span><span class="o">is</span> <span class="s">&#39;:checked&#39;</span> <span class="p">}</span>
-
-  <span class="nv">updateAnalytics: </span><span class="nf">-&gt;</span>
-    <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;analytics&#39;</span>
-      <span class="nx">analytics</span><span class="p">.</span><span class="nx">add</span> <span class="nx">page</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">analytics</span>
-    <span class="k">else</span>
-      <span class="nx">analytics</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Allows the user to modify the general settings of the extension.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SettingsView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;body&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="vi">@general = </span><span class="k">new</span> <span class="nx">GeneralSettingsView</span> <span class="p">{</span> <span class="nx">@model</span> <span class="p">}</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">@general</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-
-    <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Parent view for all configurable settings.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h2>Snippets</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SnippetControls = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#snippets_controls&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;show.bs.popover .btn&#39;</span><span class="o">:</span>           <span class="s">&#39;closeOtherPrompts&#39;</span>
-    <span class="s">&#39;click #delete_menu .btn&#39;</span><span class="o">:</span>        <span class="s">&#39;closeOtherPrompts&#39;</span>
-    <span class="s">&#39;click #add_button&#39;</span><span class="o">:</span>              <span class="s">&#39;togglePrompt&#39;</span>
-    <span class="s">&#39;shown.bs.popover #add_button&#39;</span><span class="o">:</span>   <span class="s">&#39;promptAdd&#39;</span>
-    <span class="s">&#39;click #edit_button&#39;</span><span class="o">:</span>             <span class="s">&#39;togglePrompt&#39;</span>
-    <span class="s">&#39;shown.bs.popover #edit_button&#39;</span><span class="o">:</span>  <span class="s">&#39;promptEdit&#39;</span>
-    <span class="s">&#39;click #clone_button&#39;</span><span class="o">:</span>            <span class="s">&#39;togglePrompt&#39;</span>
-    <span class="s">&#39;shown.bs.popover #clone_button&#39;</span><span class="o">:</span> <span class="s">&#39;promptClone&#39;</span>
-    <span class="s">&#39;click #delete_menu .js-resolve&#39;</span><span class="o">:</span> <span class="s">&#39;removeSnippet&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="nx">@$</span><span class="p">(</span><span class="s">&#39;#add_button, #clone_button, #edit_button&#39;</span><span class="p">).</span><span class="nx">popover</span>
-      <span class="nv">html: </span>     <span class="kc">yes</span>
-      <span class="nv">trigger: </span>  <span class="s">&#39;manual&#39;</span>
-      <span class="nv">placement: </span><span class="s">&#39;bottom&#39;</span>
-      <span class="nv">container: </span><span class="s">&#39;body&#39;</span>
-      <span class="nv">content: </span>  <span class="s">&quot;&quot;&quot;</span>
-<span class="s">        &lt;form id=&quot;edit_snippet&quot; class=&quot;form-inline&quot; role=&quot;form&quot;&gt;</span>
-<span class="s">          &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class="s">            &lt;input type=&quot;text&quot; class=&quot;form-control&quot; spellcheck=&quot;false&quot; placeholder=&quot;yourdomain.com&quot;&gt;</span>
-<span class="s">          &lt;/div&gt;</span>
-<span class="s">        &lt;/form&gt;</span>
-<span class="s">      &quot;&quot;&quot;</span>
-
-  <span class="nv">closeOtherPrompts: </span><span class="nf">(e) -&gt;</span>
-    <span class="nx">hidePopovers</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span>
-
-  <span class="nv">promptAdd: </span><span class="nf">-&gt;</span>
-    <span class="nx">do</span> <span class="nx">@promptHost</span>
-
-  <span class="nv">promptClone: </span><span class="nf">-&gt;</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="nx">@promptHost</span> <span class="nv">clone: </span><span class="kc">yes</span>
-
-  <span class="nv">promptEdit: </span><span class="nf">-&gt;</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="nx">@promptHost</span> <span class="nv">edit: </span><span class="kc">yes</span>
-
-  <span class="nv">promptHost: </span><span class="nf">(options = {}) -&gt;</span>
-    <span class="nv">$form = </span><span class="nx">$</span> <span class="s">&#39;#edit_snippet&#39;</span>
-    <span class="nv">value = </span><span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">clone</span> <span class="o">or</span> <span class="nx">options</span><span class="p">.</span><span class="nx">edit</span> <span class="k">then</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;host&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span>
-
-    <span class="nx">$form</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;submit&#39;</span><span class="p">,</span> <span class="nf">(e) =&gt;</span>
-      <span class="nv">$group = </span><span class="nx">$form</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.form-group&#39;</span>
-      <span class="nv">host   = </span><span class="nx">$form</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;:text&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">replace</span> <span class="sr">/\s+/g</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
-
-      <span class="k">if</span> <span class="o">not</span> <span class="nx">host</span>
-        <span class="nx">$group</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;has-error&#39;</span>
-      <span class="k">else</span>
-        <span class="nx">$group</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;has-error&#39;</span>
-
-        <span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">edit</span>
-          <span class="nx">@model</span><span class="p">.</span><span class="nx">save</span> <span class="p">{</span> <span class="nx">host</span> <span class="p">}</span>
-        <span class="k">else</span>
-          <span class="nv">base = </span><span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">clone</span> <span class="k">then</span> <span class="nx">@model</span> <span class="k">else</span> <span class="k">new</span> <span class="nx">Snippet</span>
-
-          <span class="nx">@collection</span><span class="p">.</span><span class="nx">create</span> <span class="p">{</span>
-            <span class="nx">host</span>
-            <span class="nv">code: </span><span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="s">&#39;&#39;</span>
-            <span class="nv">mode: </span><span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&#39;mode&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="nx">Snippet</span><span class="p">.</span><span class="nx">defaultMode</span>
-          <span class="p">},</span> <span class="nv">success: </span><span class="nf">(model) -&gt;</span>
-            <span class="nx">model</span><span class="p">.</span><span class="nx">select</span><span class="p">()</span>
-
-            <span class="nx">page</span><span class="p">.</span><span class="nx">snippets</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">showSelected</span><span class="p">()</span>
-
-      <span class="nx">do</span> <span class="nx">hidePopovers</span>
-
-      <span class="kc">false</span>
-
-    <span class="nx">$form</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;:text&#39;</span><span class="p">).</span><span class="nx">focus</span><span class="p">().</span><span class="nx">val</span> <span class="nx">value</span>
-
-  <span class="nv">removeSnippet: </span><span class="nf">-&gt;</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">@model</span><span class="o">?</span>
-
-    <span class="nv">model = </span><span class="nx">@model</span>
-    <span class="nx">model</span><span class="p">.</span><span class="nx">deselect</span><span class="p">().</span><span class="nx">done</span> <span class="nf">-&gt;</span>
-      <span class="nx">model</span><span class="p">.</span><span class="nx">destroy</span><span class="p">()</span>
-
-  <span class="nv">togglePrompt: </span><span class="nf">(e) -&gt;</span>
-    <span class="nv">$button = </span><span class="nx">$</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span>
-
-    <span class="nx">$button</span><span class="p">.</span><span class="nx">popover</span> <span class="s">&#39;toggle&#39;</span> <span class="k">unless</span> <span class="nx">$button</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;disabled&#39;</span>
-
-  <span class="nv">update: </span><span class="nf">(@model) -&gt;</span>
-    <span class="nv">$modelButtons = </span><span class="nx">@$</span> <span class="s">&#39;#clone_button, #delete_menu .btn, #edit_button&#39;</span>
-
-    <span class="nx">@$</span><span class="p">(</span><span class="s">&#39;#add_button&#39;</span><span class="p">).</span><span class="nx">removeClass</span> <span class="s">&#39;disabled&#39;</span>
-
-    <span class="k">if</span> <span class="nx">@model</span><span class="o">?</span>
-      <span class="nx">$modelButtons</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;disabled&#39;</span>
-    <span class="k">else</span>
-      <span class="nx">$modelButtons</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;disabled&#39;</span>
-
-      <span class="nx">do</span> <span class="nx">hidePopovers</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>View contains buttons used to control/manage the user's snippets.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SnippetItem = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">tagName: </span><span class="s">&#39;li&#39;</span>
-
-  <span class="nv">template: </span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span> <span class="s">&#39;&lt;a&gt;&lt;%= host %&gt;&lt;/a&gt;&#39;</span>
-
-  <span class="nv">events:</span>
-    <span class="s">&#39;click a&#39;</span><span class="o">:</span> <span class="s">&#39;toggleSelection&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&#39;destroy&#39;</span><span class="p">,</span> <span class="nx">@remove</span>
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&#39;modified&#39;</span><span class="p">,</span> <span class="nx">@modified</span>
-    <span class="nx">@listenTo</span> <span class="nx">@model</span><span class="p">,</span> <span class="s">&#39;change:host change:selected&#39;</span><span class="p">,</span> <span class="nx">@render</span>
-
-  <span class="nv">modified: </span><span class="nf">(changed) -&gt;</span>
-    <span class="k">if</span> <span class="nx">changed</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;modified&#39;</span>
-    <span class="k">else</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;modified&#39;</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span> <span class="nx">@template</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">attributes</span>
-
-    <span class="k">if</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;selected&#39;</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&#39;active&#39;</span>
-    <span class="k">else</span>
-      <span class="nx">@$el</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&#39;active modified&#39;</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">toggleSelection: </span><span class="nf">(e) -&gt;</span>
-    <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">ctrlKey</span>
-      <span class="nx">@model</span><span class="p">.</span><span class="nx">deselect</span><span class="p">()</span>
-    <span class="k">else</span> <span class="k">unless</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;active&#39;</span>
-      <span class="nx">@model</span><span class="p">.</span><span class="nx">select</span><span class="p">()</span>
-
-      <span class="nx">page</span><span class="p">.</span><span class="nx">snippets</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">showSelected</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Menu item which, when selected, enables the user to manage and modify the code of the underlying
-snippet.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SnippetsList = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#snippets_list&#39;</span>
-
-  <span class="nv">addOne: </span><span class="nf">(model) -&gt;</span>
-    <span class="nx">@$el</span><span class="p">.</span><span class="nx">append</span> <span class="k">new</span> <span class="nx">SnippetItem</span><span class="p">({</span> <span class="nx">model</span> <span class="p">}).</span><span class="nx">render</span><span class="p">().</span><span class="nx">$el</span>
-
-  <span class="nv">addAll: </span><span class="nf">-&gt;</span>
-    <span class="nx">@collection</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@addOne</span><span class="p">,</span> <span class="k">this</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;add&#39;</span><span class="p">,</span> <span class="nx">@addOne</span>
-    <span class="nx">@listenTo</span> <span class="nx">@collection</span><span class="p">,</span> <span class="s">&#39;reset&#39;</span><span class="p">,</span> <span class="nx">@addAll</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">do</span> <span class="nx">@addAll</span>
-
-    <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>A menu of snippets that allows the user to easily manage them.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">showSelected: </span><span class="nf">-&gt;</span>
-    <span class="nv">$selectedItem = </span><span class="nx">@$</span> <span class="s">&#39;li.active a&#39;</span>
-
-    <span class="nx">@$el</span><span class="p">.</span><span class="nx">scrollTop</span> <span class="nx">$selectedItem</span><span class="p">.</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="nx">@$el</span><span class="p">.</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>TODO: Fix as currently not working</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SnippetsView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
-
-  <span class="nv">el: </span><span class="s">&#39;#snippets_tab&#39;</span>
-
-  <span class="nv">initialize: </span><span class="nf">-&gt;</span>
-    <span class="vi">@controls = </span><span class="k">new</span> <span class="nx">SnippetControls</span> <span class="p">{</span> <span class="nx">@collection</span> <span class="p">}</span>
-    <span class="vi">@list     = </span><span class="k">new</span> <span class="nx">SnippetsList</span> <span class="p">{</span> <span class="nx">@collection</span> <span class="p">}</span>
-
-  <span class="nv">render: </span><span class="nf">-&gt;</span>
-    <span class="nx">@controls</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-    <span class="nx">@list</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span>
-
-    <span class="k">this</span>
-
-  <span class="nv">update: </span><span class="nf">(model) -&gt;</span>
-    <span class="nx">@controls</span><span class="p">.</span><span class="nx">update</span> <span class="nx">model</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>The primary view for managing snippets.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h2>Miscellaneous</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">activateTooltips = </span><span class="nf">(selector) -&gt;</span>
-  <span class="nv">base = </span><span class="nx">$</span> <span class="nx">selector</span> <span class="o">or</span> <span class="nb">document</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Activate tooltip effects, optionally only within a specific context.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">base</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[data-original-title]&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="nf">-&gt;</span>
-    <span class="nv">$this = </span><span class="nx">$</span> <span class="k">this</span>
-
-    <span class="nx">$this</span><span class="p">.</span><span class="nx">tooltip</span> <span class="s">&#39;destroy&#39;</span>
-    <span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;data-original-title&#39;</span>
-    <span class="nx">$this</span><span class="p">.</span><span class="nx">removeAttr</span> <span class="s">&#39;data-original-title&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Reset all previously treated tooltips.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">base</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;[title]&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="nf">-&gt;</span>
-    <span class="nv">$this = </span><span class="nx">$</span> <span class="k">this</span>
-
-    <span class="nx">$this</span><span class="p">.</span><span class="nx">tooltip</span>
-      <span class="nv">container: </span><span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-container&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="s">&#39;body&#39;</span>
-      <span class="nv">placement: </span><span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;data-placement&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="s">&#39;top&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Apply tooltips to all relevant elements.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">hidePopovers = </span><span class="nf">(exceptions) -&gt;</span>
-  <span class="nv">$toggles = </span><span class="nx">$</span> <span class="s">&#39;.js-popover-toggle&#39;</span>
-  <span class="nv">$toggles = </span><span class="nx">$toggles</span><span class="p">.</span><span class="o">not</span> <span class="nx">except</span> <span class="k">if</span> <span class="nx">except</span><span class="o">?</span>
-
-  <span class="nx">$toggles</span><span class="p">.</span><span class="nx">popover</span> <span class="s">&#39;hide&#39;</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.popover&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Hide all visibile popovers and remove them from the DOM with the option to exclude specific
-<code>exceptions</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">page = </span><span class="nb">window</span><span class="p">.</span><span class="nv">page = </span><span class="k">new</span> <span class="k">class</span> <span class="nx">Options</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <h2>Options page setup</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">-&gt;</span>
-    <span class="vi">@config  = </span><span class="p">{}</span>
-    <span class="vi">@version = </span><span class="s">&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>Create a new instance of <code>Options</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <h2>Public functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">init: </span><span class="nf">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Initialize the options page. <br />
-This will involve inserting and configuring the UI elements as well as loading the current
-settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">{</span> <span class="nx">@version</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">chrome</span><span class="p">.</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">getManifest</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>It's nice knowing what version is running.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">chrome</span><span class="p">.</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">sendMessage</span> <span class="p">{</span> <span class="nv">type: </span><span class="s">&#39;config&#39;</span> <span class="p">},</span> <span class="nf">(@config) =&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>Load the configuration data from the file before storing it locally.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">Snippet</span><span class="p">.</span><span class="nx">mapModeGroups</span> <span class="nx">@config</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">modeGroups</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>Map the mode groups now to save the configuration data from being loaded again by
-<code>Snippets.fetch</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">loadFeedback</span> <span class="nx">@config</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">userVoice</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Add the user feedback feature to the page.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">i18n</span><span class="p">.</span><span class="nx">traverse</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Begin initialization.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">models</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(result) =&gt;</span>
-        <span class="p">{</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">editorSettings</span><span class="p">,</span> <span class="nx">snippets</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">result</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Retrieve all singleton instances as well as the collection for user-created snippets.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="vi">@editor   = </span><span class="k">new</span> <span class="nx">EditorView</span><span class="p">(</span><span class="nv">settings: </span><span class="nx">editorSettings</span><span class="p">).</span><span class="nx">render</span><span class="p">()</span>
-        <span class="vi">@settings = </span><span class="k">new</span> <span class="nx">SettingsView</span><span class="p">(</span><span class="nv">model: </span><span class="nx">settings</span><span class="p">).</span><span class="nx">render</span><span class="p">()</span>
-        <span class="vi">@snippets = </span><span class="k">new</span> <span class="nx">SnippetsView</span><span class="p">(</span><span class="nv">collection: </span><span class="nx">snippets</span><span class="p">).</span><span class="nx">render</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Create views for the important models and collections.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">snippets</span><span class="p">.</span><span class="nx">on</span> <span class="s">&#39;selected deselected&#39;</span><span class="p">,</span> <span class="nf">(snippet) =&gt;</span>
-          <span class="k">if</span> <span class="nx">snippet</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;selected&#39;</span> <span class="k">then</span> <span class="nx">@update</span> <span class="nx">snippet</span> <span class="k">else</span> <span class="nx">do</span> <span class="nx">@update</span>
-
-        <span class="nv">selectedSnippet = </span><span class="nx">snippets</span><span class="p">.</span><span class="nx">findWhere</span> <span class="nv">selected: </span><span class="kc">yes</span>
-        <span class="k">if</span> <span class="nx">selectedSnippet</span>
-          <span class="nx">@update</span> <span class="nx">selectedSnippet</span>
-
-          <span class="nx">@snippets</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">showSelected</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Ensure that views are updated accordingly when snippets are selected/deselected.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.js-insert-year&#39;</span><span class="p">).</span><span class="nx">html</span> <span class="s">&quot;</span><span class="si">#{</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getFullYear</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>Ensure the current year is displayed throughout, where appropriate.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">initialTabChange = </span><span class="kc">yes</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;a[data-tabify]&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-          <span class="nv">target = </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span> <span class="s">&#39;tabify&#39;</span>
-          <span class="nv">nav    = </span><span class="nx">$</span> <span class="s">&quot;header.navbar .nav a[data-tabify=&#39;</span><span class="si">#{</span><span class="nx">target</span><span class="si">}</span><span class="s">&#39;]&quot;</span>
-          <span class="nv">parent = </span><span class="nx">nav</span><span class="p">.</span><span class="nx">parent</span> <span class="s">&#39;li&#39;</span>
-
-          <span class="k">unless</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;active&#39;</span>
-            <span class="nx">parent</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&#39;active&#39;</span><span class="p">).</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span> <span class="s">&#39;active&#39;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;hide&#39;</span><span class="p">).</span><span class="nx">siblings</span><span class="p">(</span><span class="s">&#39;.tab&#39;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&#39;hide&#39;</span>
-
-            <span class="nv">id = </span><span class="nx">nav</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;id&#39;</span>
-            <span class="nx">settings</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nv">tab: </span><span class="nx">id</span><span class="p">).</span><span class="nx">then</span> <span class="nf">-&gt;</span>
-              <span class="k">unless</span> <span class="nx">initialTabChange</span>
-                <span class="nv">id = </span><span class="nx">_</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">id</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/(\S*)_nav$/</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span> <span class="s">&#39;Tabs&#39;</span><span class="p">,</span> <span class="s">&#39;Changed&#39;</span><span class="p">,</span> <span class="nx">id</span>
-
-              <span class="nv">initialTabChange = </span><span class="kc">no</span>
-              <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">scrollTop</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Bind tab selection event to all tabs.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&quot;</span><span class="err">#</span><span class="si">#{</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span> <span class="s">&#39;tab&#39;</span><span class="si">}</span><span class="s">&quot;</span><span class="p">).</span><span class="nx">trigger</span> <span class="s">&#39;click&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>Reflect the previously persisted tab initially.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;form:not([target=&quot;_blank&quot;])&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;submit&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="kc">false</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p>Ensure that form submissions don't reload the page.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;keydown&#39;</span><span class="p">,</span> <span class="nf">(e) -&gt;</span>
-          <span class="nx">do</span> <span class="nx">hidePopovers</span> <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">is</span> <span class="mi">27</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p>Ensure that popovers are closed when the <code>Esc</code> key is pressed anywhere.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;[data-goto]&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-          <span class="k">switch</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span> <span class="s">&#39;goto&#39;</span>
-            <span class="k">when</span> <span class="s">&#39;top&#39;</span> <span class="k">then</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">scrollTop</span> <span class="mi">0</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Support <em>goto</em> navigation elements that change the current scroll position when clicked.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;footer a[href*=&quot;neocotic.com&quot;]&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-          <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span> <span class="s">&#39;Footer&#39;</span><span class="p">,</span> <span class="s">&#39;Clicked&#39;</span><span class="p">,</span> <span class="s">&#39;Homepage&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p>Bind analytical tracking events to key footer buttons and links.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#donation input[name=&quot;hosted_button_id&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">@config</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">payPal</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s">&#39;.js-donate&#39;</span><span class="p">).</span><span class="nx">on</span> <span class="s">&#39;click&#39;</span><span class="p">,</span> <span class="nf">-&gt;</span>
-          <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">tooltip</span> <span class="s">&#39;hide&#39;</span>
-
-          <span class="nx">$</span><span class="p">(</span><span class="s">&#39;#donation&#39;</span><span class="p">).</span><span class="nx">submit</span><span class="p">()</span>
-
-          <span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span> <span class="s">&#39;Donate&#39;</span><span class="p">,</span> <span class="s">&#39;Clicked&#39;</span>
-
-        <span class="nx">do</span> <span class="nx">activateTooltips</span></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>Setup and configure donation buttons.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">update: </span><span class="nf">(snippet) -&gt;</span>
-    <span class="nx">@editor</span><span class="p">.</span><span class="nx">update</span> <span class="nx">snippet</span>
-    <span class="nx">@snippets</span><span class="p">.</span><span class="nx">update</span> <span class="nx">snippet</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>Update the primary views with the selected <code>snippet</code> provided.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span> <span class="nf">-&gt;</span> <span class="nx">page</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>Initialize the <code>page</code> when the DOM is ready.</p>             </td>             <td class="code">               <div class="highlight"><pre>undefined</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>options.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="analytics.html">
+                analytics.coffee
+              </a>
+            
+              
+              <a class="source" href="content.html">
+                content.coffee
+              </a>
+            
+              
+              <a class="source" href="events.html">
+                events.coffee
+              </a>
+            
+              
+              <a class="source" href="i18n.html">
+                i18n.coffee
+              </a>
+            
+              
+              <a class="source" href="injector.html">
+                injector.coffee
+              </a>
+            
+              
+              <a class="source" href="install.html">
+                install.coffee
+              </a>
+            
+              
+              <a class="source" href="models.html">
+                models.coffee
+              </a>
+            
+              
+              <a class="source" href="options.html">
+                options.coffee
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>options.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/injector">Injector</a></p>
+<p>(c) 2014 Alasdair Mercer</p>
+<p>Freely distributable under the MIT license</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>TODO: Capture more analytics</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Extract the models and collections that are required by the options page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>{EditorSettings, EditorSettings, Snippet, Snippets} = models</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h2 id="feedback">Feedback</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Indicate whether the user feedback feature has been added to the page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>feedbackAdded = <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Add the user feedback feature to the page using the <code>options</code> provided.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">loadFeedback</span> = <span class="hljs-params">(options)</span> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Only load and configure the feedback widget once.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> feedbackAdded</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Create a script element to load the UserVoice widget.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  uv       = <span class="hljs-built_in">document</span>.createElement <span class="hljs-string">'script'</span>
+  uv.async = <span class="hljs-string">'async'</span>
+  uv.src   = <span class="hljs-string">"https://widget.uservoice.com/<span class="hljs-subst">#{options.id}</span>.js"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Insert the script element into the DOM.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  script = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'script'</span>
+  script.parentNode.insertBefore uv, script</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Configure the widget as it’s loading.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  UserVoice = <span class="hljs-built_in">window</span>.UserVoice <span class="hljs-keyword">or</span>= []
+  UserVoice.push [
+    <span class="hljs-string">'showTab'</span>
+    <span class="hljs-string">'classic_widget'</span>
+    {
+      <span class="hljs-attribute">mode</span>:          <span class="hljs-string">'full'</span>
+      <span class="hljs-attribute">primary_color</span>: <span class="hljs-string">'#333'</span>
+      <span class="hljs-attribute">link_color</span>:    <span class="hljs-string">'#08c'</span>
+      <span class="hljs-attribute">default_mode</span>:  <span class="hljs-string">'feedback'</span>
+      <span class="hljs-attribute">forum_id</span>:      options.forum
+      <span class="hljs-attribute">tab_label</span>:     i18n.get <span class="hljs-string">'feedback_button'</span>
+      <span class="hljs-attribute">tab_color</span>:     <span class="hljs-string">'#333'</span>
+      <span class="hljs-attribute">tab_position</span>:  <span class="hljs-string">'middle-right'</span>
+      <span class="hljs-attribute">tab_inverted</span>:  <span class="hljs-literal">yes</span>
+    }
+  ]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Ensure that the widget isn’t loaded again.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  feedbackAdded = <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h2 id="editor">Editor</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>View containing buttons for saving/resetting the code of the selected snippet from the contents
+of the Ace editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>EditorControls = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Overlay the editor controls on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#editor_controls'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Register DOM events for the editor controls</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'click #reset_button:not(:disabled)'</span>:  <span class="hljs-string">'reset'</span>
+    <span class="hljs-string">'click #update_button:not(:disabled)'</span>: <span class="hljs-string">'save'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Render the editor controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Reset the Ace editor so that it is empty.</p>
+<p>Nothing happens if there is no snippet selected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">reset</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+    {ace} = <span class="hljs-property">@options</span>
+
+    ace.setValue <span class="hljs-property">@model</span>.get <span class="hljs-string">'code'</span>
+    ace.gotoLine <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Save the contents of the Ace editor as the snippet code.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+    $button = $ event.currentTarget
+    code    = <span class="hljs-property">@options</span>.ace.getValue()
+
+    $button.button <span class="hljs-string">'loading'</span>
+
+    <span class="hljs-property">@model</span>.save { code }
+    .<span class="hljs-keyword">then</span><span class="hljs-function"> =&gt;</span>
+      <span class="hljs-property">@model</span>.trigger <span class="hljs-string">'modified'</span>, <span class="hljs-literal">no</span>, code
+
+      $button.button <span class="hljs-string">'reset'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Update the state of the editor controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
+    $buttons = <span class="hljs-property">@$</span> <span class="hljs-string">'#reset_button, #update_button'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Ensure that specific buttons are only enabled when a snippet is selected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $buttons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>A selection of available modes/languages that are supported by this extension for injecting
+snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>EditorModes = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Overlay the editor modes on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#editor_modes'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Template for mode group option groups.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">groupTemplate</span>: _.template <span class="hljs-string">"""
+    &lt;optgroup label="&lt;%- ctx.label %&gt;"&gt;&lt;/optgroup&gt;
+  """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Template for mode options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modeTemplate</span>: _.template <span class="hljs-string">"""
+    &lt;option value="&lt;%- ctx.value %&gt;"&gt;&lt;%= ctx.html %&gt;&lt;/option&gt;
+  """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Register DOM events for the editor modes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'change'</span>: <span class="hljs-string">'save'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Render the editor modes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">for</span> name, modes <span class="hljs-keyword">of</span> Snippet.modeGroups
+      <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(name, modes)</span> =&gt;</span>
+        $group = $ <span class="hljs-property">@groupTemplate</span>
+          <span class="hljs-attribute">label</span>: i18n.get <span class="hljs-string">"editor_mode_group_<span class="hljs-subst">#{name}</span>"</span>
+
+        <span class="hljs-keyword">for</span> mode <span class="hljs-keyword">in</span> modes
+          $group.append <span class="hljs-property">@modeTemplate</span>
+            <span class="hljs-attribute">html</span>:  i18n.get <span class="hljs-string">"editor_mode_<span class="hljs-subst">#{mode}</span>"</span>
+            <span class="hljs-attribute">value</span>: mode
+
+        <span class="hljs-property">@$el</span>.append $group
+
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Save the selected mode as the snippet mode.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>:<span class="hljs-function"> -&gt;</span>
+    mode = <span class="hljs-property">@$el</span>.val()
+
+    <span class="hljs-property">@options</span>.ace.getSession().setMode <span class="hljs-string">"ace/mode/<span class="hljs-subst">#{mode}</span>"</span>
+
+    <span class="hljs-property">@model</span>.save { mode } <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Update the state of the editor modes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
+    mode   = <span class="hljs-property">@model</span>?.get <span class="hljs-string">'mode'</span>
+    mode <span class="hljs-keyword">or</span>= Snippet.defaultMode
+
+    <span class="hljs-property">@$el</span>.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@$</span>(<span class="hljs-string">"option[value='<span class="hljs-subst">#{mode}</span>']"</span>).prop <span class="hljs-string">'selected'</span>, <span class="hljs-literal">yes</span>
+
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@save</span>
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>View containing options that allow the user to configure the Ace editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>EditorSettings = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Overlay the editor settings on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#editor_settings'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Template for setting options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">template</span>: _.template <span class="hljs-string">"""
+    &lt;option value="&lt;%- ctx.value %&gt;"&gt;&lt;%= ctx.html %&gt;&lt;/option&gt;
+  """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Register DOM events for the editor settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'change #editor_indent_size'</span>: <span class="hljs-string">'update'</span>
+    <span class="hljs-string">'change #editor_line_wrap'</span>:   <span class="hljs-string">'update'</span>
+    <span class="hljs-string">'change #editor_soft_tabs'</span>:   <span class="hljs-string">'update'</span>
+    <span class="hljs-string">'change #editor_theme'</span>:       <span class="hljs-string">'update'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Initialize the editor settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    $sizes  = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_indent_size optgroup'</span>
+    $themes = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_theme optgroup'</span>
+
+    <span class="hljs-keyword">for</span> size <span class="hljs-keyword">in</span> page.config.editor.indentSizes
+      $sizes.append <span class="hljs-property">@template</span>
+        <span class="hljs-attribute">html</span>:  size
+        <span class="hljs-attribute">value</span>: size
+
+    <span class="hljs-keyword">for</span> theme <span class="hljs-keyword">in</span> page.config.editor.themes
+      $themes.append <span class="hljs-property">@template</span>
+        <span class="hljs-attribute">html</span>:  i18n.get <span class="hljs-string">"editor_theme_<span class="hljs-subst">#{theme}</span>"</span>
+        <span class="hljs-attribute">value</span>: theme
+
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">"""
+      change:indentSize
+      change:lineWrap
+      change:softTabs
+      change:theme
+    """</span>, <span class="hljs-property">@render</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Render the editor settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    indentSize = <span class="hljs-property">@model</span>.get <span class="hljs-string">'indentSize'</span>
+    lineWrap   = <span class="hljs-property">@model</span>.get <span class="hljs-string">'lineWrap'</span>
+    softTabs   = <span class="hljs-property">@model</span>.get <span class="hljs-string">'softTabs'</span>
+    theme      = <span class="hljs-property">@model</span>.get <span class="hljs-string">'theme'</span>
+
+    <span class="hljs-property">@$</span> <span class="hljs-string">"""
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>editor_indent_size option[value=’#{indentSize}’],
+editor_line_wrap   option[value=’#{lineWrap}’],
+editor_soft_tabs   option[value=’#{softTabs}’],
+editor_theme       option[value=’#{theme}’]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">"""
+    .prop 'selected', yes
+
+    @
+
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Update the state of the editor settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
+    $indentSize = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_indent_size'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    $lineWrap   = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_line_wrap'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    $softTabs   = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_soft_tabs'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    $theme      = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_theme'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@model</span>.save
+      <span class="hljs-attribute">indentSize</span>: parseInt $indentSize.val(), <span class="hljs-number">0</span>
+      <span class="hljs-attribute">lineWrap</span>:   $lineWrap.val() <span class="hljs-keyword">is</span> <span class="hljs-string">'true'</span>
+      <span class="hljs-attribute">softTabs</span>:   $softTabs.val() <span class="hljs-keyword">is</span> <span class="hljs-string">'true'</span>
+      <span class="hljs-attribute">theme</span>:      $theme.val()
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Contains the Ace editor that allows the user to modify a snippet’s code.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>EditorView = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Overlay the editor on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#editor'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Initialize the editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@ace</span> = ace.edit <span class="hljs-string">'editor'</span>
+    <span class="hljs-property">@ace</span>.setReadOnly <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    <span class="hljs-property">@ace</span>.setShowPrintMargin <span class="hljs-literal">no</span>
+    <span class="hljs-property">@ace</span>.getSession().<span class="hljs-literal">on</span> <span class="hljs-string">'change'</span>,<span class="hljs-function"> =&gt;</span>
+      <span class="hljs-property">@model</span>.trigger <span class="hljs-string">'modified'</span>, <span class="hljs-property">@hasUnsavedChanges</span>(), <span class="hljs-property">@ace</span>.getValue() <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> EditorSettings { <span class="hljs-attribute">model</span>: <span class="hljs-property">@options</span>.settings }
+    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> EditorControls { <span class="hljs-property">@ace</span> }
+    <span class="hljs-property">@modes</span>    = <span class="hljs-keyword">new</span> EditorModes    { <span class="hljs-property">@ace</span> }
+
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@options</span>.settings, <span class="hljs-string">"""
+      change:indentSize
+      change:lineWrap
+      change:softTabs
+      change:theme
+    """</span>, <span class="hljs-property">@updateEditor</span>
+
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@updateEditor</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Determine whether or not the contents of the Ace editor is different from the snippet code.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">hasUnsavedChanges</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@ace</span>.getValue() <span class="hljs-keyword">isnt</span> <span class="hljs-property">@model</span>?.get <span class="hljs-string">'code'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Render the editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@settings</span>.render()
+    <span class="hljs-property">@controls</span>.render()
+    <span class="hljs-property">@modes</span>.render()
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Update the state of the editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
+    <span class="hljs-property">@ace</span>.setReadOnly <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    <span class="hljs-property">@ace</span>.setValue <span class="hljs-property">@model</span>?.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>
+    <span class="hljs-property">@ace</span>.gotoLine <span class="hljs-number">0</span>
+
+    <span class="hljs-property">@settings</span>.update <span class="hljs-property">@model</span>
+    <span class="hljs-property">@controls</span>.update <span class="hljs-property">@model</span>
+    <span class="hljs-property">@modes</span>.update <span class="hljs-property">@model</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Update the Ace editor with the selected options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateEditor</span>:<span class="hljs-function"> -&gt;</span>
+    {settings} = <span class="hljs-property">@options</span>
+    aceSession = <span class="hljs-property">@ace</span>.getSession()
+
+    aceSession.setUseWrapMode settings.get <span class="hljs-string">'lineWrap'</span>
+    aceSession.setUseSoftTabs settings.get <span class="hljs-string">'softTabs'</span>
+    aceSession.setTabSize     settings.get <span class="hljs-string">'indentSize'</span>
+    <span class="hljs-property">@ace</span>.setTheme <span class="hljs-string">"ace/theme/<span class="hljs-subst">#{settings.get <span class="hljs-string">'theme'</span>}</span>"</span>
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="settings">Settings</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Allows the user to modify the general settings of the extension.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>GeneralSettingsView = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Overlay the general settings on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#general_tab'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Register DOM events for the general settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'change #analytics'</span>: <span class="hljs-string">'save'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Initialize the general settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@render</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@updateAnalytics</span>
+
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@updateAnalytics</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Render the general settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#analytics'</span>).prop <span class="hljs-string">'checked'</span>, <span class="hljs-property">@model</span>.get <span class="hljs-string">'analytics'</span>
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Save the settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>:<span class="hljs-function"> -&gt;</span>
+    $analytics = <span class="hljs-property">@$</span> <span class="hljs-string">'#analytics'</span>
+
+    <span class="hljs-property">@model</span>.save { <span class="hljs-attribute">analytics</span>: $analytics.<span class="hljs-keyword">is</span> <span class="hljs-string">':checked'</span> }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Add or remove analytics from the page depending on settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateAnalytics</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'analytics'</span>
+      analytics.add page.config.analytics
+    <span class="hljs-keyword">else</span>
+      analytics.remove()
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Parent view for all configurable settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SettingsView = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Overlay the settings on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'body'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Initialize the settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@general</span> = <span class="hljs-keyword">new</span> GeneralSettingsView { <span class="hljs-property">@model</span> }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Render the settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@general</span>.render()
+
+    @
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <h2 id="snippets">Snippets</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>View contains buttons used to control/manage the user’s snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SnippetControls = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Overlay the snippet controls on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#snippets_controls'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Register DOM events for the snippet controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'show.bs.popover .btn'</span>:               <span class="hljs-string">'closeOtherPrompts'</span>
+    <span class="hljs-string">'click #delete_menu .btn'</span>:            <span class="hljs-string">'closeOtherPrompts'</span>
+    <span class="hljs-string">'click #add_button:not(:disabled)'</span>:   <span class="hljs-string">'togglePrompt'</span>
+    <span class="hljs-string">'shown.bs.popover #add_button'</span>:       <span class="hljs-string">'promptAdd'</span>
+    <span class="hljs-string">'click #edit_button:not(:disabled)'</span>:  <span class="hljs-string">'togglePrompt'</span>
+    <span class="hljs-string">'shown.bs.popover #edit_button'</span>:      <span class="hljs-string">'promptEdit'</span>
+    <span class="hljs-string">'click #clone_button:not(:disabled)'</span>: <span class="hljs-string">'togglePrompt'</span>
+    <span class="hljs-string">'shown.bs.popover #clone_button'</span>:     <span class="hljs-string">'promptClone'</span>
+    <span class="hljs-string">'click #delete_menu .js-resolve'</span>:     <span class="hljs-string">'removeSnippet'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Initialize the snippet controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@$</span> <span class="hljs-string">'#add_button, #clone_button, #edit_button'</span>
+    .popover
+      <span class="hljs-attribute">html</span>:      <span class="hljs-literal">yes</span>
+      <span class="hljs-attribute">trigger</span>:   <span class="hljs-string">'manual'</span>
+      <span class="hljs-attribute">placement</span>: <span class="hljs-string">'bottom'</span>
+      <span class="hljs-attribute">container</span>: <span class="hljs-string">'body'</span>
+      <span class="hljs-attribute">content</span>:   <span class="hljs-string">"""
+        &lt;form id="edit_snippet" class="form-inline" role="form"&gt;
+          &lt;div class="form-group"&gt;
+            &lt;input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com"&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>Hide all popovers other than the one associated with the current target of the given <code>event</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">closeOtherPrompts</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    hidePopovers event.currentTarget</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>Display the popover containing the form to add a new snippet.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptAdd</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@promptHost</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>Display the popover containing the form to clone an existing snippet.</p>
+<p>Nothing happens if no snippet is active.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptClone</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@promptHost</span> <span class="hljs-attribute">clone</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>Display the popover containing the form to edit an existing snippet.</p>
+<p>Nothing happens if no snippet is active.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptEdit</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@promptHost</span> <span class="hljs-attribute">edit</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Display the popover containing the form based on the specified <code>options</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptHost</span>: <span class="hljs-function"><span class="hljs-params">(options = {})</span> -&gt;</span>
+    $form = $ <span class="hljs-string">'#edit_snippet'</span>
+    value = <span class="hljs-keyword">if</span> options.clone <span class="hljs-keyword">or</span> options.edit <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'host'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>Handle the form submission depending on the purpose of the prompt.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $form.<span class="hljs-literal">on</span> <span class="hljs-string">'submit'</span>,<span class="hljs-function"> =&gt;</span>
+      $group = $form.find <span class="hljs-string">'.form-group'</span>
+      host   = $form.find(<span class="hljs-string">':text'</span>).val().replace <span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>
+
+      <span class="hljs-keyword">unless</span> host
+        $group.addClass <span class="hljs-string">'has-error'</span>
+      <span class="hljs-keyword">else</span>
+        $group.removeClass <span class="hljs-string">'has-error'</span>
+
+        <span class="hljs-keyword">if</span> options.edit
+          <span class="hljs-property">@model</span>.save { host }
+          .done<span class="hljs-function"> -&gt;</span>
+            page.snippets.list.sort()
+        <span class="hljs-keyword">else</span>
+          base = <span class="hljs-keyword">if</span> options.clone <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">new</span> Snippet
+
+          <span class="hljs-property">@collection</span>.create {
+            host
+            <span class="hljs-attribute">code</span>: base.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>
+            <span class="hljs-attribute">mode</span>: base.get(<span class="hljs-string">'mode'</span>) <span class="hljs-keyword">or</span> Snippet.defaultMode
+          }, <span class="hljs-attribute">success</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
+            model.select().done<span class="hljs-function"> -&gt;</span>
+              page.snippets.list.sort().showSelected()
+
+      <span class="hljs-keyword">do</span> hidePopovers
+
+      <span class="hljs-literal">false</span>
+
+    $form.find(<span class="hljs-string">':text'</span>).focus().val value</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>Deselect and destroy the active snippet.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">removeSnippet</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+    model = <span class="hljs-property">@model</span>
+    model.deselect().done<span class="hljs-function"> -&gt;</span>
+      model.destroy()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>Toggle the display of the popover associated with the current target of the given <code>event</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">togglePrompt</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    $(event.currentTarget).popover <span class="hljs-string">'toggle'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>Update the state of the snippet controls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
+    $modelButtons = <span class="hljs-property">@$</span> <span class="hljs-string">'#clone_button, #delete_menu .btn, #edit_button'</span>
+
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#add_button'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-literal">no</span>
+    $modelButtons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-keyword">do</span> hidePopovers <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>Menu item which, when selected, enables the user to manage and modify the code of the underlying
+snippet.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SnippetItem = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>Tag name for the element to be created for the snippet item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">tagName</span>: <span class="hljs-string">'li'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>Template for the snippet item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">template</span>: _.template <span class="hljs-string">'&lt;a&gt;&lt;%= ctx.host %&gt;&lt;/a&gt;'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>Register DOM events for the snippet item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
+    <span class="hljs-string">'click a'</span>: <span class="hljs-string">'updateSelection'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>Initialize the snippet item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'destroy'</span>, <span class="hljs-property">@remove</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'modified'</span>, <span class="hljs-property">@modified</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:host change:selected'</span>, <span class="hljs-property">@render</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>Highlight that the snippet code has been modified in the editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modified</span>: <span class="hljs-function"><span class="hljs-params">(changed)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> changed
+      <span class="hljs-property">@$el</span>.addClass <span class="hljs-string">'modified'</span>
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@$el</span>.removeClass <span class="hljs-string">'modified'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>Render the snippet item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@$el</span>.html <span class="hljs-property">@template</span> <span class="hljs-property">@model</span>.pick <span class="hljs-string">'host'</span>
+
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'selected'</span>
+      <span class="hljs-property">@$el</span>.addClass <span class="hljs-string">'active'</span>
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@$el</span>.removeClass <span class="hljs-string">'active modified'</span>
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>Update the selected state of the snippet depending on the given <code>event</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateSelection</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> event.ctrlKey <span class="hljs-keyword">or</span> event.metaKey <span class="hljs-keyword">and</span> <span class="hljs-regexp">/^mac/i</span>.test navigator.platform
+      <span class="hljs-property">@model</span>.deselect()
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@$el</span>.hasClass <span class="hljs-string">'active'</span>
+      <span class="hljs-property">@model</span>.select()
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>A menu of snippets that allows the user to easily manage them.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SnippetsList = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>Overlay the snippets list on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#snippets_list'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>Create and add a <code>SnippetItem</code> for the specified <code>model</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">addItem</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
+    item = <span class="hljs-keyword">new</span> SnippetItem { model }
+
+    <span class="hljs-property">@items</span>.push item
+
+    <span class="hljs-property">@$el</span>.append item.render().$el
+
+    item</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <p>Initialize the snippets list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@items</span> = []
+
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@collection</span>, <span class="hljs-string">'add'</span>, <span class="hljs-property">@addItem</span>
+    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@collection</span>, <span class="hljs-string">'reset'</span>, <span class="hljs-property">@resetItems</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <p>Override <code>remove</code> to ensure that managed sub-views are removed as well.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">remove</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@removeItems</span>
+
+    <span class="hljs-property">@super</span> <span class="hljs-string">'remove'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <p>Remove all managed sub-views.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">removeItems</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@items</span>.shift().remove() <span class="hljs-keyword">while</span> <span class="hljs-property">@items</span>.length &gt; <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <p>Render the snippets list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@resetItems</span>
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              <p>Remove any existing managed sub-views before creating and adding new <code>SnippetItem</code> views for
+each snippet model in the collection.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resetItems</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">do</span> <span class="hljs-property">@removeItems</span>
+
+    <span class="hljs-property">@collection</span>.each <span class="hljs-property">@addItem</span>, @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-86">&#182;</a>
+              </div>
+              <p>Scroll to the selected snippet in the list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">showSelected</span>:<span class="hljs-function"> -&gt;</span>
+    $selectedItem = <span class="hljs-property">@$</span> <span class="hljs-string">'li.active'</span>
+
+    <span class="hljs-property">@$el</span>.scrollTop $selectedItem.offset().top - <span class="hljs-property">@$el</span>.offset().top
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <p>Detach each snippet item in the list and sort them based on their text contents before
+re-appending them.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">sort</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@$el</span>.append _.sortBy <span class="hljs-property">@$</span>(<span class="hljs-string">'li'</span>).detach(), <span class="hljs-string">'textContent'</span>
+
+    @
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <p>The primary view for managing snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>SnippetsView = Injector.View.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>Overlay the snippets on top of this element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">el</span>: <span class="hljs-string">'#snippets_tab'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p>Initialize the snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> SnippetControls { <span class="hljs-property">@collection</span> }
+    <span class="hljs-property">@list</span>     = <span class="hljs-keyword">new</span> SnippetsList { <span class="hljs-property">@collection</span> }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              <p>Render the snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@controls</span>.render()
+    <span class="hljs-property">@list</span>.render()
+
+    @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>Update the state of the snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
+    <span class="hljs-property">@controls</span>.update model
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <h2 id="miscellaneous">Miscellaneous</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-94">&#182;</a>
+              </div>
+              <p>Activate tooltip effects, optionally only within a specific context.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">activateTooltips</span> = <span class="hljs-params">(selector)</span> -&gt;</span>
+  base = $ selector <span class="hljs-keyword">or</span> <span class="hljs-built_in">document</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-95">&#182;</a>
+              </div>
+              <p>Reset all previously treated tooltips.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  base.find <span class="hljs-string">'[data-original-title]'</span>
+  .each<span class="hljs-function"> -&gt;</span>
+    $<span class="hljs-keyword">this</span> = $ @
+
+    $<span class="hljs-keyword">this</span>
+    .tooltip <span class="hljs-string">'destroy'</span>
+    .attr <span class="hljs-string">'title'</span>, $<span class="hljs-keyword">this</span>.attr <span class="hljs-string">'data-original-title'</span>
+    .removeAttr <span class="hljs-string">'data-original-title'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-96">&#182;</a>
+              </div>
+              <p>Apply tooltips to all relevant elements.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  base.find <span class="hljs-string">'[title]'</span>
+  .each<span class="hljs-function"> -&gt;</span>
+    $<span class="hljs-keyword">this</span> = $ @
+
+    $<span class="hljs-keyword">this</span>.tooltip
+      <span class="hljs-attribute">container</span>: $<span class="hljs-keyword">this</span>.attr(<span class="hljs-string">'data-container'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">'body'</span>
+      <span class="hljs-attribute">placement</span>: $<span class="hljs-keyword">this</span>.attr(<span class="hljs-string">'data-placement'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">'top'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-97">&#182;</a>
+              </div>
+              <p>Hide all visibile popovers and remove them from the DOM with the option to exclude specific
+<code>exceptions</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">hidePopovers</span> = <span class="hljs-params">(exceptions)</span> -&gt;</span>
+  $toggles = $ <span class="hljs-string">'.js-popover-toggle'</span>
+  $toggles = $toggles.<span class="hljs-keyword">not</span> exceptions <span class="hljs-keyword">if</span> exceptions?
+
+  $toggles.popover <span class="hljs-string">'hide'</span>
+  $(<span class="hljs-string">'.popover'</span>).remove()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-98">&#182;</a>
+              </div>
+              <h2 id="options-page-setup">Options page setup</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              <p>Responsible for managing the options page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OptionsPage</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <p>The current version of the extension.</p>
+<p>This will be updated with the actual value during the page’s initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">version</span>: <span class="hljs-string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-101">&#182;</a>
+              </div>
+              <p>Create a new instance of <code>OptionsPage</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">constructor</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@config</span> = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-102">&#182;</a>
+              </div>
+              <h2 id="public-functions">Public functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-103">&#182;</a>
+              </div>
+              <p>Initialize the options page.</p>
+<p>This will involve inserting and configuring the UI elements as well as loading the current
+settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-104">&#182;</a>
+              </div>
+              <p>It’s nice knowing what version is running.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    {<span class="hljs-property">@version</span>} = chrome.runtime.getManifest()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <p>Load the configuration data from the file before storing it locally.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    chrome.runtime.sendMessage { <span class="hljs-attribute">type</span>: <span class="hljs-string">'config'</span> }, <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@config</span>)</span> =&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-106">&#182;</a>
+              </div>
+              <p>Map the mode groups now to save the configuration data from being loaded again by
+<code>Snippets.fetch</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      Snippet.mapModeGroups <span class="hljs-property">@config</span>.editor.modeGroups</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-107">&#182;</a>
+              </div>
+              <p>Add the user feedback feature to the page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      loadFeedback <span class="hljs-property">@config</span>.options.userVoice</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-108">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-108">&#182;</a>
+              </div>
+              <p>Begin initialization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      i18n.traverse()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-109">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-109">&#182;</a>
+              </div>
+              <p>Retrieve all singleton instances as well as the collection for user-created snippets.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      models.fetch <span class="hljs-function"><span class="hljs-params">(result)</span> =&gt;</span>
+        {settings, editorSettings, snippets} = result</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-110">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-110">&#182;</a>
+              </div>
+              <p>Create views for the important models and collections.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-property">@editor</span>   = <span class="hljs-keyword">new</span> EditorView <span class="hljs-attribute">settings</span>: editorSettings
+        <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> SettingsView <span class="hljs-attribute">model</span>: settings
+        <span class="hljs-property">@snippets</span> = <span class="hljs-keyword">new</span> SnippetsView <span class="hljs-attribute">collection</span>: snippets</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-111">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-111">&#182;</a>
+              </div>
+              <p>Render these new views.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-property">@editor</span>.render()
+        <span class="hljs-property">@settings</span>.render()
+        <span class="hljs-property">@snippets</span>.render()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-112">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-112">&#182;</a>
+              </div>
+              <p>Ensure that views are updated accordingly when snippets are selected/deselected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        snippets.<span class="hljs-literal">on</span> <span class="hljs-string">'selected deselected'</span>, <span class="hljs-function"><span class="hljs-params">(snippet)</span> =&gt;</span>
+          <span class="hljs-keyword">if</span> snippet.get <span class="hljs-string">'selected'</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@update</span> snippet <span class="hljs-keyword">else</span> <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+
+        selectedSnippet = snippets.findWhere <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span>
+        <span class="hljs-property">@update</span> selectedSnippet <span class="hljs-keyword">if</span> selectedSnippet</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-113">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-113">&#182;</a>
+              </div>
+              <p>Ensure the current year is displayed throughout, where appropriate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'.js-insert-year'</span>).html <span class="hljs-string">"<span class="hljs-subst">#{<span class="hljs-keyword">new</span> Date().getFullYear()}</span>"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-114">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-114">&#182;</a>
+              </div>
+              <p>Bind tab selection event to all tabs.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        initialSnippetDisplay = initialTabChange = <span class="hljs-literal">yes</span>
+
+        $(<span class="hljs-string">'a[data-tabify]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
+          target  = $(@).data <span class="hljs-string">'tabify'</span>
+          $nav    = $ <span class="hljs-string">"header.navbar .nav a[data-tabify='<span class="hljs-subst">#{target}</span>']"</span>
+          $parent = $nav.parent <span class="hljs-string">'li'</span>
+
+          <span class="hljs-keyword">unless</span> $parent.hasClass <span class="hljs-string">'active'</span>
+            $parent.addClass(<span class="hljs-string">'active'</span>).siblings().removeClass <span class="hljs-string">'active'</span>
+            $(target).removeClass(<span class="hljs-string">'hide'</span>).siblings(<span class="hljs-string">'.tab'</span>).addClass <span class="hljs-string">'hide'</span>
+
+            id = $nav.attr <span class="hljs-string">'id'</span>
+
+            settings.save <span class="hljs-attribute">tab</span>: id
+            .<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
+              <span class="hljs-keyword">unless</span> initialTabChange
+                analytics.track <span class="hljs-string">'Tabs'</span>, <span class="hljs-string">'Changed'</span>, _.capitalize id.match(<span class="hljs-regexp">/(\S*)_nav$/</span>)[<span class="hljs-number">1</span>]
+
+              <span class="hljs-keyword">if</span> id <span class="hljs-keyword">is</span> <span class="hljs-string">'snippets'</span> <span class="hljs-keyword">and</span> initialSnippetDisplay
+                initialSnippetDisplay = <span class="hljs-literal">no</span>
+                page.snippets.list.showSelected()
+
+              initialTabChange = <span class="hljs-literal">no</span>
+
+              $(<span class="hljs-built_in">document</span>.body).scrollTop <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-115">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-115">&#182;</a>
+              </div>
+              <p>Reflect the previously persisted tab initially.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">"#<span class="hljs-subst">#{settings.get <span class="hljs-string">'tab'</span>}</span>"</span>).trigger <span class="hljs-string">'click'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-116">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-116">&#182;</a>
+              </div>
+              <p>Ensure that form submissions don’t reload the page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'form:not([target="_blank"])'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'submit'</span>,<span class="hljs-function"> -&gt;</span> <span class="hljs-literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-117">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-117">&#182;</a>
+              </div>
+              <p>Ensure that popovers are closed when the <code>Esc</code> key is pressed anywhere.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">document</span>)</span>.<span class="hljs-title">on</span> '<span class="hljs-title">keydown</span>', <span class="hljs-params">(e)</span> -&gt;</span>
+          <span class="hljs-keyword">do</span> hidePopovers <span class="hljs-keyword">if</span> e.keyCode <span class="hljs-keyword">is</span> <span class="hljs-number">27</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-118">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-118">&#182;</a>
+              </div>
+              <p>Support <em>goto</em> navigation elements that change the current scroll position when clicked.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'[data-goto]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
+          <span class="hljs-keyword">switch</span> $(@).data <span class="hljs-string">'goto'</span>
+            <span class="hljs-keyword">when</span> <span class="hljs-string">'top'</span> <span class="hljs-keyword">then</span> $(<span class="hljs-built_in">document</span>.body).scrollTop <span class="hljs-number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-119">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-119">&#182;</a>
+              </div>
+              <p>Bind analytical tracking events to key footer buttons and links.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'footer a[href*="neocotic.com"]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
+          analytics.track <span class="hljs-string">'Footer'</span>, <span class="hljs-string">'Clicked'</span>, <span class="hljs-string">'Homepage'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-120">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-120">&#182;</a>
+              </div>
+              <p>Setup and configure donation buttons.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#donation input[name="hosted_button_id"]'</span>).val <span class="hljs-property">@config</span>.options.payPal
+        $(<span class="hljs-string">'.js-donate'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
+          $(@).tooltip <span class="hljs-string">'hide'</span>
+
+          $(<span class="hljs-string">'#donation'</span>).submit()
+
+          analytics.track <span class="hljs-string">'Donate'</span>, <span class="hljs-string">'Clicked'</span>
+
+        <span class="hljs-keyword">do</span> activateTooltips</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-121">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-121">&#182;</a>
+              </div>
+              <p>Update the primary views with the selected <code>snippet</code> provided.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
+    <span class="hljs-property">@editor</span>.update snippet
+    <span class="hljs-property">@snippets</span>.update snippet</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-122">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-122">&#182;</a>
+              </div>
+              <p>Create an global instance of <code>OptionsPage</code> and initialize it once the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>page = <span class="hljs-built_in">window</span>.page = <span class="hljs-keyword">new</span> OptionsPage
+
+$<span class="hljs-function"> -&gt;</span> page.init()</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

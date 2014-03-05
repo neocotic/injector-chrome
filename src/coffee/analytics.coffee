@@ -1,12 +1,15 @@
-# [Injector](http://neocotic.com/injector)  
-# (c) 2014 Alasdair Mercer  
+# [Injector](http://neocotic.com/injector)
+#
+# (c) 2014 Alasdair Mercer
+#
 # Freely distributable under the MIT license
 
 # Analytics
 # ---------
 
 # Analytics capture end-user interactions and usage details which can be used to improve the
-# extension.  
+# extension.
+#
 # Although enabled by default, the user can disable the capturing of this information via the
 # options page.
 analytics = window.analytics =

@@ -1,122 +1,681 @@
-<!DOCTYPE html>  <html> <head>   <title>models.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="analytics.html">                 analytics.coffee               </a>                                           <a class="source" href="events.html">                 events.coffee               </a>                                           <a class="source" href="i18n.html">                 i18n.coffee               </a>                                           <a class="source" href="injector.html">                 injector.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="models.html">                 models.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               models.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/injector">Injector</a> <br />
-(c) 2013 Alasdair Mercer <br />
-Freely distributable under the MIT license</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Models</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Expose all models (and collections) that are used throughout the extension. <br />
-These are intentionally not added to the global object (i.e. <code>window</code>) to avoid cluttering that
-<em>namespace</em>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">models = </span><span class="nb">window</span><span class="p">.</span><span class="nv">models =</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Convenience short-hand method for retrieving all common models and collections. <br />
-The <code>callback</code> function will be passed a map of the fetched instances.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">fetch: </span><span class="nf">(callback) -&gt;</span>
-    <span class="nx">Settings</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(settings) -&gt;</span>
-      <span class="nx">EditorSettings</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(editorSettings) -&gt;</span>
-        <span class="nx">Snippets</span><span class="p">.</span><span class="nx">fetch</span> <span class="nf">(snippets) -&gt;</span>
-          <span class="nx">callback</span> <span class="p">{</span> <span class="nx">settings</span><span class="p">,</span> <span class="nx">editorSettings</span><span class="p">,</span> <span class="nx">snippets</span> <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Editor</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Singleton instance of the <code>EditorSettingsLookup</code> collection.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">editorSettingsLookup = </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The settings associated with the Ace editor.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorSettings = models.EditorSettings = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span>
+<!DOCTYPE html>
 
-  <span class="nv">defaults:</span>
-    <span class="nv">indentSize: </span><span class="mi">2</span>
-    <span class="nv">lineWrap: </span>  <span class="kc">no</span>
-    <span class="nv">softTabs: </span>  <span class="kc">yes</span>
-    <span class="nv">theme: </span>     <span class="s">&#39;github&#39;</span>
+<html>
+<head>
+  <title>models.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="analytics.html">
+                analytics.coffee
+              </a>
+            
+              
+              <a class="source" href="content.html">
+                content.coffee
+              </a>
+            
+              
+              <a class="source" href="events.html">
+                events.coffee
+              </a>
+            
+              
+              <a class="source" href="i18n.html">
+                i18n.coffee
+              </a>
+            
+              
+              <a class="source" href="injector.html">
+                injector.coffee
+              </a>
+            
+              
+              <a class="source" href="install.html">
+                install.coffee
+              </a>
+            
+              
+              <a class="source" href="models.html">
+                models.coffee
+              </a>
+            
+              
+              <a class="source" href="options.html">
+                options.coffee
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>models.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/injector">Injector</a></p>
+<p>(c) 2014 Alasdair Mercer</p>
+<p>Freely distributable under the MIT license</p>
 
-<span class="p">},</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Retrieve the singleton instance of the <code>EditorSettings</code> model.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">fetch: </span><span class="nf">(callback) -&gt;</span>
-    <span class="p">(</span><span class="nx">editorSettingsLookup</span> <span class="o">?=</span> <span class="k">new</span> <span class="nx">EditorSettingsLookup</span><span class="p">).</span><span class="nx">fetch</span><span class="p">().</span><span class="nx">then</span> <span class="nf">-&gt;</span>
-      <span class="nx">editorSettingsLookup</span><span class="p">.</span><span class="nx">add</span> <span class="k">new</span> <span class="nx">EditorSettings</span> <span class="k">unless</span> <span class="nx">editorSettingsLookup</span><span class="p">.</span><span class="nx">length</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="models">Models</h2>
 
-      <span class="nx">callback</span> <span class="nx">editorSettingsLookup</span><span class="p">.</span><span class="nx">first</span><span class="p">()</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Expose all models (and collections) that are used throughout the extension.</p>
+<p>These are intentionally not added to the global object (i.e. <code>window</code>) to avoid cluttering that
+<em>namespace</em>.</p>
 
-<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Lookup collection used for retrieving a singleton instance of the <code>EditorSettings</code> model.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EditorSettingsLookup = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>models = <span class="hljs-built_in">window</span>.models =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Convenience short-hand method for retrieving all common models and collections.</p>
+<p>The <code>callback</code> function will be passed a map of the fetched instances.</p>
 
-  <span class="nv">chromeStorage: </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">ChromeStorage</span> <span class="s">&#39;EditorSettings&#39;</span><span class="p">,</span> <span class="s">&#39;sync&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fetch</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    Settings.fetch <span class="hljs-function"><span class="hljs-params">(settings)</span> -&gt;</span>
+      EditorSettings.fetch <span class="hljs-function"><span class="hljs-params">(editorSettings)</span> -&gt;</span>
+        Snippets.fetch <span class="hljs-function"><span class="hljs-params">(snippets)</span> -&gt;</span>
+          callback { settings, editorSettings, snippets }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="editor">Editor</h2>
 
-  <span class="nv">model: </span><span class="nx">EditorSettings</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Settings</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Singleton instance of the <code>SettingsLookup</code> collection.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">settingsLookup = </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>The general settings that can be configured (or are related to) the options page.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Settings = models.Settings = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>The settings associated with the Ace editor.</p>
 
-  <span class="nv">defaults:</span>
-    <span class="nv">tab: </span>      <span class="s">&#39;general_nav&#39;</span>
-    <span class="nv">analytics: </span><span class="kc">yes</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>EditorSettings = models.EditorSettings = Injector.SingletonModel.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Store the editor settings remotely.</p>
 
-<span class="p">},</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Retrieve the singleton instance of the <code>Settings</code> model.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">fetch: </span><span class="nf">(callback) -&gt;</span>
-    <span class="p">(</span><span class="nx">settingsLookup</span> <span class="o">?=</span> <span class="k">new</span> <span class="nx">SettingsLookup</span><span class="p">).</span><span class="nx">fetch</span><span class="p">().</span><span class="nx">then</span> <span class="nf">-&gt;</span>
-      <span class="nx">settingsLookup</span><span class="p">.</span><span class="nx">add</span> <span class="k">new</span> <span class="nx">Settings</span> <span class="k">unless</span> <span class="nx">settingsLookup</span><span class="p">.</span><span class="nx">length</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">storage</span>:
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">'EditorSettings'</span>
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">'sync'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Default attributes for the editor settings.</p>
 
-      <span class="nx">callback</span> <span class="nx">settingsLookup</span><span class="p">.</span><span class="nx">first</span><span class="p">()</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">defaults</span>:
+    <span class="hljs-attribute">indentSize</span>: <span class="hljs-number">2</span>
+    <span class="hljs-attribute">lineWrap</span>:   <span class="hljs-literal">no</span>
+    <span class="hljs-attribute">softTabs</span>:   <span class="hljs-literal">yes</span>
+    <span class="hljs-attribute">theme</span>:      <span class="hljs-string">'chrome'</span>
 
-<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Lookup collection used for retrieving a singleton instance of the <code>Settings</code> model.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SettingsLookup = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span>
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="settings">Settings</h2>
 
-  <span class="nv">chromeStorage: </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">ChromeStorage</span> <span class="s">&#39;Settings&#39;</span><span class="p">,</span> <span class="s">&#39;sync&#39;</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>The general settings that can be configured (or are related to) the options page.</p>
 
-  <span class="nv">model: </span><span class="nx">Settings</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h2>Snippets</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Default Ace editor mode/language.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">DEFAULT_MODE = </span><span class="s">&#39;javascript&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>A snippet to be injected into a specific host. <br />
-The snippet's code can be written in a number of supported languages and can be either be a
-script to be executed on the page or contain styles to be applied to it.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Snippet = models.Snippet = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Settings = models.Settings = Injector.SingletonModel.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Store the general settings remotely.</p>
 
-  <span class="nv">defaults:</span>
-    <span class="nv">code: </span>    <span class="s">&#39;&#39;</span>
-    <span class="nv">mode: </span>    <span class="nx">DEFAULT_MODE</span>
-    <span class="nv">selected: </span><span class="kc">no</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">storage</span>:
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">'Settings'</span>
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">'sync'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Default attributes for the general settings.</p>
 
-  <span class="nv">deselect: </span><span class="nf">-&gt;</span>
-    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">().</span><span class="nx">resolve</span><span class="p">()</span> <span class="k">unless</span> <span class="nx">@get</span> <span class="s">&#39;selected&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">defaults</span>:
+    <span class="hljs-attribute">analytics</span>: <span class="hljs-literal">yes</span>
+    <span class="hljs-attribute">tab</span>:       <span class="hljs-string">'snippets_nav'</span>
 
-    <span class="nx">@save</span><span class="p">(</span><span class="nv">selected: </span><span class="kc">no</span><span class="p">).</span><span class="nx">done</span> <span class="o">=&gt;</span>
-      <span class="nx">@trigger</span> <span class="s">&#39;deselected&#39;</span><span class="p">,</span> <span class="k">this</span>
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="snippets">Snippets</h2>
 
-  <span class="nv">groupName: </span><span class="nf">-&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span><span class="nx">Snippet</span><span class="p">.</span><span class="nx">modeGroups</span><span class="p">).</span><span class="nx">keys</span><span class="p">().</span><span class="nx">find</span><span class="p">(</span><span class="nx">@inGroup</span><span class="p">,</span> <span class="k">this</span><span class="p">).</span><span class="nx">value</span><span class="p">()</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Default Ace editor mode/language.</p>
 
-  <span class="nv">inGroup: </span><span class="nf">(name) -&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">contains</span> <span class="nx">Snippet</span><span class="p">.</span><span class="nx">modeGroups</span><span class="p">[</span><span class="nx">name</span><span class="p">],</span> <span class="nx">@get</span> <span class="s">&#39;mode&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>DEFAULT_MODE = <span class="hljs-string">'javascript'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>A snippet to be injected into a specific host.</p>
+<p>The snippet’s code can be written in a number of supported languages and can be either be a
+script to be executed on the page or contain styles to be applied to it.</p>
 
-  <span class="nv">select: </span><span class="nf">-&gt;</span>
-    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">().</span><span class="nx">resolve</span><span class="p">()</span> <span class="k">if</span> <span class="nx">@get</span> <span class="s">&#39;selected&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Snippet = models.Snippet = Injector.Model.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Default attributes for a snippet.</p>
 
-    <span class="nx">@save</span><span class="p">(</span><span class="nv">selected: </span><span class="kc">yes</span><span class="p">).</span><span class="nx">done</span> <span class="o">=&gt;</span>
-      <span class="k">if</span> <span class="nx">@collection</span>
-        <span class="nx">@collection</span><span class="p">.</span><span class="nx">chain</span><span class="p">().</span><span class="nx">without</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">invoke</span> <span class="s">&#39;save&#39;</span><span class="p">,</span> <span class="nv">selected: </span><span class="kc">no</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">defaults</span>:
+    <span class="hljs-attribute">code</span>:     <span class="hljs-string">''</span>
+    <span class="hljs-attribute">mode</span>:     DEFAULT_MODE
+    <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Attribute mutators for a snippet.</p>
 
-      <span class="nx">@trigger</span> <span class="s">&#39;selected&#39;</span><span class="p">,</span> <span class="k">this</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">mutators</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Retrieve the group associated with the mode of this snippet.</p>
 
-  <span class="nv">validate: </span><span class="nf">(attributes) -&gt;</span>
-    <span class="p">{</span> <span class="nx">host</span><span class="p">,</span> <span class="nx">mode</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">attributes</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">group</span>:
+      <span class="hljs-attribute">get</span>:<span class="hljs-function"> -&gt;</span>
+        _.find Snippet.modeGroups, <span class="hljs-property">@inGroup</span>, @
+      <span class="hljs-attribute">transient</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Determine the name of the group associated with the mode of this snippet.</p>
 
-    <span class="k">unless</span> <span class="nx">host</span>
-      <span class="s">&#39;host is required&#39;</span>
-    <span class="k">else</span> <span class="k">unless</span> <span class="nx">mode</span>
-      <span class="s">&#39;mode is required&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">groupName</span>:
+      <span class="hljs-attribute">get</span>:<span class="hljs-function"> -&gt;</span>
+        _.chain Snippet.modeGroups
+        .keys()
+        .find <span class="hljs-property">@inGroup</span>, @
+        .value()
+      <span class="hljs-attribute">transient</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Deselect this snippet, but only if it is currently selected.</p>
 
-<span class="p">},</span> <span class="p">{</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">deselect</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span> <span class="hljs-string">'selected'</span>
+      <span class="hljs-property">@save</span> <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span>
+      .done<span class="hljs-function"> =&gt;</span>
+        <span class="hljs-property">@trigger</span> <span class="hljs-string">'deselected'</span>, @
+    <span class="hljs-keyword">else</span>
+      $.Deferred().resolve()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Indicate whether or not the mode of this snippet falls under a group with the given <code>name</code>.</p>
 
-  <span class="nv">defaultMode: </span><span class="nx">DEFAULT_MODE</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Map of mode groups.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">modeGroups: </span><span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Add all of the mode <code>groups</code> that are provided in their object form.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">mapModeGroups: </span><span class="nf">(groups) -&gt;</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">groups</span><span class="p">,</span> <span class="nf">(group) =&gt;</span>
-      <span class="nx">@modeGroups</span><span class="p">[</span><span class="nx">group</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">group</span><span class="p">.</span><span class="nx">modes</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Populates the map of mode groups with the values from <code>configuration.json</code>. <br />
-Nothing happens if <code>Snippet.modeGroups</code> has already been populated.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">populateModeGroups: </span><span class="nf">(callback) -&gt;</span>
-    <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span> <span class="nx">@modeGroups</span>
-      <span class="nx">chrome</span><span class="p">.</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">sendMessage</span> <span class="p">{</span> <span class="nv">type: </span><span class="s">&#39;config&#39;</span> <span class="p">},</span> <span class="nf">(config) =&gt;</span>
-        <span class="nx">@mapModeGroups</span> <span class="nx">config</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">modeGroups</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">inGroup</span>: <span class="hljs-function"><span class="hljs-params">(group, name)</span> -&gt;</span>
+    name = group <span class="hljs-keyword">if</span> _.isString group
 
-        <span class="nx">do</span> <span class="nx">callback</span>
-    <span class="k">else</span>
-      <span class="nx">do</span> <span class="nx">callback</span>
-<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Collection of snippets created by the user.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Snippets = models.Snippets = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span>
+    _.contains Snippet.modeGroups[name], <span class="hljs-property">@get</span> <span class="hljs-string">'mode'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Select this snippet, but only if it is <em>not</em> already selected.</p>
 
-  <span class="nv">chromeStorage: </span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">ChromeStorage</span> <span class="s">&#39;Snippets&#39;</span><span class="p">,</span> <span class="s">&#39;local&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">select</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span> <span class="hljs-string">'selected'</span>
+      $.Deferred().resolve()
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@save</span> <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span>
+      .done<span class="hljs-function"> =&gt;</span>
+        <span class="hljs-property">@collection</span>?.chain()
+        .without @
+        .invoke <span class="hljs-string">'save'</span>, <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span>
 
-  <span class="nv">model: </span><span class="nx">Snippet</span>
+        <span class="hljs-property">@trigger</span> <span class="hljs-string">'selected'</span>, @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Validate that the attributes of this snippet are valid.</p>
 
-  <span class="nv">group: </span><span class="nf">(name) -&gt;</span>
-    <span class="nx">Snippets</span><span class="p">.</span><span class="nx">group</span> <span class="k">this</span><span class="p">,</span> <span class="nx">name</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">validate</span>: <span class="hljs-function"><span class="hljs-params">(attributes)</span> -&gt;</span>
+    {host, mode} = attributes
 
-<span class="p">},</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Retrieve the <strong>all</strong> instances of <code>Snippet</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">fetch: </span><span class="nf">(callback) -&gt;</span>
-    <span class="nx">Snippet</span><span class="p">.</span><span class="nx">populateModeGroups</span> <span class="nf">-&gt;</span>
-      <span class="p">(</span><span class="nv">snippets = </span><span class="k">new</span> <span class="nx">Snippets</span><span class="p">).</span><span class="nx">fetch</span><span class="p">().</span><span class="nx">then</span> <span class="nf">-&gt;</span>
-        <span class="nx">callback</span> <span class="nx">snippets</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>TODO: Document</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">group: </span><span class="nf">(snippets, name) -&gt;</span>
-    <span class="k">if</span> <span class="nx">name</span>
-      <span class="nx">snippets</span><span class="p">.</span><span class="nx">filter</span> <span class="nf">(snippet) -&gt;</span>
-        <span class="nx">snippet</span><span class="p">.</span><span class="nx">inGroup</span> <span class="nx">name</span>
-    <span class="k">else</span>
-      <span class="nv">groups = </span><span class="p">{}</span>
+    <span class="hljs-keyword">unless</span> host
+      <span class="hljs-string">'host is required'</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">unless</span> mode
+      <span class="hljs-string">'mode is required'</span>
 
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">Snippet</span><span class="p">.</span><span class="nx">modeGroups</span><span class="p">,</span> <span class="nf">(modes, name) =&gt;</span>
-        <span class="nx">groups</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">snippets</span><span class="p">.</span><span class="nx">filter</span> <span class="nf">(snippet) -&gt;</span>
-          <span class="nx">snippet</span><span class="p">.</span><span class="nx">inGroup</span> <span class="nx">name</span>
+}, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Expose the default Ace editor mode/language publically.</p>
 
-      <span class="nx">groups</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">defaultMode</span>: DEFAULT_MODE</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Map of mode groups.</p>
 
-<span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modeGroups</span>: {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Add all of the mode <code>groups</code> that are provided in their object form.</p>
+<p>If a group already exists, it’s original value will be overridden.</p>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">mapModeGroups</span>: <span class="hljs-function"><span class="hljs-params">(groups)</span> -&gt;</span>
+    <span class="hljs-property">@modeGroups</span>[group.name] = group.modes <span class="hljs-keyword">for</span> group <span class="hljs-keyword">in</span> groups</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Populates the map of mode groups with the values from the configuration file.</p>
+<p>Nothing happens if <code>Snippet.modeGroups</code> has already been populated.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">populateModeGroups</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> _.isEmpty <span class="hljs-property">@modeGroups</span>
+      $.getJSON chrome.extension.getURL<span class="hljs-function"><span class="hljs-params">(<span class="hljs-string">'configuration.json'</span>)</span>, <span class="hljs-params">(config)</span> =&gt;</span>
+        <span class="hljs-property">@mapModeGroups</span> config.editor.modeGroups
+
+        <span class="hljs-keyword">do</span> callback
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">do</span> callback
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Collection of snippets created by the user.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Snippets = models.Snippets = Injector.Collection.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Store the snippets locally.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">storage</span>:
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">'Snippets'</span>
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">'local'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Model class contained by this collection.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Snippet</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Sort snippets based on the <code>host</code> attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">comparator</span>: <span class="hljs-string">'host'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>List the snippets that are associated with a mode under the group witht the given <code>name</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">group</span>: <span class="hljs-function"><span class="hljs-params">(name)</span> -&gt;</span>
+    Snippets.group @, name
+
+}, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Retrieve <strong>all</strong> <code>Snippet</code> models.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fetch</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    Snippet.populateModeGroups<span class="hljs-function"> -&gt;</span>
+      collection = <span class="hljs-keyword">new</span> Snippets
+      collection.fetch().<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
+        callback collection</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Map the specified <code>snippets</code> based on their mode groups.</p>
+<p>Optionally, when a group <code>name</code> is provided, only a list of the snippets that are associated
+with a mode under that group will be returned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">group</span>: <span class="hljs-function"><span class="hljs-params">(snippets, name)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> name
+      snippets.filter <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
+        snippet.inGroup name
+    <span class="hljs-keyword">else</span>
+      groups = {}
+
+      <span class="hljs-keyword">for</span> name, modes <span class="hljs-keyword">of</span> Snippet.modeGroups
+        groups[name] = snippets.filter <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
+          snippet.inGroup name
+
+      groups
+
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

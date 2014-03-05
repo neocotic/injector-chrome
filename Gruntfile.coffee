@@ -15,14 +15,9 @@ module.exports = (grunt) ->
     pkg
 
     clean:
-      build:        [
-        'bin/_locales/**'
-        'bin/img/**'
-        'bin/vendor/**'
-        'bin/*.json'
-        'bin/*.html'
-      ]
+      build:        [ 'bin/img/**', 'bin/vendor/**', 'bin/*.html' ]
       buildAll:     'bin/*'
+      buildJSON:    [ 'bin/_locales/**', 'bin/*.json' ]
       buildStyles:  'bin/less/*'
       buildScripts: 'bin/coffee/*'
 
@@ -47,7 +42,7 @@ module.exports = (grunt) ->
       build:
         expand: yes
         cwd:    'src/'
-        src:    [ '_locales/**', 'img/**', 'vendor/**', '*.json', '*.html' ]
+        src:    [ 'img/**', 'vendor/**', '*.html' ]
         dest:   'bin/'
 
       buildStyles:
@@ -75,6 +70,14 @@ module.exports = (grunt) ->
         src:    '*.coffee'
         dest:   'bin/js/'
         ext:    '.js'
+
+    cson:
+      buildJSON:
+        expand: yes
+        cwd:    'src/'
+        src:    '**/*.cson'
+        dest:   'bin/'
+        ext:    '.json'
 
     docco:
       dist:
@@ -118,8 +121,12 @@ module.exports = (grunt) ->
 
     watch:
       build:
-        files: [ 'src/_locales/**', 'src/img/**', 'src/vendor/**', 'src/*.json', 'src/*.html' ]
+        files: [ 'src/img/**', 'src/vendor/**', 'src/*.html' ]
         tasks: [ 'clean:build', 'copy:build' ]
+
+      buildJSON:
+        files: [ 'src/_locales/**', 'src/*.cson' ]
+        tasks: [ 'clean:buildJSON', 'cson' ]
 
       buildStyles:
         files: [ 'src/css/**', 'src/less/**' ]
@@ -143,6 +150,7 @@ module.exports = (grunt) ->
     'copy:buildScripts'
     'copy:buildStyles'
     'coffee'
+    'cson'
     'less'
   ]
 

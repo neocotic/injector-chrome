@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>install.coffee</title>
+  <title>utils.coffee</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -71,7 +71,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>install.coffee</h1>
+                  <h1>utils.coffee</h1>
               </div>
           </li>
         
@@ -98,7 +98,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="inline-installation">Inline installation</h2>
+              <h2 id="utilities">Utilities</h2>
 
             </div>
             
@@ -111,11 +111,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Injector’s extension ID is currently using.</p>
+              <p>Extend <code>_</code> with our utility functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>id         = chrome.i18n.getMessage <span class="hljs-string">'@@extension_id'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>_.mixin {</pre></div></div>
             
         </li>
         
@@ -126,11 +126,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Names of the classes to be added to the targeted elements.</p>
+              <p>Transform the given string into title case.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>newClasses = [ <span class="hljs-string">'disabled'</span> ]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">capitalize</span>: <span class="hljs-function"><span class="hljs-params">(str)</span> -&gt;</span>
+    <span class="hljs-keyword">return</span> str <span class="hljs-keyword">unless</span> str
+
+    str.replace <span class="hljs-regexp">/\w+/g</span>, <span class="hljs-function"><span class="hljs-params">(word)</span> -&gt;</span>
+      word[<span class="hljs-number">0</span>].toUpperCase() + word[<span class="hljs-number">1.</span>.].toLowerCase()
+
+}</pre></div></div>
             
         </li>
         
@@ -141,30 +147,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Names of the classes to be removed from the targeted elements.</p>
+              <p>Enforcing the use of a template variable significantly optmizes the rendering of templates.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>oldClasses = [ <span class="hljs-string">'chrome_install_button'</span> ]</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Disable all “Install” links on the homepage for Template.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> link <span class="hljs-keyword">in</span> <span class="hljs-built_in">document</span>.querySelectorAll <span class="hljs-string">"a.<span class="hljs-subst">#{oldClasses[<span class="hljs-number">0</span>]}</span>[href$=<span class="hljs-subst">#{id}</span>]"</span>
-  link.innerHTML = link.innerHTML.replace <span class="hljs-string">'Install'</span>, <span class="hljs-string">'Installed'</span>
-
-  link.classList.add    cls <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> newClasses
-  link.classList.remove cls <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> oldClasses</pre></div></div>
+            <div class="content"><div class='highlight'><pre>_.templateSettings.variable = <span class="hljs-string">'ctx'</span></pre></div></div>
             
         </li>
         

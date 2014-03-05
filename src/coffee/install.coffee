@@ -1,5 +1,7 @@
-# [Injector](http://neocotic.com/injector)  
-# (c) 2014 Alasdair Mercer  
+# [Injector](http://neocotic.com/injector)
+#
+# (c) 2014 Alasdair Mercer
+#
 # Freely distributable under the MIT license
 
 # Inline installation
@@ -15,5 +17,6 @@ oldClasses = [ 'chrome_install_button' ]
 # Disable all "Install" links on the homepage for Template.
 for link in document.querySelectorAll "a.#{oldClasses[0]}[href$=#{id}]"
   link.innerHTML = link.innerHTML.replace 'Install', 'Installed'
+
   link.classList.add    cls for cls in newClasses
   link.classList.remove cls for cls in oldClasses

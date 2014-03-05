@@ -1,0 +1,251 @@
+analytics_label:
+  message: 'Analytics'
+  description: 'Label for the Analytics field.'
+
+analytics_sub_text:
+  message: 'This information is only ever used to help improve user experience and will never be supplied to a 3rd party'
+  description: 'Help text for the Analytics field.'
+
+analytics_text:
+  message: 'Send anonymous usage statistics'
+  description: 'Text for the Analytics field.'
+
+delete_confirmation_text:
+  message: 'Are you sure?'
+  description: 'Text for the delete confirmation.'
+
+delete_reject_item:
+  message: 'No'
+  description: 'Text for the reject deletion menu item.'
+
+delete_resolve_item:
+  message: 'Yes'
+  description: 'Text for the resolve deletion menu item.'
+
+description:
+  message: 'Runs your custom code snippets on any website'
+  description: 'Brief description of the extension.'
+
+donate_title:
+  message: 'Share the love!'
+  description: 'Hover text for donation links/buttons.'
+
+editor_indent_mode_label:
+  message: 'Indent Mode'
+  description: 'Label for the editor Indent Mode field.'
+
+editor_indent_mode_spaces:
+  message: 'Spaces'
+  description: 'Text for the Spaces option under the editor Indent Mode field.'
+
+editor_indent_mode_tabs:
+  message: 'Tabs'
+  description: 'Text for the Tabs option under the editor Indent Mode field.'
+
+editor_indent_size_label:
+  message: 'Indent Size'
+  description: 'Label for the editor Indent Size field.'
+
+editor_line_wrap_none:
+  message: 'None'
+  description: 'Text for the None option under the editor Line Wrap Mode field.'
+
+editor_line_wrap_label:
+  message: 'Line Wrap Mode'
+  description: 'Label for the editor Line Wrap Mode field.'
+
+editor_line_wrap_soft:
+  message: 'Soft'
+  description: 'Text for the Soft option under the editor Line Wrap Mode field.'
+
+editor_mode_coffee:
+  message: 'CoffeeScript'
+  description: 'Text for the CoffeeScript editor mode.'
+
+editor_mode_css:
+  message: 'CSS'
+  description: 'Text for the CSS editor mode.'
+
+editor_mode_group_scripts:
+  message: 'Scripts'
+  description: 'Label for the Scripts group in the editor mode field.'
+
+editor_mode_group_styles:
+  message: 'Styles'
+  description: 'Label for the Styles group in the editor mode field.'
+
+editor_mode_javascript:
+  message: 'JavaScript'
+  description: 'Text for the JavaScript editor mode.'
+
+editor_mode_less:
+  message: 'LESS'
+  description: 'Text for the LESS editor mode.'
+
+editor_theme_ambiance:
+  message: 'Ambiance'
+  description: 'Text for the Ambiance editor theme.'
+
+editor_theme_chaos:
+  message: 'Chaos'
+  description: 'Text for the Chaos editor theme.'
+
+editor_theme_chrome:
+  message: 'Chrome'
+  description: 'Text for the Chrome editor theme.'
+
+editor_theme_clouds:
+  message: 'Clouds'
+  description: 'Text for the Clouds editor theme.'
+
+editor_theme_clouds_midnight:
+  message: 'Clouds Midnight'
+  description: 'Text for the Clouds Midnight editor theme.'
+
+editor_theme_cobalt:
+  message: 'Cobalt'
+  description: 'Text for the Cobalt editor theme.'
+
+editor_theme_crimson_editor:
+  message: 'Crimson Editor'
+  description: 'Text for the Crimson Editor editor theme.'
+
+editor_theme_dawn:
+  message: 'Dawn'
+  description: 'Text for the Dawn editor theme.'
+
+editor_theme_dreamweaver:
+  message: 'Dreamweaver'
+  description: 'Text for the Dreamweaver editor theme.'
+
+editor_theme_eclipse:
+  message: 'Eclipse'
+  description: 'Text for the Eclipse editor theme.'
+
+editor_theme_github:
+  message: 'GitHub'
+  description: 'Text for the GitHub editor theme.'
+
+editor_theme_idle_fingers:
+  message: 'Idle Fingers'
+  description: 'Text for the Idle Fingers editor theme.'
+
+editor_theme_kr:
+  message: 'KR'
+  description: 'Text for the KR editor theme.'
+
+editor_theme_label:
+  message: 'Theme'
+  description: 'Label for the editor Theme field.'
+
+editor_theme_merbivore:
+  message: 'Merbivore'
+  description: 'Text for the Merbivore editor theme.'
+
+editor_theme_merbivore_soft:
+  message: 'Merbivore Soft'
+  description: 'Text for the Merbivore Soft editor theme.'
+
+editor_theme_mono_industrial:
+  message: 'Mono Industrial'
+  description: 'Text for the Mono Industrial editor theme.'
+
+editor_theme_monokai:
+  message: 'Monokai'
+  description: 'Text for the Monokai editor theme.'
+
+editor_theme_pastel_on_dark:
+  message: 'Pastel On Dark'
+  description: 'Text for the Pastel On Dark editor theme.'
+
+editor_theme_solarized_dark:
+  message: 'Solarized Dark'
+  description: 'Text for the Solarized Dark editor theme.'
+
+editor_theme_solarized_light:
+  message: 'Solarized Light'
+  description: 'Text for the Solarized Light editor theme.'
+
+editor_theme_terminal:
+  message: 'Terminal'
+  description: 'Text for the Terminal editor theme.'
+
+editor_theme_textmate:
+  message: 'TextMate'
+  description: 'Text for the TextMate editor theme.'
+
+editor_theme_tomorrow:
+  message: 'Tomorrow'
+  description: 'Text for the Tomorrow editor theme.'
+
+editor_theme_tomorrow_night:
+  message: 'Tomorrow Night'
+  description: 'Text for the Tomorrow Night editor theme.'
+
+editor_theme_tomorrow_night_blue:
+  message: 'Tomorrow Night Blue'
+  description: 'Text for the Tomorrow Night Blue editor theme.'
+
+editor_theme_tomorrow_night_bright:
+  message: 'Tomorrow Night Bright'
+  description: 'Text for the Tomorrow Night Bright editor theme.'
+
+editor_theme_tomorrow_night_eighties:
+  message: 'Tomorrow Night Eighties'
+  description: 'Text for the Tomorrow Night Eighties editor theme.'
+
+editor_theme_twilight:
+  message: 'Twilight'
+  description: 'Text for the Twilight editor theme.'
+
+editor_theme_vibrant_ink:
+  message: 'Vibrant Ink'
+  description: 'Text for the Vibrant Ink editor theme.'
+
+editor_theme_xcode:
+  message: 'Xcode'
+  description: 'Text for the Xcode editor theme.'
+
+feedback_button:
+  message: 'feedback'
+  description: 'Text of Feedback button.'
+
+general_header:
+  message: 'General'
+  description: 'Header of the General tab.'
+
+misc_header:
+  message: 'Miscellaneous'
+  description: 'Header of the Miscellaneous section.'
+
+name:
+  message: 'Injector'
+  description: 'Name of the extension.'
+
+reset_button:
+  message: 'Reset'
+  description: 'Text for the Reset button.'
+
+snippets_header:
+  message: 'Snippets'
+  description: 'Header of the Snippets tab.'
+
+skip_navigation:
+  message: 'Skip navigation'
+  description: 'Text for link to skip main navigation (screen reader only).'
+
+toggle_navigation:
+  message: 'Toggle navigation'
+  description: 'Text for link to toggle main navigation (screen reader only).'
+
+top_button:
+  message: 'Back to top'
+  description: 'Text for the link in the footer that takes the user to the top of the page.'
+
+update_button:
+  message: 'Update'
+  description: 'Text for the Update button.'
+
+update_button_alt:
+  message: 'Saved!'
+  description: 'Alternative text for the Update button which is displayed after being clicked.'

@@ -12,10 +12,13 @@
     <script src="/vendor/js/jquery.min.js"></script>
     <script src="/vendor/js/underscore-min.js"></script>
     <script src="/vendor/js/backbone-min.js"></script>
+    <script src="/vendor/js/backbone.mutators.min.js"></script>
     <script src="/vendor/js/backbone.chromestorage.min.js"></script>
     <script src="/vendor/js/bootstrap.min.js"></script>
     <script src="/vendor/js/int17.min.js"></script>
 
+    <script src="/js/utils.js"></script>
+    <script src="/js/injector.js"></script>
     <script src="/js/models.js"></script>
     <script src="/js/i18n.js"></script>
     <script src="/js/analytics.js"></script>
@@ -90,9 +93,9 @@
                   <div class="col-xs-3">
                     <div class="btn-toolbar" id="snippets_controls">
                       <div class="btn-group">
-                        <a id="add_button" class="btn btn-default js-popover-toggle"><span class="glyphicon glyphicon-plus"></span></a>
+                        <button id="add_button" type="button" class="btn btn-default js-popover-toggle"><span class="glyphicon glyphicon-plus"></span></button>
                         <div id="delete_menu" class="btn-group">
-                          <a class="btn btn-default disabled dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-minus"></span></a>
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled><span class="glyphicon glyphicon-minus"></span></button>
                           <ul class="dropdown-menu" role="menu">
                             <li role="presentation" class="dropdown-header" data-i18n-content="delete_confirmation_text"></li>
                             <li role="presentation"><a class="js-resolve" role="menuitem" tabindex="-1" data-i18n-content="delete_resolve_item"></a></li>
@@ -102,44 +105,34 @@
                       </div>
 
                       <div class="btn-group">
-                        <a id="edit_button" class="btn btn-default disabled js-popover-toggle"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a id="clone_button" class="btn btn-default disabled js-popover-toggle"><span class="glyphicon glyphicon-share"></span></a>
+                        <button id="edit_button" type="button" class="btn btn-default js-popover-toggle" disabled><span class="glyphicon glyphicon-pencil"></span></button>
+                        <button id="clone_button" type="button" class="btn btn-default js-popover-toggle" disabled><span class="glyphicon glyphicon-share"></span></button>
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-xs-9">
+                  <div class="form-toolbar col-xs-9">
                     <div class="row">
-                      <div class="col-sm-3">
+                      <div class="col-md-3">
                         <select id="editor_modes" class="form-control" disabled></select>
                       </div>
 
-                      <div id="editor_settings" class="col-sm-9">
-                        <div class="row">
-                          <div class="col-xs-6 col-sm-3 col-md-4">
-                            <select id="editor_theme" class="form-control" disabled>
-                              <optgroup data-i18n-values="label:editor_theme_label"></optgroup>
-                            </select>
-                          </div>
+                      <div id="editor_settings" class="col-md-9">
+                        <select id="editor_theme" class="form-control" disabled>
+                          <optgroup data-i18n-values="label:editor_theme_label"></optgroup>
+                        </select>
 
-                          <div class="col-xs-6 col-sm-3">
-                            <select id="editor_soft_tabs" class="form-control" disabled>
-                              <optgroup data-i18n-values="label:editor_indent_mode_label" data-i18n-options="editor_indent_mode_tabs:false;editor_indent_mode_spaces:true"></optgroup>
-                            </select>
-                          </div>
+                        <select id="editor_soft_tabs" class="form-control" disabled>
+                          <optgroup data-i18n-values="label:editor_indent_mode_label" data-i18n-options="editor_indent_mode_tabs:false;editor_indent_mode_spaces:true"></optgroup>
+                        </select>
 
-                          <div class="col-xs-6 col-sm-3 col-md-2">
-                            <select id="editor_indent_size" class="form-control" disabled>
-                              <optgroup data-i18n-values="label:editor_indent_size_label"></optgroup>
-                            </select>
-                          </div>
+                        <select id="editor_indent_size" class="form-control" disabled>
+                          <optgroup data-i18n-values="label:editor_indent_size_label"></optgroup>
+                        </select>
 
-                          <div class="col-xs-6 col-sm-3">
-                            <select id="editor_line_wrap" class="form-control" disabled>
-                              <optgroup data-i18n-values="label:editor_line_wrap_label" data-i18n-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></optgroup>
-                            </select>
-                          </div>
-                        </div>
+                        <select id="editor_line_wrap" class="form-control" disabled>
+                          <optgroup data-i18n-values="label:editor_line_wrap_label" data-i18n-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></optgroup>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -156,8 +149,8 @@
                     </div>
 
                     <div id="editor_controls" class="pull-right">
-                      <a id="reset_button" class="btn btn-warning disabled" data-i18n-content="reset_button"></a>
-                      <a id="update_button" class="btn btn-success disabled" data-i18n-content="update_button"></a>
+                      <button id="reset_button" type="button" class="btn btn-warning" data-i18n-content="reset_button" disabled></button>
+                      <button id="update_button" type="button" class="btn btn-success" data-i18n-values=".innerHTML:update_button;data-loading-text:update_button_alt" disabled></button>
                     </div>
                   </div>
                 </div>
