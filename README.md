@@ -33,5 +33,5 @@ http://neocotic.com/injector
 
 [@neocotic]: https://twitter.com/neocotic
 [google chrome]: https://www.google.com/chrome
-[help desk]: https://scriptrunner.uservoice.com
+[help desk]: https://injector.uservoice.com
 [injector]: http://neocotic.com/injector
