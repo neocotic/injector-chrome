@@ -22,7 +22,7 @@ loadFeedback = (options) ->
 
   # Create a script element to load the UserVoice widget.
   uv       = document.createElement 'script'
-  uv.async = 'async'
+  uv.async = yes
   uv.src   = "https://widget.uservoice.com/#{options.id}.js"
 
   # Insert the script element into the DOM.
