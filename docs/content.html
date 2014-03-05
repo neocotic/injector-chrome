@@ -131,6 +131,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>chrome.runtime.sendMessage { host, <span class="hljs-attribute">type</span>: <span class="hljs-string">'injection'</span> }, <span class="hljs-function"><span class="hljs-params">(response)</span> -&gt;</span>
+  body      = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'body'</span>
   head      = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'head'</span>
   {css, js} = response</pre></div></div>
             
@@ -143,16 +144,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Create an element with the given name and insert it in to the document <code>&lt;head&gt;</code>.</p>
+              <p>Create an element with the given name and insert it in to the <code>parent</code> element.</p>
 <p>The new element will contain only the <code>html</code> provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-title">appendNewElement</span> = <span class="hljs-params">(tagName, html)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-title">appendNewElement</span> = <span class="hljs-params">(tagName, parent, html)</span> -&gt;</span>
     el = <span class="hljs-built_in">document</span>.createElement tagName
     el.innerHTML = html
 
-    head.appendChild el</pre></div></div>
+    parent.appendChild el</pre></div></div>
             
         </li>
         
@@ -168,7 +169,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> code <span class="hljs-keyword">in</span> css
-    appendNewElement <span class="hljs-string">'style'</span>, code</pre></div></div>
+    appendNewElement <span class="hljs-string">'style'</span>, head, code</pre></div></div>
             
         </li>
         
@@ -186,7 +187,7 @@ and potentially causing conflicts with libraries used on the current page.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> code <span class="hljs-keyword">in</span> js
-    appendNewElement <span class="hljs-string">'script'</span>, <span class="hljs-string">"""
+    appendNewElement <span class="hljs-string">'script'</span>, body, <span class="hljs-string">"""
       (function() {
       <span class="hljs-subst">#{code}</span>
       })();
