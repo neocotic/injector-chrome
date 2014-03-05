@@ -341,60 +341,6 @@ script to be executed on the page or contain styles to be applied to it.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Attribute mutators for a snippet.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">mutators</span>:</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Retrieve the group associated with the mode of this snippet.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">group</span>:
-      <span class="hljs-attribute">get</span>:<span class="hljs-function"> -&gt;</span>
-        _.find Snippet.modeGroups, <span class="hljs-property">@inGroup</span>, @
-      <span class="hljs-attribute">transient</span>: <span class="hljs-literal">yes</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>Determine the name of the group associated with the mode of this snippet.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attribute">groupName</span>:
-      <span class="hljs-attribute">get</span>:<span class="hljs-function"> -&gt;</span>
-        _.chain Snippet.modeGroups
-        .keys()
-        .find <span class="hljs-property">@inGroup</span>, @
-        .value()
-      <span class="hljs-attribute">transient</span>: <span class="hljs-literal">yes</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
               <p>Deselect this snippet, but only if it is currently selected.</p>
 
             </div>
@@ -410,11 +356,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Indicate whether or not the mode of this snippet falls under a group with the given <code>name</code>.</p>
 
@@ -428,11 +374,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Select this snippet, but only if it is <em>not</em> already selected.</p>
 
@@ -453,11 +399,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Validate that the attributes of this snippet are valid.</p>
 
@@ -476,11 +422,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Expose the default Ace editor mode/language publically.</p>
 
@@ -491,11 +437,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Map of mode groups.</p>
 
@@ -506,11 +452,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Add all of the mode <code>groups</code> that are provided in their object form.</p>
 <p>If a group already exists, it’s original value will be overridden.</p>
@@ -523,11 +469,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Populates the map of mode groups with the values from the configuration file.</p>
 <p>Nothing happens if <code>Snippet.modeGroups</code> has already been populated.</p>
@@ -547,11 +493,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Collection of snippets created by the user.</p>
 
@@ -562,11 +508,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Store the snippets locally.</p>
 
@@ -579,11 +525,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Model class contained by this collection.</p>
 
@@ -594,11 +540,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Sort snippets based on the <code>host</code> attribute.</p>
 
@@ -609,11 +555,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>List the snippets that are associated with a mode under the group witht the given <code>name</code>.</p>
 
@@ -627,11 +573,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Retrieve <strong>all</strong> <code>Snippet</code> models.</p>
 
@@ -646,11 +592,11 @@ script to be executed on the page or contain styles to be applied to it.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Map the specified <code>snippets</code> based on their mode groups.</p>
 <p>Optionally, when a group <code>name</code> is provided, only a list of the snippets that are associated

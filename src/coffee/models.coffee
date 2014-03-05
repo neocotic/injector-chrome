@@ -78,23 +78,6 @@ Snippet = models.Snippet = Injector.Model.extend {
     mode:     DEFAULT_MODE
     selected: no
 
-  # Attribute mutators for a snippet.
-  mutators:
-    # Retrieve the group associated with the mode of this snippet.
-    group:
-      get: ->
-        _.find Snippet.modeGroups, @inGroup, @
-      transient: yes
-
-    # Determine the name of the group associated with the mode of this snippet.
-    groupName:
-      get: ->
-        _.chain Snippet.modeGroups
-        .keys()
-        .find @inGroup, @
-        .value()
-      transient: yes
-
   # Deselect this snippet, but only if it is currently selected.
   deselect: ->
     if @get 'selected'

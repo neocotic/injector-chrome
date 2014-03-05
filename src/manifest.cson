@@ -47,7 +47,6 @@ background:
     'vendor/js/jquery.min.js'
     'vendor/js/underscore-min.js'
     'vendor/js/backbone-min.js'
-    'vendor/js/backbone.mutators.min.js'
     'vendor/js/backbone.chromestorage.min.js'
     'vendor/js/coffee-script.min.js'
     'vendor/js/less.min.js'
