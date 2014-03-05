@@ -37,6 +37,18 @@ abbr {
   }
 }
 
+.snippet-tooltip {
+  word-break: break-all;
+
+  .snippet-tooltip-host {
+    display: block;
+  }
+
+  .snippet-tooltip-mode {
+    font-style: italic;
+  }
+}
+
 #editor {
   position: relative !important;
   border: 1px solid #ccc;
@@ -81,6 +93,7 @@ abbr {
   li > a {
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
   }
 
   li.modified {

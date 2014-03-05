@@ -485,8 +485,23 @@ SnippetItem = Injector.View.extend {
   # Tag name for the element to be created for the snippet item.
   tagName: 'li'
 
+  # Prevent `activateTooltips` from interfering with the tooltip of the snippet item.
+  className: 'js-tooltip-ignore'
+
   # Template for the snippet item.
-  template: _.template '<a><%= ctx.host %></a>'
+  mainTemplate: _.template """
+    <a>
+      <span><%= ctx.host %></span>
+    </a>
+  """
+
+  # Template for the tooltip of the snippet item.
+  tooltipTemplate: _.template """
+    <div class="snippet-tooltip">
+      <span class="snippet-tooltip-host"><%= ctx.host %></span>
+      <span class="snippet-tooltip-mode"><%= i18n.get('editor_mode_' + ctx.mode) %></span>
+    </div>
+  """
 
   # Register DOM events for the snippet item.
   events:
@@ -497,6 +512,9 @@ SnippetItem = Injector.View.extend {
     @listenTo @model, 'destroy', @remove
     @listenTo @model, 'modified', @modified
     @listenTo @model, 'change:host change:selected', @render
+    @listenTo @model, 'change:host change:mode', @updateTooltip
+
+    do @updateTooltip
 
   # Highlight that the snippet code has been modified in the editor.
   modified: (changed) ->
@@ -505,9 +523,15 @@ SnippetItem = Injector.View.extend {
     else
       @$el.removeClass 'modified'
 
+  # Override `remove` to ensure that the tooltip is properly destroyed upon removal.
+  remove: ->
+    @$el.tooltip 'destroy'
+
+    @super 'remove'
+
   # Render the snippet item.
   render: ->
-    @$el.html @template @model.pick 'host'
+    @$el.html @mainTemplate @model.pick 'host'
 
     if @model.get 'selected'
       @$el.addClass 'active'
@@ -522,6 +546,15 @@ SnippetItem = Injector.View.extend {
       @model.deselect()
     else unless @$el.hasClass 'active'
       @model.select()
+
+  # Update the tooltip for the snippet item, destroying any previous tooltip in the process.
+  updateTooltip: ->
+    @$el
+    .tooltip 'destroy'
+    .tooltip
+      container: 'body'
+      html:      yes
+      title:     @tooltipTemplate @model.pick 'host', 'mode'
 
 }
 
@@ -620,7 +653,7 @@ activateTooltips = (selector) ->
   base = $ selector or document
 
   # Reset all previously treated tooltips.
-  base.find '[data-original-title]'
+  base.find '[data-original-title]:not(.js-tooltip-ignore)'
   .each ->
     $this = $ @
 
@@ -630,7 +663,7 @@ activateTooltips = (selector) ->
     .removeAttr 'data-original-title'
 
   # Apply tooltips to all relevant elements.
-  base.find '[title]'
+  base.find '[title]:not(.js-tooltip-ignore)'
   .each ->
     $this = $ @
 
