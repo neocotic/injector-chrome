@@ -111,11 +111,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Primary global namespace.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Injector = <span class="hljs-built_in">window</span>.Injector = {}</pre></div></div>
             
         </li>
         
@@ -125,6 +122,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Primary global namespace.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Injector = <span class="hljs-built_in">window</span>.Injector = {}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Retrieve the value of the given <code>property</code> from the “parent” of the context class.</p>
 <p>If that value is a function, then invoke it with the additional <code>args</code> and retrieve the return
@@ -140,11 +152,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Setup the Chrome storage for the specified <code>model</code> (may also be a collection) based on the
 <code>storage</code> property, if it exists.</p>
@@ -160,30 +172,15 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h2 id="model">Model</h2>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Base model to be used within our application.</p>
+              <h2 id="model">Model</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Model = Injector.Model = Backbone.Model.extend {</pre></div></div>
             
         </li>
         
@@ -194,11 +191,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -208,6 +202,36 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Base model to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Model = Injector.Model = Backbone.Model.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom model initialization.</p>
 
@@ -221,11 +245,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Allow models to access “parent” properties easily.</p>
 
@@ -238,11 +262,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>The identifier used by single models.</p>
 
@@ -253,11 +277,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>A singleton model where implementations should only have one persisted instance.</p>
 
@@ -268,11 +292,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to set the singleton identifier.</p>
 
@@ -288,11 +312,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Retrieve a singleton instance of the model.</p>
 
@@ -308,45 +332,15 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h2 id="collection">Collection</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Base collection to be used within our application.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>Collection = Injector.Collection = Backbone.Collection.extend {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>The default model for a collection. This should be overridden in most cases.</p>
+              <h2 id="collection">Collection</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Model</pre></div></div>
             
         </li>
         
@@ -357,11 +351,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -371,6 +362,51 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Base collection to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Collection = Injector.Collection = Backbone.Collection.extend {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>The default model for a collection. This should be overridden in most cases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Model</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom collection initialization.</p>
 
@@ -384,11 +420,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Allow collections to access “parent” properties easily.</p>
 
@@ -401,11 +437,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h2 id="view">View</h2>
 
@@ -414,11 +450,23 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Base view to be used within our application.</p>
 
@@ -429,11 +477,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
 
@@ -444,11 +492,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom view initialization.</p>
 
@@ -460,11 +508,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Indicate whether or not this view has an underlying collection associated with it.</p>
 
@@ -476,11 +524,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Indicate whether or not this view has an underlying model associated with it.</p>
 
@@ -492,11 +540,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Allow views to access “parent” properties easily.</p>
 
@@ -509,11 +557,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h2 id="router">Router</h2>
 
@@ -522,11 +570,23 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Base router to be used within our application.</p>
 
@@ -537,11 +597,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
 
@@ -552,11 +612,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom model initialization.</p>
 
@@ -568,11 +628,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Allow routers to access “parent” properties easily.</p>
 
@@ -585,11 +645,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h2 id="history">History</h2>
 
@@ -598,11 +658,23 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Base history implementation to be used within our application.</p>
 
@@ -613,11 +685,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Allow history implementations to access “parent” properties easily.</p>
 
