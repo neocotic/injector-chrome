@@ -295,5 +295,5 @@ update_button:
   description: 'Text for the Update button.'
 
 update_button_alt:
-  message: 'Saved!'
+  message: 'Saving...'
   description: 'Alternative text for the Update button which is displayed after being clicked.'

@@ -384,7 +384,7 @@ of the Ace editor.</p>
     $button = $ event.currentTarget
     code    = <span class="hljs-property">@options</span>.ace.getValue()
 
-    $button.button <span class="hljs-string">'loading'</span>
+    $button.button(<span class="hljs-string">'loading'</span>).delay <span class="hljs-number">500</span>
 
     <span class="hljs-property">@model</span>.save { code }
     .<span class="hljs-keyword">then</span><span class="hljs-function"> =&gt;</span>
@@ -392,7 +392,9 @@ of the Ace editor.</p>
 
       analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Code'</span>
 
-      $button.button <span class="hljs-string">'reset'</span></pre></div></div>
+      $button.queue<span class="hljs-function"> -&gt;</span>
+        $button.button <span class="hljs-string">'reset'</span>
+        .dequeue()</pre></div></div>
             
         </li>
         

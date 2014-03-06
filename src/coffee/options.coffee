@@ -87,7 +87,7 @@ EditorControls = Injector.View.extend {
     $button = $ event.currentTarget
     code    = @options.ace.getValue()
 
-    $button.button 'loading'
+    $button.button('loading').delay 500
 
     @model.save { code }
     .then =>
@@ -95,7 +95,9 @@ EditorControls = Injector.View.extend {
 
       analytics.track 'Snippet', 'Changed', 'Code'
 
-      $button.button 'reset'
+      $button.queue ->
+        $button.button 'reset'
+        .dequeue()
 
   # Update the state of the editor controls.
   update: (@model) ->
