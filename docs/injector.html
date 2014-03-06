@@ -251,6 +251,24 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
+              <p>Restore the default attribute values, where possible.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">restoreDefaults</span>: <span class="hljs-function"><span class="hljs-params">(options)</span> -&gt;</span>
+    attrs = _.extend {}, _.result @, <span class="hljs-string">'defaults'</span>
+
+    <span class="hljs-property">@set</span> attrs, options</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
               <p>Allow models to access “parent” properties easily.</p>
 
             </div>
@@ -262,11 +280,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>The identifier used by single models.</p>
 
@@ -277,11 +295,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>A singleton model where implementations should only have one persisted instance.</p>
 
@@ -292,11 +310,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to set the singleton identifier.</p>
 
@@ -312,11 +330,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Retrieve a singleton instance of the model.</p>
 
@@ -332,26 +350,14 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h2 id="collection">Collection</h2>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              
+              <h2 id="collection">Collection</h2>
+
             </div>
             
         </li>
@@ -363,11 +369,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Base collection to be used within our application.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Collection = Injector.Collection = Backbone.Collection.extend {</pre></div></div>
             
         </li>
         
@@ -378,11 +381,11 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>The default model for a collection. This should be overridden in most cases.</p>
+              <p>Base collection to be used within our application.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Model</pre></div></div>
+            <div class="content"><div class='highlight'><pre>Collection = Injector.Collection = Backbone.Collection.extend {</pre></div></div>
             
         </li>
         
@@ -393,11 +396,11 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+              <p>The default model for a collection. This should be overridden in most cases.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">model</span>: Model</pre></div></div>
             
         </li>
         
@@ -407,6 +410,21 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom collection initialization.</p>
 
@@ -420,11 +438,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Allow collections to access “parent” properties easily.</p>
 
@@ -437,26 +455,14 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <h2 id="view">View</h2>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              
+              <h2 id="view">View</h2>
+
             </div>
             
         </li>
@@ -468,11 +474,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Base view to be used within our application.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>View = Injector.View = Backbone.View.extend {</pre></div></div>
             
         </li>
         
@@ -483,11 +486,11 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+              <p>Base view to be used within our application.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>View = Injector.View = Backbone.View.extend {</pre></div></div>
             
         </li>
         
@@ -497,6 +500,21 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom view initialization.</p>
 
@@ -508,11 +526,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Indicate whether or not this view has an underlying collection associated with it.</p>
 
@@ -524,11 +542,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Indicate whether or not this view has an underlying model associated with it.</p>
 
@@ -540,11 +558,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Allow views to access “parent” properties easily.</p>
 
@@ -557,26 +575,14 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h2 id="router">Router</h2>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              
+              <h2 id="router">Router</h2>
+
             </div>
             
         </li>
@@ -588,11 +594,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Base router to be used within our application.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Router = Injector.Router = Backbone.Router.extend {</pre></div></div>
             
         </li>
         
@@ -603,11 +606,11 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+              <p>Base router to be used within our application.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>Router = Injector.Router = Backbone.Router.extend {</pre></div></div>
             
         </li>
         
@@ -617,6 +620,21 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Called internally by <code>initialize</code>. This should be overridden for custom initialization logic.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Override <code>initialize</code> to hook in our own custom model initialization.</p>
 
@@ -628,11 +646,11 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Allow routers to access “parent” properties easily.</p>
 
@@ -645,26 +663,14 @@ value of that call instead.</p>
         </li>
         
         
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <h2 id="history">History</h2>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              
+              <h2 id="history">History</h2>
+
             </div>
             
         </li>
@@ -676,11 +682,8 @@ value of that call instead.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Base history implementation to be used within our application.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre>History = Injector.History = Backbone.History.extend</pre></div></div>
             
         </li>
         
@@ -690,6 +693,21 @@ value of that call instead.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Base history implementation to be used within our application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>History = Injector.History = Backbone.History.extend</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Allow history implementations to access “parent” properties easily.</p>
 

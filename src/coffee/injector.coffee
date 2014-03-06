@@ -42,6 +42,12 @@ Model = Injector.Model = Backbone.Model.extend {
 
     @init arguments...
 
+  # Restore the default attribute values, where possible.
+  restoreDefaults: (options) ->
+    attrs = _.extend {}, _.result @, 'defaults'
+
+    @set attrs, options
+
   # Allow models to access "parent" properties easily.
   super: getSuper
 

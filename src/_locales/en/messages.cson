@@ -238,6 +238,10 @@ reset_button:
   message: 'Reset'
   description: 'Text for the Reset button.'
 
+restore_defaults_button:
+  message: 'Restore Defaults'
+  description: 'Text for the Restore Defaults button.'
+
 snippets_header:
   message: 'Snippets'
   description: 'Header of the Snippets tab.'

@@ -166,13 +166,13 @@
 
     <div id="editor_settings_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editor_settings_header" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 id="editor_settings_header" class="modal-title" data-i18n-content="editor_settings_header"></h4>
-          </div>
-          <div class="modal-body">
-            <form id="editor_settings" class="form-horizontal" role="form">
+        <form id="editor_settings" class="form-horizontal" role="form">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 id="editor_settings_header" class="modal-title" data-i18n-content="editor_settings_header"></h4>
+            </div>
+            <div class="modal-body">
               <div class="form-group">
                 <label for="editor_theme" class="control-label col-sm-3" data-i18n-content="editor_theme_label"></label>
 
@@ -204,12 +204,13 @@
                   <select id="editor_line_wrap" class="form-control" data-i18n-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></select>
                 </div>
               </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
+              <button type="button" class="btn btn-warning" data-i18n-content="restore_defaults_button"></button>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </body>

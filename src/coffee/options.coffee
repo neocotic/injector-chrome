@@ -93,6 +93,8 @@ EditorControls = Injector.View.extend {
     .then =>
       @model.trigger 'modified', no, code
 
+      analytics.track 'Snippet', 'Changed', 'Code'
+
       $button.button 'reset'
 
   # Update the state of the editor controls.
@@ -149,7 +151,10 @@ EditorModes = Injector.View.extend {
 
     @options.ace.getSession().setMode "ace/mode/#{mode}"
 
-    @model.save { mode } if @hasModel()
+    if @hasModel()
+      analytics.track 'Snippet', 'Changed', 'Mode'
+
+      @model.save { mode }
 
   # Update the state of the editor modes.
   update: (@model) ->
@@ -177,10 +182,11 @@ EditorSettingsView = Injector.View.extend {
 
   # Register DOM events for the editor settings.
   events:
-    'change #editor_indent_size': 'update'
-    'change #editor_line_wrap':   'update'
-    'change #editor_soft_tabs':   'update'
-    'change #editor_theme':       'update'
+    'change #editor_indent_size':       'update'
+    'change #editor_line_wrap':         'update'
+    'change #editor_soft_tabs':         'update'
+    'change #editor_theme':             'update'
+    'click .modal-footer .btn-warning': 'restoreDefaults'
 
   # Initialize the editor settings.
   init: ->
@@ -197,12 +203,14 @@ EditorSettingsView = Injector.View.extend {
         html:  i18n.get "editor_theme_#{theme}"
         value: theme
 
-    @listenTo @model, """
-      change:indentSize
-      change:lineWrap
-      change:softTabs
-      change:theme
-    """, @render
+    @listenTo @model, 'change', @captureAnalytics
+    @listenTo @model, 'change', @render
+
+  # Capture the analytics for any changed model attributes.
+  captureAnalytics: ->
+    attrs = @model.changedAttributes() or {}
+
+    analytics.track 'Editor', 'Changed', attr for attr of attrs
 
   # Render the editor settings.
   render: ->
@@ -217,6 +225,11 @@ EditorSettingsView = Injector.View.extend {
     @$('#editor_theme').val theme
 
     @
+
+  # Restore the attributes of underlying model to their default values.
+  restoreDefaults: ->
+    @model.restoreDefaults()
+    @model.save()
 
   # Update the state of the editor settings.
   update: ->
@@ -251,12 +264,7 @@ EditorView = Injector.View.extend {
     @controls = new EditorControls { @ace }
     @modes    = new EditorModes { @ace }
 
-    @listenTo @options.settings, """
-      change:indentSize
-      change:lineWrap
-      change:softTabs
-      change:theme
-    """, @updateEditor
+    @listenTo @options.settings, 'change', @updateEditor
 
     do @updateEditor
 
@@ -330,7 +338,9 @@ GeneralSettingsView = Injector.View.extend {
   updateAnalytics: ->
     if @model.get 'analytics'
       analytics.add page.config.analytics
+      analytics.track 'General', 'Changed', 'Analytics', 1
     else
+      analytics.track 'General', 'Changed', 'Analytics', 0
       analytics.remove()
 
 }
@@ -432,6 +442,8 @@ SnippetControls = Injector.View.extend {
         if options.edit
           @model.save { host }
           .done ->
+            analytics.track 'Snippet', 'Renamed', host
+
             page.snippets.list.sort()
         else
           base = if options.clone then @model else new Snippet
@@ -441,6 +453,11 @@ SnippetControls = Injector.View.extend {
             code: base.get('code') or ''
             mode: base.get('mode') or Snippet.defaultMode
           }, success: (model) ->
+            if options.clone
+              analytics.track 'Snippet', 'Cloned', base.get 'host'
+            else
+              analytics.track 'Snippet', 'Created', host
+
             model.select().done ->
               page.snippets.list.sort().showSelected()
 
