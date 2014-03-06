@@ -1195,15 +1195,13 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">events</span>:
-    <span class="hljs-string">'show.bs.popover .btn'</span>:               <span class="hljs-string">'closeOtherPrompts'</span>
-    <span class="hljs-string">'click #delete_menu .btn'</span>:            <span class="hljs-string">'closeOtherPrompts'</span>
-    <span class="hljs-string">'click #add_button:not(:disabled)'</span>:   <span class="hljs-string">'togglePrompt'</span>
-    <span class="hljs-string">'shown.bs.popover #add_button'</span>:       <span class="hljs-string">'promptAdd'</span>
-    <span class="hljs-string">'click #edit_button:not(:disabled)'</span>:  <span class="hljs-string">'togglePrompt'</span>
-    <span class="hljs-string">'shown.bs.popover #edit_button'</span>:      <span class="hljs-string">'promptEdit'</span>
-    <span class="hljs-string">'click #clone_button:not(:disabled)'</span>: <span class="hljs-string">'togglePrompt'</span>
-    <span class="hljs-string">'shown.bs.popover #clone_button'</span>:     <span class="hljs-string">'promptClone'</span>
-    <span class="hljs-string">'click #delete_menu .js-resolve'</span>:     <span class="hljs-string">'removeSnippet'</span></pre></div></div>
+    <span class="hljs-string">'click #delete_menu .js-resolve'</span>:                          <span class="hljs-string">'removeSnippet'</span>
+    <span class="hljs-string">'hide.bs.modal .modal'</span>:                                    <span class="hljs-string">'resetHost'</span>
+    <span class="hljs-string">'show.bs.modal #snippet_clone_modal, #snippet_edit_modal'</span>: <span class="hljs-string">'insertHost'</span>
+    <span class="hljs-string">'shown.bs.modal .modal'</span>:                                   <span class="hljs-string">'focusHost'</span>
+    <span class="hljs-string">'submit #snippet_add_form'</span>:                                <span class="hljs-string">'addSnippet'</span>
+    <span class="hljs-string">'submit #snippet_clone_form'</span>:                              <span class="hljs-string">'cloneSnippet'</span>
+    <span class="hljs-string">'submit #snippet_edit_form'</span>:                               <span class="hljs-string">'editSnippet'</span></pre></div></div>
             
         </li>
         
@@ -1214,24 +1212,12 @@ snippets.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <p>Initialize the snippet controls.</p>
+              <p>Handle the form submission to add a new snippet.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@$</span> <span class="hljs-string">'#add_button, #clone_button, #edit_button'</span>
-    .popover
-      <span class="hljs-attribute">html</span>:      <span class="hljs-literal">yes</span>
-      <span class="hljs-attribute">trigger</span>:   <span class="hljs-string">'manual'</span>
-      <span class="hljs-attribute">placement</span>: <span class="hljs-string">'bottom'</span>
-      <span class="hljs-attribute">container</span>: <span class="hljs-string">'body'</span>
-      <span class="hljs-attribute">content</span>:   <span class="hljs-string">"""
-        &lt;form id="edit_snippet" class="form-inline" role="form"&gt;
-          &lt;div class="form-group"&gt;
-            &lt;input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com"&gt;
-          &lt;/div&gt;
-        &lt;/form&gt;
-      """</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">addSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'add'</span></pre></div></div>
             
         </li>
         
@@ -1242,12 +1228,14 @@ snippets.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <p>Hide all popovers other than the one associated with the current target of the given <code>event</code>.</p>
+              <p>Grant focus to the host field within the originating modal dialog.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">closeOtherPrompts</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    hidePopovers event.currentTarget</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">focusHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    $modal = $ event.currentTarget
+
+    $modal.find(<span class="hljs-string">'form :text'</span>).focus()</pre></div></div>
             
         </li>
         
@@ -1258,12 +1246,12 @@ snippets.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <p>Display the popover containing the form to add a new snippet.</p>
+              <p>Handle the form submission to clone an existing snippet.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptAdd</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@promptHost</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">cloneSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'clone'</span></pre></div></div>
             
         </li>
         
@@ -1274,15 +1262,12 @@ snippets.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p>Display the popover containing the form to clone an existing snippet.</p>
-<p>Nothing happens if no snippet is active.</p>
+              <p>Handle the form submission to edit an existing snippet.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptClone</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
-
-    <span class="hljs-property">@promptHost</span> <span class="hljs-attribute">clone</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">editSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'edit'</span></pre></div></div>
             
         </li>
         
@@ -1293,15 +1278,15 @@ snippets.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>Display the popover containing the form to edit an existing snippet.</p>
-<p>Nothing happens if no snippet is active.</p>
+              <p>Insert the host attribute of the selected snippet in to the field within the originating modal
+dialog.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptEdit</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">insertHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    $modal = $ event.currentTarget
 
-    <span class="hljs-property">@promptHost</span> <span class="hljs-attribute">edit</span>: <span class="hljs-literal">yes</span></pre></div></div>
+    $modal.find(<span class="hljs-string">'form :text'</span>).val <span class="hljs-property">@model</span>.get <span class="hljs-string">'host'</span></pre></div></div>
             
         </li>
         
@@ -1311,73 +1296,6 @@ snippets.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
-              </div>
-              <p>Display the popover containing the form based on the specified <code>options</code>.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">promptHost</span>: <span class="hljs-function"><span class="hljs-params">(options = {})</span> -&gt;</span>
-    $form = $ <span class="hljs-string">'#edit_snippet'</span>
-    value = <span class="hljs-keyword">if</span> options.clone <span class="hljs-keyword">or</span> options.edit <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'host'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">''</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>Handle the form submission depending on the purpose of the prompt.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    $form.<span class="hljs-literal">on</span> <span class="hljs-string">'submit'</span>,<span class="hljs-function"> =&gt;</span>
-      $group = $form.find <span class="hljs-string">'.form-group'</span>
-      host   = $form.find(<span class="hljs-string">':text'</span>).val().replace <span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>
-
-      <span class="hljs-keyword">unless</span> host
-        $group.addClass <span class="hljs-string">'has-error'</span>
-      <span class="hljs-keyword">else</span>
-        $group.removeClass <span class="hljs-string">'has-error'</span>
-
-        <span class="hljs-keyword">if</span> options.edit
-          <span class="hljs-property">@model</span>.save { host }
-          .done<span class="hljs-function"> -&gt;</span>
-            analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Renamed'</span>, host
-
-            page.snippets.list.sort()
-        <span class="hljs-keyword">else</span>
-          base = <span class="hljs-keyword">if</span> options.clone <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">new</span> Snippet
-
-          <span class="hljs-property">@collection</span>.create {
-            host
-            <span class="hljs-attribute">code</span>: base.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>
-            <span class="hljs-attribute">mode</span>: base.get(<span class="hljs-string">'mode'</span>) <span class="hljs-keyword">or</span> Snippet.defaultMode
-          }, <span class="hljs-attribute">success</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
-            <span class="hljs-keyword">if</span> options.clone
-              analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Cloned'</span>, base.get <span class="hljs-string">'host'</span>
-            <span class="hljs-keyword">else</span>
-              analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Created'</span>, host
-
-            model.select().done<span class="hljs-function"> -&gt;</span>
-              page.snippets.list.sort().showSelected()
-
-      <span class="hljs-keyword">do</span> hidePopovers
-
-      <span class="hljs-literal">false</span>
-
-    $form.find(<span class="hljs-string">':text'</span>).focus().val value</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Deselect and destroy the active snippet.</p>
 
@@ -1393,18 +1311,90 @@ snippets.</p>
         </li>
         
         
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>Reset the host field within the originating modal dialog.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resetHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+    $modal = $ event.currentTarget
+
+    $modal.find(<span class="hljs-string">'form :text'</span>).val <span class="hljs-string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>Handle the form submission to determine how the input should be stored based on the <code>action</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">submitSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event, action)</span> -&gt;</span>
+    $form  = $ event.currentTarget
+    $group = $form.find <span class="hljs-string">'.form-group:first'</span>
+    $modal = $form.closest <span class="hljs-string">'.modal'</span>
+    host   = $group.find(<span class="hljs-string">':text'</span>).val().replace <span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>
+
+    <span class="hljs-keyword">unless</span> host
+      $group.addClass <span class="hljs-string">'has-error'</span>
+    <span class="hljs-keyword">else</span>
+      $group.removeClass <span class="hljs-string">'has-error'</span>
+
+      $modal.modal <span class="hljs-string">'hide'</span>
+
+      <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'edit'</span>
+        <span class="hljs-property">@model</span>.save { host }
+        .done<span class="hljs-function"> -&gt;</span>
+          analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Renamed'</span>, host
+
+          page.snippets.list.sort()
+      <span class="hljs-keyword">else</span>
+        base = <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'clone'</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">new</span> Snippet
+
+        <span class="hljs-property">@collection</span>.create {
+          host
+          <span class="hljs-attribute">code</span>: base.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>
+          <span class="hljs-attribute">mode</span>: base.get(<span class="hljs-string">'mode'</span>) <span class="hljs-keyword">or</span> Snippet.defaultMode
+        }, <span class="hljs-attribute">success</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
+          <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'clone'</span>
+            analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Cloned'</span>, base.get <span class="hljs-string">'host'</span>
+          <span class="hljs-keyword">else</span>
+            analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Created'</span>, host
+
+          model.select().done<span class="hljs-function"> -&gt;</span>
+            page.snippets.list.sort().showSelected()
+
+    <span class="hljs-literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <p>Toggle the display of the popover associated with the current target of the given <code>event</code>.</p>
+              <p>Update the state of the snippet controls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">togglePrompt</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    $(event.currentTarget).popover <span class="hljs-string">'toggle'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
+    $modelButtons = <span class="hljs-property">@$</span> <span class="hljs-string">'#clone_button, #edit_button, #delete_menu .btn'</span>
+
+    $modelButtons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+
+}</pre></div></div>
             
         </li>
         
@@ -1414,29 +1404,6 @@ snippets.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-73">&#182;</a>
-              </div>
-              <p>Update the state of the snippet controls.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
-    $modelButtons = <span class="hljs-property">@$</span> <span class="hljs-string">'#clone_button, #delete_menu .btn, #edit_button'</span>
-
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#add_button'</span>).prop <span class="hljs-string">'disabled'</span>, <span class="hljs-literal">no</span>
-    $modelButtons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
-
-    <span class="hljs-keyword">do</span> hidePopovers <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
-
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>Menu item which, when selected, enables the user to manage and modify the code of the underlying
 snippet.</p>
@@ -1448,11 +1415,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>Tag name for the element to be created for the snippet item.</p>
 
@@ -1463,11 +1430,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Prevent <code>activateTooltips</code> from interfering with the tooltip of the snippet item.</p>
 
@@ -1478,11 +1445,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Template for the snippet item.</p>
 
@@ -1497,11 +1464,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Template for the tooltip of the snippet item.</p>
 
@@ -1517,11 +1484,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Register DOM events for the snippet item.</p>
 
@@ -1533,11 +1500,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Initialize the snippet item.</p>
 
@@ -1554,11 +1521,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Highlight that the snippet code has been modified in the editor.</p>
 
@@ -1573,11 +1540,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Override <code>remove</code> to ensure that the tooltip is properly destroyed upon removal.</p>
 
@@ -1591,11 +1558,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Render the snippet item.</p>
 
@@ -1614,11 +1581,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>Update the selected state of the snippet depending on the given <code>event</code>.</p>
 
@@ -1633,11 +1600,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>Update the tooltip for the snippet item, destroying any previous tooltip in the process.</p>
 
@@ -1656,11 +1623,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p>A menu of snippets that allows the user to easily manage them.</p>
 
@@ -1671,11 +1638,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Overlay the snippets list on top of this element.</p>
 
@@ -1686,11 +1653,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-88">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <p>Create and add a <code>SnippetItem</code> for the specified <code>model</code>.</p>
 
@@ -1708,11 +1675,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-89">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Initialize the snippets list.</p>
 
@@ -1727,11 +1694,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Override <code>remove</code> to ensure that managed sub-views are removed as well.</p>
 
@@ -1745,11 +1712,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-91">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Remove all managed sub-views.</p>
 
@@ -1761,11 +1728,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Render the snippets list.</p>
 
@@ -1779,11 +1746,11 @@ snippet.</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <p>Remove any existing managed sub-views before creating and adding new <code>SnippetItem</code> views for
 each snippet model in the collection.</p>
@@ -1798,11 +1765,11 @@ each snippet model in the collection.</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>Scroll to the selected snippet in the list.</p>
 
@@ -1818,11 +1785,11 @@ each snippet model in the collection.</p>
         </li>
         
         
-        <li id="section-95">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p>Detach each snippet item in the list and sort them based on their text contents before
 re-appending them.</p>
@@ -1839,11 +1806,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-96">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>The primary view for managing snippets.</p>
 
@@ -1854,11 +1821,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-97">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>Overlay the snippets on top of this element.</p>
 
@@ -1869,11 +1836,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-98">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p>Initialize the snippets.</p>
 
@@ -1886,11 +1853,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-99">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p>Render the snippets.</p>
 
@@ -1905,11 +1872,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p>Update the state of the snippets.</p>
 
@@ -1923,14 +1890,26 @@ re-appending them.</p>
         </li>
         
         
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <h2 id="miscellaneous">Miscellaneous</h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
-              <h2 id="miscellaneous">Miscellaneous</h2>
-
+              
             </div>
             
         </li>
@@ -1942,18 +1921,6 @@ re-appending them.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-103">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
-              </div>
               <p>Activate tooltip effects, optionally only within a specific context.</p>
 
             </div>
@@ -1964,11 +1931,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-104">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p>Reset all previously treated tooltips.</p>
 
@@ -1986,11 +1953,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-105">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p>Apply tooltips to all relevant elements.</p>
 
@@ -2007,23 +1974,27 @@ re-appending them.</p>
         </li>
         
         
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <h2 id="options-page-setup">Options page setup</h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
-              <p>Hide all visibile popovers and remove them from the DOM with the option to exclude specific
-<code>exceptions</code>.</p>
-
+              
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">hidePopovers</span> = <span class="hljs-params">(exceptions)</span> -&gt;</span>
-  $toggles = $ <span class="hljs-string">'.js-popover-toggle'</span>
-  $toggles = $toggles.<span class="hljs-keyword">not</span> exceptions <span class="hljs-keyword">if</span> exceptions?
-
-  $toggles.popover <span class="hljs-string">'hide'</span>
-  $(<span class="hljs-string">'.popover'</span>).remove()</pre></div></div>
             
         </li>
         
@@ -2034,31 +2005,6 @@ re-appending them.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
-              <h2 id="options-page-setup">Options page setup</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-108">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-109">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
-              </div>
               <p>Responsible for managing the options page.</p>
 
             </div>
@@ -2068,11 +2014,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-110">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <p>The current version of the extension.</p>
 <p>This will be updated with the actual value during the page’s initialization.</p>
@@ -2084,11 +2030,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-111">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <p>Create a new instance of <code>OptionsPage</code>.</p>
 
@@ -2100,11 +2046,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-112">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <h2 id="public-functions">Public functions</h2>
 
@@ -2113,11 +2059,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-113">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               
             </div>
@@ -2125,11 +2071,11 @@ re-appending them.</p>
         </li>
         
         
-        <li id="section-114">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
               <p>Initialize the options page.</p>
 <p>This will involve inserting and configuring the UI elements as well as loading the current
@@ -2142,11 +2088,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-115">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
+                <a class="pilcrow" href="#section-113">&#182;</a>
               </div>
               <p>It’s nice knowing what version is running.</p>
 
@@ -2157,11 +2103,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-116">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
+                <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
               <p>Load the configuration data from the file before storing it locally.</p>
 
@@ -2172,11 +2118,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-117">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
               <p>Map the mode groups now to save the configuration data from being loaded again by
 <code>Snippets.fetch</code>.</p>
@@ -2188,11 +2134,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-118">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
+                <a class="pilcrow" href="#section-116">&#182;</a>
               </div>
               <p>Add the user feedback feature to the page.</p>
 
@@ -2203,11 +2149,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-119">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
               <p>Begin initialization.</p>
 
@@ -2218,11 +2164,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-120">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-120">&#182;</a>
+                <a class="pilcrow" href="#section-118">&#182;</a>
               </div>
               <p>Retrieve all singleton instances as well as the collection for user-created snippets.</p>
 
@@ -2234,11 +2180,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-121">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-121">&#182;</a>
+                <a class="pilcrow" href="#section-119">&#182;</a>
               </div>
               <p>Create views for the important models and collections.</p>
 
@@ -2251,11 +2197,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-122">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-122">&#182;</a>
+                <a class="pilcrow" href="#section-120">&#182;</a>
               </div>
               <p>Render these new views.</p>
 
@@ -2268,11 +2214,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-123">
+        <li id="section-121">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-123">&#182;</a>
+                <a class="pilcrow" href="#section-121">&#182;</a>
               </div>
               <p>Ensure that views are updated accordingly when snippets are selected/deselected.</p>
 
@@ -2287,11 +2233,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-124">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-124">&#182;</a>
+                <a class="pilcrow" href="#section-122">&#182;</a>
               </div>
               <p>Ensure the current year is displayed throughout, where appropriate.</p>
 
@@ -2302,11 +2248,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-125">
+        <li id="section-123">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-125">&#182;</a>
+                <a class="pilcrow" href="#section-123">&#182;</a>
               </div>
               <p>Bind tab selection event to all tabs.</p>
 
@@ -2341,11 +2287,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-126">
+        <li id="section-124">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-126">&#182;</a>
+                <a class="pilcrow" href="#section-124">&#182;</a>
               </div>
               <p>Reflect the previously persisted tab initially.</p>
 
@@ -2356,42 +2302,26 @@ settings.</p>
         </li>
         
         
-        <li id="section-127">
+        <li id="section-125">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-127">&#182;</a>
+                <a class="pilcrow" href="#section-125">&#182;</a>
               </div>
               <p>Ensure that form submissions don’t reload the page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'form:not([target="_blank"])'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'submit'</span>,<span class="hljs-function"> -&gt;</span> <span class="hljs-literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'form.js-no-submit'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'submit'</span>,<span class="hljs-function"> -&gt;</span> <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-128">
+        <li id="section-126">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-128">&#182;</a>
-              </div>
-              <p>Ensure that popovers are closed when the <code>Esc</code> key is pressed anywhere.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        $<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">document</span>)</span>.<span class="hljs-title">on</span> '<span class="hljs-title">keydown</span>', <span class="hljs-params">(e)</span> -&gt;</span>
-          <span class="hljs-keyword">do</span> hidePopovers <span class="hljs-keyword">if</span> e.keyCode <span class="hljs-keyword">is</span> <span class="hljs-number">27</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-129">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-129">&#182;</a>
+                <a class="pilcrow" href="#section-126">&#182;</a>
               </div>
               <p>Support <em>goto</em> navigation elements that change the current scroll position when clicked.</p>
 
@@ -2404,11 +2334,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-130">
+        <li id="section-127">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-130">&#182;</a>
+                <a class="pilcrow" href="#section-127">&#182;</a>
               </div>
               <p>Bind analytical tracking events to key footer buttons and links.</p>
 
@@ -2420,11 +2350,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-131">
+        <li id="section-128">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-131">&#182;</a>
+                <a class="pilcrow" href="#section-128">&#182;</a>
               </div>
               <p>Setup and configure donation buttons.</p>
 
@@ -2443,11 +2373,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-132">
+        <li id="section-129">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-132">&#182;</a>
+                <a class="pilcrow" href="#section-129">&#182;</a>
               </div>
               <p>Update the primary views with the selected <code>snippet</code> provided.</p>
 
@@ -2460,11 +2390,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-133">
+        <li id="section-130">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-133">&#182;</a>
+                <a class="pilcrow" href="#section-130">&#182;</a>
               </div>
               <p>Create an global instance of <code>OptionsPage</code> and initialize it once the DOM is ready.</p>
 

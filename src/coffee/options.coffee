@@ -374,98 +374,38 @@ SnippetControls = Injector.View.extend {
 
   # Register DOM events for the snippet controls.
   events:
-    'show.bs.popover .btn':               'closeOtherPrompts'
-    'click #delete_menu .btn':            'closeOtherPrompts'
-    'click #add_button:not(:disabled)':   'togglePrompt'
-    'shown.bs.popover #add_button':       'promptAdd'
-    'click #edit_button:not(:disabled)':  'togglePrompt'
-    'shown.bs.popover #edit_button':      'promptEdit'
-    'click #clone_button:not(:disabled)': 'togglePrompt'
-    'shown.bs.popover #clone_button':     'promptClone'
-    'click #delete_menu .js-resolve':     'removeSnippet'
+    'click #delete_menu .js-resolve':                          'removeSnippet'
+    'hide.bs.modal .modal':                                    'resetHost'
+    'show.bs.modal #snippet_clone_modal, #snippet_edit_modal': 'insertHost'
+    'shown.bs.modal .modal':                                   'focusHost'
+    'submit #snippet_add_form':                                'addSnippet'
+    'submit #snippet_clone_form':                              'cloneSnippet'
+    'submit #snippet_edit_form':                               'editSnippet'
 
-  # Initialize the snippet controls.
-  init: ->
-    @$ '#add_button, #clone_button, #edit_button'
-    .popover
-      html:      yes
-      trigger:   'manual'
-      placement: 'bottom'
-      container: 'body'
-      content:   """
-        <form id="edit_snippet" class="form-inline" role="form">
-          <div class="form-group">
-            <input type="text" class="form-control" spellcheck="false" placeholder="yourdomain.com">
-          </div>
-        </form>
-      """
+  # Handle the form submission to add a new snippet.
+  addSnippet: (event) ->
+    @submitSnippet event, 'add'
 
-  # Hide all popovers other than the one associated with the current target of the given `event`.
-  closeOtherPrompts: (event) ->
-    hidePopovers event.currentTarget
+  # Grant focus to the host field within the originating modal dialog.
+  focusHost: (event) ->
+    $modal = $ event.currentTarget
 
-  # Display the popover containing the form to add a new snippet.
-  promptAdd: ->
-    do @promptHost
+    $modal.find('form :text').focus()
 
-  # Display the popover containing the form to clone an existing snippet.
-  #
-  # Nothing happens if no snippet is active.
-  promptClone: ->
-    return unless @hasModel()
+  # Handle the form submission to clone an existing snippet.
+  cloneSnippet: (event) ->
+    @submitSnippet event, 'clone'
 
-    @promptHost clone: yes
+  # Handle the form submission to edit an existing snippet.
+  editSnippet: (event) ->
+    @submitSnippet event, 'edit'
 
-  # Display the popover containing the form to edit an existing snippet.
-  #
-  # Nothing happens if no snippet is active.
-  promptEdit: ->
-    return unless @hasModel()
+  # Insert the host attribute of the selected snippet in to the field within the originating modal
+  # dialog.
+  insertHost: (event) ->
+    $modal = $ event.currentTarget
 
-    @promptHost edit: yes
-
-  # Display the popover containing the form based on the specified `options`.
-  promptHost: (options = {}) ->
-    $form = $ '#edit_snippet'
-    value = if options.clone or options.edit then @model.get 'host' else ''
-
-    # Handle the form submission depending on the purpose of the prompt.
-    $form.on 'submit', =>
-      $group = $form.find '.form-group'
-      host   = $form.find(':text').val().replace /\s+/g, ''
-
-      unless host
-        $group.addClass 'has-error'
-      else
-        $group.removeClass 'has-error'
-
-        if options.edit
-          @model.save { host }
-          .done ->
-            analytics.track 'Snippet', 'Renamed', host
-
-            page.snippets.list.sort()
-        else
-          base = if options.clone then @model else new Snippet
-
-          @collection.create {
-            host
-            code: base.get('code') or ''
-            mode: base.get('mode') or Snippet.defaultMode
-          }, success: (model) ->
-            if options.clone
-              analytics.track 'Snippet', 'Cloned', base.get 'host'
-            else
-              analytics.track 'Snippet', 'Created', host
-
-            model.select().done ->
-              page.snippets.list.sort().showSelected()
-
-      do hidePopovers
-
-      false
-
-    $form.find(':text').focus().val value
+    $modal.find('form :text').val @model.get 'host'
 
   # Deselect and destroy the active snippet.
   removeSnippet: ->
@@ -475,18 +415,55 @@ SnippetControls = Injector.View.extend {
     model.deselect().done ->
       model.destroy()
 
-  # Toggle the display of the popover associated with the current target of the given `event`.
-  togglePrompt: (event) ->
-    $(event.currentTarget).popover 'toggle'
+  # Reset the host field within the originating modal dialog.
+  resetHost: (event) ->
+    $modal = $ event.currentTarget
+
+    $modal.find('form :text').val ''
+
+  # Handle the form submission to determine how the input should be stored based on the `action`.
+  submitSnippet: (event, action) ->
+    $form  = $ event.currentTarget
+    $group = $form.find '.form-group:first'
+    $modal = $form.closest '.modal'
+    host   = $group.find(':text').val().replace /\s+/g, ''
+
+    unless host
+      $group.addClass 'has-error'
+    else
+      $group.removeClass 'has-error'
+
+      $modal.modal 'hide'
+
+      if action is 'edit'
+        @model.save { host }
+        .done ->
+          analytics.track 'Snippet', 'Renamed', host
+
+          page.snippets.list.sort()
+      else
+        base = if action is 'clone' then @model else new Snippet
+
+        @collection.create {
+          host
+          code: base.get('code') or ''
+          mode: base.get('mode') or Snippet.defaultMode
+        }, success: (model) ->
+          if action is 'clone'
+            analytics.track 'Snippet', 'Cloned', base.get 'host'
+          else
+            analytics.track 'Snippet', 'Created', host
+
+          model.select().done ->
+            page.snippets.list.sort().showSelected()
+
+    false
 
   # Update the state of the snippet controls.
   update: (@model) ->
-    $modelButtons = @$ '#clone_button, #delete_menu .btn, #edit_button'
+    $modelButtons = @$ '#clone_button, #edit_button, #delete_menu .btn'
 
-    @$('#add_button').prop 'disabled', no
     $modelButtons.prop 'disabled', not @hasModel()
-
-    do hidePopovers unless @hasModel()
 
 }
 
@@ -683,15 +660,6 @@ activateTooltips = (selector) ->
       container: $this.attr('data-container') or 'body'
       placement: $this.attr('data-placement') or 'top'
 
-# Hide all visibile popovers and remove them from the DOM with the option to exclude specific
-# `exceptions`.
-hidePopovers = (exceptions) ->
-  $toggles = $ '.js-popover-toggle'
-  $toggles = $toggles.not exceptions if exceptions?
-
-  $toggles.popover 'hide'
-  $('.popover').remove()
-
 # Options page setup
 # ------------------
 
@@ -785,11 +753,7 @@ class OptionsPage
         $("##{settings.get 'tab'}").trigger 'click'
 
         # Ensure that form submissions don't reload the page.
-        $('form:not([target="_blank"])').on 'submit', -> false
-
-        # Ensure that popovers are closed when the `Esc` key is pressed anywhere.
-        $(document).on 'keydown', (e) ->
-          do hidePopovers if e.keyCode is 27
+        $('form.js-no-submit').on 'submit', -> false
 
         # Support *goto* navigation elements that change the current scroll position when clicked.
         $('[data-goto]').on 'click', ->

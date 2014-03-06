@@ -57,26 +57,24 @@
       <section id="general_tab" class="tab hide">
         <div class="row">
           <div class="col-lg-12">
-            <form class="form-horizontal" role="form">
-              <fieldset>
-                <legend data-i18n-content="misc_header"></legend>
+            <fieldset>
+              <legend data-i18n-content="misc_header"></legend>
 
-                <div class="form-group">
-                  <label for="analytics" class="control-label col-lg-2" data-i18n-content="analytics_label"></label>
+              <div class="form-group">
+                <label for="analytics" class="control-label col-lg-2" data-i18n-content="analytics_label"></label>
 
-                  <div class="col-lg-10">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" id="analytics">
-                        <span data-i18n-content="analytics_text"></span>
-                      </label>
+                <div class="col-lg-10">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" id="analytics">
+                      <span data-i18n-content="analytics_text"></span>
+                    </label>
 
-                      <span class="help-block" data-i18n-content="analytics_sub_text"></span>
-                    </div>
+                    <span class="help-block" data-i18n-content="analytics_sub_text"></span>
                   </div>
                 </div>
-              </fieldset>
-            </form>
+              </div>
+            </fieldset>
           </div>
         </div>
       </section>
@@ -84,66 +82,151 @@
       <section id="snippets_tab" class="tab hide">
         <div class="row">
           <div class="col-lg-12">
-            <form class="form-inline" role="form">
-              <fieldset>
-                <legend data-i18n-content="snippets_header"></legend>
+            <fieldset>
+              <legend data-i18n-content="snippets_header"></legend>
 
-                <div class="form-inline-group row">
-                  <div class="col-xs-3">
-                    <div class="btn-toolbar" id="snippets_controls">
-                      <div class="btn-group">
-                        <button id="add_button" type="button" class="btn btn-default js-popover-toggle"><span class="glyphicon glyphicon-plus"></span></button>
-                        <div id="delete_menu" class="btn-group">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled><span class="glyphicon glyphicon-minus"></span></button>
-                          <ul class="dropdown-menu" role="menu">
-                            <li role="presentation" class="dropdown-header" data-i18n-content="delete_confirmation_text"></li>
-                            <li role="presentation"><a class="js-resolve" role="menuitem" tabindex="-1" data-i18n-content="delete_resolve_item"></a></li>
-                            <li role="presentation"><a class="js-reject" role="menuitem" tabindex="-1" data-i18n-content="delete_reject_item"></a></li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div class="btn-group">
-                        <button id="edit_button" type="button" class="btn btn-default js-popover-toggle" disabled><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button id="clone_button" type="button" class="btn btn-default js-popover-toggle" disabled><span class="glyphicon glyphicon-share"></span></button>
+              <div class="form-inline-group row">
+                <div class="col-xs-3">
+                  <div class="btn-toolbar" id="snippets_controls">
+                    <div class="btn-group">
+                      <button id="add_button" type="button" class="btn btn-default" data-toggle="modal" data-target="#snippet_add_modal"><span class="glyphicon glyphicon-plus"></span></button>
+                      <div id="delete_menu" class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled><span class="glyphicon glyphicon-minus"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li role="presentation" class="dropdown-header" data-i18n-content="delete_confirmation_text"></li>
+                          <li role="presentation"><a class="js-resolve" role="menuitem" tabindex="-1" data-i18n-content="delete_resolve_item"></a></li>
+                          <li role="presentation"><a class="js-reject" role="menuitem" tabindex="-1" data-i18n-content="delete_reject_item"></a></li>
+                        </ul>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="col-xs-9">
-                    <div class="row">
-                      <div class="col-xs-6">
-                        <select id="editor_modes" class="form-control" disabled></select>
+                    <div class="btn-group">
+                      <button id="edit_button" type="button" class="btn btn-default" data-toggle="modal" data-target="#snippet_edit_modal" disabled><span class="glyphicon glyphicon-pencil"></span></button>
+                      <button id="clone_button" type="button" class="btn btn-default" data-toggle="modal" data-target="#snippet_clone_modal" disabled><span class="glyphicon glyphicon-share"></span></button>
+                    </div>
+
+                    <div id="snippet_add_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="snippet_add_header" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <form id="snippet_add_form" class="form-horizontal" role="form">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                              <h4 id="snippet_add_header" class="modal-title" data-i18n-content="snippet_add_header"></h4>
+                            </div>
+
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="snippet_add_host" class="control-label col-sm-3" data-i18n-content="snippet_host_label"></label>
+
+                                <div class="col-sm-9">
+                                  <input id="snippet_add_host" type="text" class="form-control" spellcheck="false" data-i18n-values="placeholder:snippet_host_placeholder">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
+                              <button type="submit" class="btn btn-primary" data-i18n-content="snippet_add_button"></button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
+                    </div>
 
-                      <div class="col-xs-6 text-right">
-                        <button id="editor_settings_button" class="btn btn-default" data-toggle="modal" data-target="#editor_settings_modal">
-                          <span class="glyphicon glyphicon-cog"></span>
-                          <span data-i18n-content="editor_settings_button"></span>
-                        </button>
+                    <div id="snippet_edit_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="snippet_edit_header" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <form id="snippet_edit_form" class="form-horizontal" role="form">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                              <h4 id="snippet_edit_header" class="modal-title" data-i18n-content="snippet_edit_header"></h4>
+                            </div>
+
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="snippet_edit_host" class="control-label col-sm-3" data-i18n-content="snippet_host_label"></label>
+
+                                <div class="col-sm-9">
+                                  <input id="snippet_edit_host" type="text" class="form-control" spellcheck="false" data-i18n-values="placeholder:snippet_host_placeholder">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
+                              <button type="submit" class="btn btn-primary" data-i18n-content="snippet_edit_button"></button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+
+                    <div id="snippet_clone_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="snippet_clone_header" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <form id="snippet_clone_form" class="form-horizontal" role="form">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                              <h4 id="snippet_clone_header" class="modal-title" data-i18n-content="snippet_clone_header"></h4>
+                            </div>
+
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="snippet_clone_host" class="control-label col-sm-3" data-i18n-content="snippet_host_label"></label>
+
+                                <div class="col-sm-9">
+                                  <input id="snippet_clone_host" type="text" class="form-control" spellcheck="false" data-i18n-values="placeholder:snippet_host_placeholder">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
+                              <button type="submit" class="btn btn-primary" data-i18n-content="snippet_clone_button"></button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="form-inline-group row">
-                  <div class="col-xs-3">
-                    <ul id="snippets_list" class="nav nav-pills nav-stacked"></ul>
-                  </div>
-
-                  <div class="col-xs-9">
-                    <div class="form-inline-group">
-                      <pre id="editor"></pre>
+                <div class="col-xs-9">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <select id="editor_modes" class="form-control" disabled></select>
                     </div>
 
-                    <div id="editor_controls" class="pull-right">
-                      <button id="reset_button" type="button" class="btn btn-warning" data-i18n-content="reset_button" disabled></button>
-                      <button id="update_button" type="button" class="btn btn-success" data-i18n-values=".innerHTML:update_button;data-loading-text:update_button_alt" disabled></button>
+                    <div class="col-xs-6 text-right">
+                      <button id="editor_settings_button" class="btn btn-default" data-toggle="modal" data-target="#editor_settings_modal">
+                        <span class="glyphicon glyphicon-cog"></span>
+                        <span data-i18n-content="editor_settings_button"></span>
+                      </button>
                     </div>
                   </div>
                 </div>
-              </fieldset>
-            </form>
+              </div>
+
+              <div class="form-inline-group row">
+                <div class="col-xs-3">
+                  <ul id="snippets_list" class="nav nav-pills nav-stacked"></ul>
+                </div>
+
+                <div class="col-xs-9">
+                  <div class="form-inline-group">
+                    <pre id="editor"></pre>
+                  </div>
+
+                  <div id="editor_controls" class="pull-right">
+                    <button id="reset_button" type="button" class="btn btn-warning" data-i18n-content="reset_button" disabled></button>
+                    <button id="update_button" type="button" class="btn btn-success" data-i18n-values=".innerHTML:update_button;data-loading-text:update_button_alt" disabled></button>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
           </div>
         </div>
       </section>
@@ -159,19 +242,21 @@
       </footer>
     </main>
 
-    <form id="donation" class="hide" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+    <form id="donation" class="js-no-submit hide" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
       <input type="hidden" name="cmd" value="_s-xclick">
       <input type="hidden" name="hosted_button_id" value="">
     </form>
 
     <div id="editor_settings_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editor_settings_header" aria-hidden="true">
       <div class="modal-dialog">
-        <form id="editor_settings" class="form-horizontal" role="form">
+        <form id="editor_settings" class="form-horizontal js-no-submit" role="form">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
               <h4 id="editor_settings_header" class="modal-title" data-i18n-content="editor_settings_header"></h4>
             </div>
+
             <div class="modal-body">
               <div class="form-group">
                 <label for="editor_theme" class="control-label col-sm-3" data-i18n-content="editor_theme_label"></label>
@@ -205,6 +290,7 @@
                 </div>
               </div>
             </div>
+
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
               <button type="button" class="btn btn-warning" data-i18n-content="restore_defaults_button"></button>

@@ -242,6 +242,38 @@ restore_defaults_button:
   message: 'Restore Defaults'
   description: 'Text for the Restore Defaults button.'
 
+snippet_add_button:
+  message: 'Create'
+  description: 'Text for the submit button in the add snippet modal dialog form.'
+
+snippet_add_header:
+  message: 'New Snippet'
+  description: 'Header for the add snippet form modal dialog.'
+
+snippet_clone_button:
+  message: 'Create'
+  description: 'Text for the submit button in the clone snippet modal dialog form.'
+
+snippet_clone_header:
+  message: 'Clone Snippet'
+  description: 'Header for the clone snippet form modal dialog.'
+
+snippet_edit_button:
+  message: 'Update'
+  description: 'Text for the submit button in the edit snippet modal dialog form.'
+
+snippet_edit_header:
+  message: 'Edit Snippet'
+  description: 'Header for the edit snippet form modal dialog.'
+
+snippet_host_label:
+  message: 'Domain'
+  description: 'Label for the Domain field in the snippet form modal dialog.'
+
+snippet_host_placeholder:
+  message: 'example.com'
+  description: 'Placeholder text for the Domain field in the snippet form modal dialog.'
+
 snippets_header:
   message: 'Snippets'
   description: 'Header of the Snippets tab.'
