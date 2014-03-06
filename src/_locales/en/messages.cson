@@ -10,6 +10,10 @@ analytics_text:
   message: 'Send anonymous usage statistics'
   description: 'Text for the Analytics field.'
 
+close_button:
+  message: 'Close'
+  description: 'Text for the close button in modal dialogs.'
+
 delete_confirmation_text:
   message: 'Are you sure?'
   description: 'Text for the delete confirmation.'
@@ -81,6 +85,14 @@ editor_mode_javascript:
 editor_mode_less:
   message: 'LESS'
   description: 'Text for the LESS editor mode.'
+
+editor_settings_button:
+  message: 'Settings'
+  description: 'Text for the button used to open the Editor Settings modal dialog.'
+
+editor_settings_header:
+  message: 'Settings'
+  description: 'Header for the Editor Settings modal dialog.'
 
 editor_theme_ambiance:
   message: 'Ambiance'

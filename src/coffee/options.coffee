@@ -4,8 +4,8 @@
 #
 # Freely distributable under the MIT license
 
-# Extract the models and collections that are required by the options page.
-{EditorSettings, EditorSettings, Snippet, Snippets} = models
+# Extract any models and collections that are required by the options page.
+{Snippet} = models
 
 # Feedback
 # --------
@@ -165,7 +165,7 @@ EditorModes = Injector.View.extend {
 }
 
 # View containing options that allow the user to configure the Ace editor.
-EditorSettings = Injector.View.extend {
+EditorSettingsView = Injector.View.extend {
 
   # Overlay the editor settings on top of this element.
   el: '#editor_settings'
@@ -184,8 +184,8 @@ EditorSettings = Injector.View.extend {
 
   # Initialize the editor settings.
   init: ->
-    $sizes  = @$ '#editor_indent_size optgroup'
-    $themes = @$ '#editor_theme optgroup'
+    $sizes  = @$ '#editor_indent_size'
+    $themes = @$ '#editor_theme'
 
     for size in page.config.editor.indentSizes
       $sizes.append @template
@@ -211,22 +211,19 @@ EditorSettings = Injector.View.extend {
     softTabs   = @model.get 'softTabs'
     theme      = @model.get 'theme'
 
-    @$ """
-      #editor_indent_size option[value='#{indentSize}'],
-      #editor_line_wrap   option[value='#{lineWrap}'],
-      #editor_soft_tabs   option[value='#{softTabs}'],
-      #editor_theme       option[value='#{theme}']
-    """
-    .prop 'selected', yes
+    @$('#editor_indent_size').val "#{indentSize}"
+    @$('#editor_line_wrap').val "#{lineWrap}"
+    @$('#editor_soft_tabs').val "#{softTabs}"
+    @$('#editor_theme').val theme
 
     @
 
   # Update the state of the editor settings.
-  update: (model) ->
-    $indentSize = @$('#editor_indent_size').prop 'disabled', not @hasModel()
-    $lineWrap   = @$('#editor_line_wrap').prop 'disabled', not @hasModel()
-    $softTabs   = @$('#editor_soft_tabs').prop 'disabled', not @hasModel()
-    $theme      = @$('#editor_theme').prop 'disabled', not @hasModel()
+  update: ->
+    $indentSize = @$ '#editor_indent_size'
+    $lineWrap   = @$ '#editor_line_wrap'
+    $softTabs   = @$ '#editor_soft_tabs'
+    $theme      = @$ '#editor_theme'
 
     @model.save
       indentSize: parseInt $indentSize.val(), 0
@@ -250,9 +247,9 @@ EditorView = Injector.View.extend {
     @ace.getSession().on 'change', =>
       @model.trigger 'modified', @hasUnsavedChanges(), @ace.getValue() if @hasModel()
 
-    @settings = new EditorSettings { model: @options.settings }
+    @settings = new EditorSettingsView { model: @options.settings }
     @controls = new EditorControls { @ace }
-    @modes    = new EditorModes    { @ace }
+    @modes    = new EditorModes { @ace }
 
     @listenTo @options.settings, """
       change:indentSize
