@@ -29,6 +29,10 @@ activateTab = (url, callback) ->
       chrome.tabs.create { windowId: win.id, url, active: yes }, (tab) ->
         callback? tab
 
+# Derive the host name from the specified `url`.
+getHost = (url) ->
+  $.url(url).attr('host').replace /^www\./, ''
+
 # Compilers
 # ---------
 
@@ -118,5 +122,5 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   # The request needs to be handled differently based on its type.
   switch request.type
     when 'config'    then fetchJSON 'configuration.json', callback
-    when 'injection' then fetchSnippets request.host, callback
+    when 'injection' then fetchSnippets getHost(request.url), callback
     else false

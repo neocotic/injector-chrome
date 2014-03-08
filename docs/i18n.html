@@ -111,18 +111,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
               <p>Although we could easily just use <code>int17</code> as-is, it’s probably best to integrate Chrome’s
 internationalization implementation as it’ll already be optimized using native code.</p>
 <p>For this reason, modify the internal classes of the <code>int17</code> library so that it interfaces with
@@ -135,11 +123,11 @@ the Chrome API.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Use <code>chrome.i18n.getMessage</code> to retrieve the localized message for the specified <code>name</code>.</p>
 
@@ -155,11 +143,11 @@ the Chrome API.</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Use <code>chrome.i18n.getAcceptLanguages</code> to asynchronously fetch all of the supported languages,
 optional specifying a <code>parent</code> locale for which only it’s <em>children</em> should be retrieved.</p>
@@ -190,11 +178,11 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h2 id="internalization-setup">Internalization setup</h2>
 
@@ -203,23 +191,11 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Ensure that the default value of the <code>messages</code> option is <em>not</em> an empty object in order to
 prevent any attempts to load message bundle resources.</p>

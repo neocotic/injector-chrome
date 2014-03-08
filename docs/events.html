@@ -111,18 +111,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
               <p>Attempt to select a tab in the current window displaying a page whose location begins with <code>url</code>.</p>
 <p>If no existing tab exists, a new one is created.</p>
 
@@ -133,11 +121,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Retrieve the tabs of last focused window to check for an existing one with a <em>matching</em> URL.</p>
 
@@ -149,11 +137,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Try to find an existing tab that begins with <code>url</code>.</p>
 
@@ -168,11 +156,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Found one! Now to select it.</p>
 
@@ -185,11 +173,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Ach well, let’s just create a brand-spanking new one.</p>
 
@@ -197,6 +185,22 @@
             
             <div class="content"><div class='highlight'><pre>      chrome.tabs.create { <span class="hljs-attribute">windowId</span>: win.id, url, <span class="hljs-attribute">active</span>: <span class="hljs-literal">yes</span> }, <span class="hljs-function"><span class="hljs-params">(tab)</span> -&gt;</span>
         callback? tab</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Derive the host name from the specified <code>url</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">getHost</span> = <span class="hljs-params">(url)</span> -&gt;</span>
+  $.url(url).attr(<span class="hljs-string">'host'</span>).replace <span class="hljs-regexp">/^www\./</span>, <span class="hljs-string">''</span></pre></div></div>
             
         </li>
         
@@ -220,18 +224,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
               <p>Reusable instance of the LESS parser used to compile LESS code in to CSS.</p>
 
             </div>
@@ -241,11 +233,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Compilers that map to supported editor modes.</p>
 <p>Each compiler should compile into either JavaScript or CSS code, depending on the nature of the
@@ -258,11 +250,11 @@ language.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Compile the CoffeeScript <code>code</code> provided in to JavaScript.</p>
 
@@ -278,11 +270,11 @@ language.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Compile the LESS <code>code</code> provided in to CSS.</p>
 
@@ -297,11 +289,11 @@ language.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Compile the code of the specified <code>snippet</code>, if required.</p>
 <p>If the <code>snippet</code> mode does not require compilation, the <code>code</code> will be passed back as-is.</p>
@@ -319,11 +311,11 @@ language.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h2 id="events">Events</h2>
 
@@ -332,23 +324,11 @@ language.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Retrieve the contents of the specified JSON <code>file</code> that is relative to this extension.</p>
 
@@ -360,6 +340,49 @@ language.</p>
     callback <span class="hljs-literal">null</span>, data
   .fail <span class="hljs-function"><span class="hljs-params">(jqXHR, textStatus, error)</span> -&gt;</span>
     callback error</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Indicate that we intend on responding to the request.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-literal">true</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Retrieve all of the snippets that are associated with a given <code>host</code>.</p>
+<p>The snippets are grouped based on their modes (languages) and compiled so that their code can be
+quickly and easily injected in to the requesting page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">fetchSnippets</span> = <span class="hljs-params">(host, callback)</span> -&gt;</span>
+  models.Snippets.fetch <span class="hljs-function"><span class="hljs-params">(snippets)</span> -&gt;</span>
+    snippets          = snippets.where { host }
+    {scripts, styles} = models.Snippets.group snippets
+
+    async.parallel
+      <span class="hljs-attribute">css</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
+        async.mapSeries styles, compileSnippet, done
+
+      <span class="hljs-attribute">js</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
+        async.mapSeries scripts, compileSnippet, done
+    , callback</pre></div></div>
             
         </li>
         
@@ -385,49 +408,6 @@ language.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Retrieve all of the snippets that are associated with a given <code>host</code>.</p>
-<p>The snippets are grouped based on their modes (languages) and compiled so that their code can be
-quickly and easily injected in to the requesting page.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">fetchSnippets</span> = <span class="hljs-params">(host, callback)</span> -&gt;</span>
-  models.Snippets.fetch <span class="hljs-function"><span class="hljs-params">(snippets)</span> -&gt;</span>
-    snippets          = snippets.where { host }
-    {scripts, styles} = models.Snippets.group snippets
-
-    async.parallel
-      <span class="hljs-attribute">css</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
-        async.mapSeries styles, compileSnippet, done
-
-      <span class="hljs-attribute">js</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
-        async.mapSeries scripts, compileSnippet, done
-    , callback</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>Indicate that we intend on responding to the request.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-literal">true</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
               <p>Open the Options page when the browser action is clicked.</p>
 
             </div>
@@ -440,11 +420,11 @@ quickly and easily injected in to the requesting page.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Add message listener to communicate with other pages within the extension.</p>
 
@@ -455,11 +435,11 @@ quickly and easily injected in to the requesting page.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Wrapper for incorporating the asynchronous pattern of the <code>async</code> library.</p>
 
@@ -473,11 +453,11 @@ quickly and easily injected in to the requesting page.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>The request needs to be handled differently based on its type.</p>
 
@@ -485,7 +465,7 @@ quickly and easily injected in to the requesting page.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">switch</span> request.type
     <span class="hljs-keyword">when</span> <span class="hljs-string">'config'</span>    <span class="hljs-keyword">then</span> fetchJSON <span class="hljs-string">'configuration.json'</span>, callback
-    <span class="hljs-keyword">when</span> <span class="hljs-string">'injection'</span> <span class="hljs-keyword">then</span> fetchSnippets request.host, callback
+    <span class="hljs-keyword">when</span> <span class="hljs-string">'injection'</span> <span class="hljs-keyword">then</span> fetchSnippets getHost(request.url), callback
     <span class="hljs-keyword">else</span> <span class="hljs-literal">false</span></pre></div></div>
             
         </li>

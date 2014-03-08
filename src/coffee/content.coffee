@@ -7,11 +7,8 @@
 # Content Script
 # --------------
 
-# Derive the host name for the current page.
-host = location.host.replace /^www\./, ''
-
 # Retrieve any JavaScript and CSS code that is to be injected into the current page.
-chrome.runtime.sendMessage { host, type: 'injection' }, (response) ->
+chrome.runtime.sendMessage { url: location.href, type: 'injection' }, (response) ->
   body      = document.querySelector 'body'
   head      = document.querySelector 'head'
   {css, js} = response

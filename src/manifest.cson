@@ -27,9 +27,7 @@ content_scripts: [
 ]
 
 browser_action:
-  default_icon:
-    19: 'img/icon19.png'
-    38: 'img/icon38.png'
+  default_icon:  'img/icon-128.png'
   default_title: '__MSG_name__'
 
 options_page: 'options.html'
@@ -50,6 +48,7 @@ background:
     'vendor/js/backbone.chromestorage.min.js'
     'vendor/js/coffee-script.min.js'
     'vendor/js/less.min.js'
+    'vendor/js/purl.min.js'
     'js/utils.js'
     'js/injector.js'
     'js/models.js'
@@ -60,8 +59,6 @@ background:
 version: '1.0.0'
 
 icons:
-  16:  'img/icon16.png'
-  19:  'img/icon19.png'
-  38:  'img/icon38.png'
-  48:  'img/icon48.png'
-  128: 'img/icon128.png'
+  16:  'img/icon-128.png'
+  48:  'img/icon-128.png'
+  128: 'img/icon-128.png'
