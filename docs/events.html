@@ -131,7 +131,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  chrome.windows.getLastFocused <span class="hljs-attribute">populate</span>: <span class="hljs-literal">yes</span>, <span class="hljs-function"><span class="hljs-params">(win)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  chrome.windows.getLastFocused { <span class="hljs-attribute">populate</span>: <span class="hljs-literal">yes</span> }, <span class="hljs-function"><span class="hljs-params">(win)</span> -&gt;</span>
     {tabs} = win</pre></div></div>
             
         </li>
@@ -147,7 +147,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> tab <span class="hljs-keyword">in</span> tabs <span class="hljs-keyword">when</span> <span class="hljs-keyword">not</span> tab.url.indexOf url
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> tab <span class="hljs-keyword">in</span> tabs <span class="hljs-keyword">when</span> <span class="hljs-keyword">not</span> tab.url.indexOf(url)
       existing = tab
       <span class="hljs-keyword">break</span>
 
@@ -166,8 +166,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      chrome.tabs.update existing.id, <span class="hljs-attribute">active</span>: <span class="hljs-literal">yes</span>
-      callback? existing
+            <div class="content"><div class='highlight'><pre>      chrome.tabs.update(existing.id, { <span class="hljs-attribute">active</span>: <span class="hljs-literal">yes</span> })
+      callback?(existing)
     <span class="hljs-keyword">else</span></pre></div></div>
             
         </li>
@@ -184,7 +184,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>      chrome.tabs.create { <span class="hljs-attribute">windowId</span>: win.id, url, <span class="hljs-attribute">active</span>: <span class="hljs-literal">yes</span> }, <span class="hljs-function"><span class="hljs-params">(tab)</span> -&gt;</span>
-        callback? tab</pre></div></div>
+        callback?(tab)</pre></div></div>
             
         </li>
         
@@ -200,7 +200,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">getHost</span> = <span class="hljs-params">(url)</span> -&gt;</span>
-  $.url(url).attr(<span class="hljs-string">'host'</span>).replace <span class="hljs-regexp">/^www\./</span>, <span class="hljs-string">''</span></pre></div></div>
+  $.url(url).attr(<span class="hljs-string">'host'</span>).replace(<span class="hljs-regexp">/^www\./</span>, <span class="hljs-string">''</span>)</pre></div></div>
             
         </li>
         
@@ -245,7 +245,7 @@ language.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>compilers =</pre></div></div>
+            <div class="content"><div class='highlight'><pre>compilers = {</pre></div></div>
             
         </li>
         
@@ -262,10 +262,10 @@ language.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">coffee</span>: <span class="hljs-function"><span class="hljs-params">(code, callback)</span> -&gt;</span>
     <span class="hljs-keyword">try</span>
-      code = CoffeeScript.compile code, <span class="hljs-attribute">bare</span>: <span class="hljs-literal">yes</span>
-      callback <span class="hljs-literal">null</span>, code
+      code = CoffeeScript.compile(code, { <span class="hljs-attribute">bare</span>: <span class="hljs-literal">yes</span> })
+      callback(<span class="hljs-literal">null</span>, code)
     <span class="hljs-keyword">catch</span> error
-      callback error</pre></div></div>
+      callback(error)</pre></div></div>
             
         </li>
         
@@ -281,10 +281,12 @@ language.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">less</span>: <span class="hljs-function"><span class="hljs-params">(code, callback)</span> -&gt;</span>
-    lessParser ?= <span class="hljs-keyword">new</span> less.Parser
+    lessParser ?= <span class="hljs-keyword">new</span> less.Parser()
     lessParser.parse code, <span class="hljs-function"><span class="hljs-params">(error, tree)</span> -&gt;</span>
-      <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> callback error
-      <span class="hljs-keyword">else</span>          callback <span class="hljs-literal">null</span>, tree.toCSS()</pre></div></div>
+      <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> callback(error)
+      <span class="hljs-keyword">else</span>          callback(<span class="hljs-literal">null</span>, tree.toCSS())
+
+}</pre></div></div>
             
         </li>
         
@@ -301,12 +303,12 @@ language.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">compileSnippet</span> = <span class="hljs-params">(snippet, callback)</span> -&gt;</span>
-  {code, mode} = snippet.pick <span class="hljs-string">'code'</span>, <span class="hljs-string">'mode'</span>
+  {code, mode} = snippet.pick(<span class="hljs-string">'code'</span>, <span class="hljs-string">'mode'</span>)
 
   <span class="hljs-keyword">if</span> compilers[mode]
-    compilers[mode] code, callback
+    compilers[mode](code, callback)
   <span class="hljs-keyword">else</span>
-    callback <span class="hljs-literal">null</span>, code</pre></div></div>
+    callback(<span class="hljs-literal">null</span>, code)</pre></div></div>
             
         </li>
         
@@ -335,11 +337,11 @@ language.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">fetchJSON</span> = <span class="hljs-params">(file, callback)</span> -&gt;</span>
-  $.getJSON chrome.extension.getURL file
+  $.getJSON(chrome.extension.getURL(file))
   .done <span class="hljs-function"><span class="hljs-params">(data)</span> -&gt;</span>
-    callback <span class="hljs-literal">null</span>, data
+    callback(<span class="hljs-literal">null</span>, data)
   .fail <span class="hljs-function"><span class="hljs-params">(jqXHR, textStatus, error)</span> -&gt;</span>
-    callback error</pre></div></div>
+    callback(error)</pre></div></div>
             
         </li>
         
@@ -373,16 +375,16 @@ quickly and easily injected in to the requesting page.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">fetchSnippets</span> = <span class="hljs-params">(host, callback)</span> -&gt;</span>
   models.Snippets.fetch <span class="hljs-function"><span class="hljs-params">(snippets)</span> -&gt;</span>
-    snippets          = snippets.where { host }
-    {scripts, styles} = models.Snippets.group snippets
+    snippets          = snippets.where({ host })
+    {scripts, styles} = models.Snippets.group(snippets)
 
-    async.parallel
+    async.parallel {
       <span class="hljs-attribute">css</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
-        async.mapSeries styles, compileSnippet, done
+        async.mapSeries(styles, compileSnippet, done)
 
       <span class="hljs-attribute">js</span>: <span class="hljs-function"><span class="hljs-params">(done)</span> -&gt;</span>
-        async.mapSeries scripts, compileSnippet, done
-    , callback</pre></div></div>
+        async.mapSeries(scripts, compileSnippet, done)
+    }, callback</pre></div></div>
             
         </li>
         
@@ -415,7 +417,7 @@ quickly and easily injected in to the requesting page.</p>
             <div class="content"><div class='highlight'><pre>chrome.browserAction.onClicked.addListener <span class="hljs-function"><span class="hljs-params">(tab)</span> -&gt;</span>
   {options_page} = chrome.runtime.getManifest()
 
-  activateTab chrome.extension.getURL options_page</pre></div></div>
+  activateTab(chrome.extension.getURL(options_page))</pre></div></div>
             
         </li>
         
@@ -448,7 +450,7 @@ quickly and easily injected in to the requesting page.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-title">callback</span> = <span class="hljs-params">(error, args...)</span> -&gt;</span>
     <span class="hljs-keyword">throw</span> error <span class="hljs-keyword">if</span> error?
 
-    sendResponse args...</pre></div></div>
+    sendResponse(args...)</pre></div></div>
             
         </li>
         
@@ -464,8 +466,8 @@ quickly and easily injected in to the requesting page.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">switch</span> request.type
-    <span class="hljs-keyword">when</span> <span class="hljs-string">'config'</span>    <span class="hljs-keyword">then</span> fetchJSON <span class="hljs-string">'configuration.json'</span>, callback
-    <span class="hljs-keyword">when</span> <span class="hljs-string">'injection'</span> <span class="hljs-keyword">then</span> fetchSnippets getHost(request.url), callback
+    <span class="hljs-keyword">when</span> <span class="hljs-string">'config'</span>    <span class="hljs-keyword">then</span> fetchJSON(<span class="hljs-string">'configuration.json'</span>, callback)
+    <span class="hljs-keyword">when</span> <span class="hljs-string">'injection'</span> <span class="hljs-keyword">then</span> fetchSnippets(getHost(request.url), callback)
     <span class="hljs-keyword">else</span> <span class="hljs-literal">false</span></pre></div></div>
             
         </li>

@@ -187,7 +187,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  uv       = <span class="hljs-built_in">document</span>.createElement <span class="hljs-string">'script'</span>
+            <div class="content"><div class='highlight'><pre>  uv       = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'script'</span>)
   uv.async = <span class="hljs-literal">yes</span>
   uv.src   = <span class="hljs-string">"https://widget.uservoice.com/<span class="hljs-subst">#{options.id}</span>.js"</span></pre></div></div>
             
@@ -204,8 +204,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  script = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'script'</span>
-  script.parentNode.insertBefore uv, script</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  script = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'script'</span>)
+  script.parentNode.insertBefore(uv, script)</pre></div></div>
             
         </li>
         
@@ -230,7 +230,7 @@
       <span class="hljs-attribute">link_color</span>:    <span class="hljs-string">'#08c'</span>
       <span class="hljs-attribute">default_mode</span>:  <span class="hljs-string">'feedback'</span>
       <span class="hljs-attribute">forum_id</span>:      options.forum
-      <span class="hljs-attribute">tab_label</span>:     i18n.get <span class="hljs-string">'feedback_button'</span>
+      <span class="hljs-attribute">tab_label</span>:     i18n.get(<span class="hljs-string">'feedback_button'</span>)
       <span class="hljs-attribute">tab_color</span>:     <span class="hljs-string">'#333'</span>
       <span class="hljs-attribute">tab_position</span>:  <span class="hljs-string">'middle-right'</span>
       <span class="hljs-attribute">tab_inverted</span>:  <span class="hljs-literal">yes</span>
@@ -339,7 +339,7 @@ of the Ace editor.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+    <span class="hljs-property">@update</span>()
 
     @</pre></div></div>
             
@@ -362,8 +362,8 @@ of the Ace editor.</p>
 
     {ace} = <span class="hljs-property">@options</span>
 
-    ace.setValue <span class="hljs-property">@model</span>.get <span class="hljs-string">'code'</span>
-    ace.gotoLine <span class="hljs-number">0</span></pre></div></div>
+    ace.setValue(<span class="hljs-property">@model</span>.get(<span class="hljs-string">'code'</span>))
+    ace.gotoLine(<span class="hljs-number">0</span>)</pre></div></div>
             
         </li>
         
@@ -381,20 +381,19 @@ of the Ace editor.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
 
-    $button = $ event.currentTarget
+    $button = $(event.currentTarget)
     code    = <span class="hljs-property">@options</span>.ace.getValue()
 
-    $button.button(<span class="hljs-string">'loading'</span>).delay <span class="hljs-number">500</span>
+    $button.button(<span class="hljs-string">'loading'</span>).delay(<span class="hljs-number">500</span>)
 
-    <span class="hljs-property">@model</span>.save { code }
+    <span class="hljs-property">@model</span>.save({ code })
     .<span class="hljs-keyword">then</span><span class="hljs-function"> =&gt;</span>
-      <span class="hljs-property">@model</span>.trigger <span class="hljs-string">'modified'</span>, <span class="hljs-literal">no</span>, code
+      <span class="hljs-property">@model</span>.trigger(<span class="hljs-string">'modified'</span>, <span class="hljs-literal">no</span>, code)
 
-      analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Code'</span>
+      analytics.track(<span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Code'</span>)
 
       $button.queue<span class="hljs-function"> -&gt;</span>
-        $button.button <span class="hljs-string">'reset'</span>
-        .dequeue()</pre></div></div>
+        $button.button(<span class="hljs-string">'reset'</span>).dequeue()</pre></div></div>
             
         </li>
         
@@ -410,7 +409,7 @@ of the Ace editor.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
-    $buttons = <span class="hljs-property">@$</span> <span class="hljs-string">'#reset_button, #update_button'</span></pre></div></div>
+    $buttons = <span class="hljs-property">@$</span>(<span class="hljs-string">'#reset_button, #update_button'</span>)</pre></div></div>
             
         </li>
         
@@ -425,7 +424,7 @@ of the Ace editor.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    $buttons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+            <div class="content"><div class='highlight'><pre>    $buttons.prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>())
 
 }</pre></div></div>
             
@@ -526,17 +525,19 @@ snippets.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-keyword">for</span> name, modes <span class="hljs-keyword">of</span> Snippet.modeGroups
       <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(name, modes)</span> =&gt;</span>
-        $group = $ <span class="hljs-property">@groupTemplate</span>
-          <span class="hljs-attribute">label</span>: i18n.get <span class="hljs-string">"editor_mode_group_<span class="hljs-subst">#{name}</span>"</span>
+        $group = $ <span class="hljs-property">@groupTemplate</span> {
+          <span class="hljs-attribute">label</span>: i18n.get(<span class="hljs-string">"editor_mode_group_<span class="hljs-subst">#{name}</span>"</span>)
+        }
 
         <span class="hljs-keyword">for</span> mode <span class="hljs-keyword">in</span> modes
-          $group.append <span class="hljs-property">@modeTemplate</span>
-            <span class="hljs-attribute">html</span>:  i18n.get <span class="hljs-string">"editor_mode_<span class="hljs-subst">#{mode}</span>"</span>
+          $group.append <span class="hljs-property">@modeTemplate</span> {
+            <span class="hljs-attribute">html</span>:  i18n.get(<span class="hljs-string">"editor_mode_<span class="hljs-subst">#{mode}</span>"</span>)
             <span class="hljs-attribute">value</span>: mode
+          }
 
-        <span class="hljs-property">@$el</span>.append $group
+        <span class="hljs-property">@$el</span>.append($group)
 
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+    <span class="hljs-property">@update</span>()
 
     @</pre></div></div>
             
@@ -556,12 +557,12 @@ snippets.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>:<span class="hljs-function"> -&gt;</span>
     mode = <span class="hljs-property">@$el</span>.val()
 
-    <span class="hljs-property">@options</span>.ace.getSession().setMode <span class="hljs-string">"ace/mode/<span class="hljs-subst">#{mode}</span>"</span>
+    <span class="hljs-property">@options</span>.ace.getSession().setMode(<span class="hljs-string">"ace/mode/<span class="hljs-subst">#{mode}</span>"</span>)
 
     <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()
-      analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Mode'</span>
+      analytics.track(<span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Mode'</span>)
 
-      <span class="hljs-property">@model</span>.save { mode }</pre></div></div>
+      <span class="hljs-property">@model</span>.save({ mode })</pre></div></div>
             
         </li>
         
@@ -577,14 +578,14 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
-    mode   = <span class="hljs-property">@model</span>?.get <span class="hljs-string">'mode'</span>
+    mode   = <span class="hljs-property">@model</span>?.get(<span class="hljs-string">'mode'</span>)
     mode <span class="hljs-keyword">or</span>= Snippet.defaultMode
 
-    <span class="hljs-property">@$el</span>.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    <span class="hljs-property">@$el</span>.prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>())
 
-    <span class="hljs-property">@$</span>(<span class="hljs-string">"option[value='<span class="hljs-subst">#{mode}</span>']"</span>).prop <span class="hljs-string">'selected'</span>, <span class="hljs-literal">yes</span>
+    <span class="hljs-property">@$</span>(<span class="hljs-string">"option[value='<span class="hljs-subst">#{mode}</span>']"</span>).prop(<span class="hljs-string">'selected'</span>, <span class="hljs-literal">yes</span>)
 
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@save</span>
+    <span class="hljs-property">@save</span>()
 
 }</pre></div></div>
             
@@ -669,21 +670,23 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    $sizes  = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_indent_size'</span>
-    $themes = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_theme'</span>
+    $sizes  = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_indent_size'</span>)
+    $themes = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_theme'</span>)
 
     <span class="hljs-keyword">for</span> size <span class="hljs-keyword">in</span> page.config.editor.indentSizes
-      $sizes.append <span class="hljs-property">@template</span>
+      $sizes.append <span class="hljs-property">@template</span> {
         <span class="hljs-attribute">html</span>:  size
         <span class="hljs-attribute">value</span>: size
+      }
 
     <span class="hljs-keyword">for</span> theme <span class="hljs-keyword">in</span> page.config.editor.themes
-      $themes.append <span class="hljs-property">@template</span>
-        <span class="hljs-attribute">html</span>:  i18n.get <span class="hljs-string">"editor_theme_<span class="hljs-subst">#{theme}</span>"</span>
+      $themes.append <span class="hljs-property">@template</span> {
+        <span class="hljs-attribute">html</span>:  i18n.get(<span class="hljs-string">"editor_theme_<span class="hljs-subst">#{theme}</span>"</span>)
         <span class="hljs-attribute">value</span>: theme
+      }
 
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change'</span>, <span class="hljs-property">@captureAnalytics</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change'</span>, <span class="hljs-property">@render</span></pre></div></div>
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change'</span>, <span class="hljs-property">@captureAnalytics</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change'</span>, <span class="hljs-property">@render</span>)</pre></div></div>
             
         </li>
         
@@ -701,7 +704,7 @@ snippets.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">captureAnalytics</span>:<span class="hljs-function"> -&gt;</span>
     attrs = <span class="hljs-property">@model</span>.changedAttributes() <span class="hljs-keyword">or</span> {}
 
-    analytics.track <span class="hljs-string">'Editor'</span>, <span class="hljs-string">'Changed'</span>, attr <span class="hljs-keyword">for</span> attr <span class="hljs-keyword">of</span> attrs</pre></div></div>
+    analytics.track(<span class="hljs-string">'Editor'</span>, <span class="hljs-string">'Changed'</span>, attr) <span class="hljs-keyword">for</span> attr <span class="hljs-keyword">of</span> attrs</pre></div></div>
             
         </li>
         
@@ -717,15 +720,15 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
-    indentSize = <span class="hljs-property">@model</span>.get <span class="hljs-string">'indentSize'</span>
-    lineWrap   = <span class="hljs-property">@model</span>.get <span class="hljs-string">'lineWrap'</span>
-    softTabs   = <span class="hljs-property">@model</span>.get <span class="hljs-string">'softTabs'</span>
-    theme      = <span class="hljs-property">@model</span>.get <span class="hljs-string">'theme'</span>
+    indentSize = <span class="hljs-property">@model</span>.get(<span class="hljs-string">'indentSize'</span>)
+    lineWrap   = <span class="hljs-property">@model</span>.get(<span class="hljs-string">'lineWrap'</span>)
+    softTabs   = <span class="hljs-property">@model</span>.get(<span class="hljs-string">'softTabs'</span>)
+    theme      = <span class="hljs-property">@model</span>.get(<span class="hljs-string">'theme'</span>)
 
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_indent_size'</span>).val <span class="hljs-string">"<span class="hljs-subst">#{indentSize}</span>"</span>
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_line_wrap'</span>).val <span class="hljs-string">"<span class="hljs-subst">#{lineWrap}</span>"</span>
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_soft_tabs'</span>).val <span class="hljs-string">"<span class="hljs-subst">#{softTabs}</span>"</span>
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_theme'</span>).val theme
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_indent_size'</span>).val(<span class="hljs-string">"<span class="hljs-subst">#{indentSize}</span>"</span>)
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_line_wrap'</span>).val(<span class="hljs-string">"<span class="hljs-subst">#{lineWrap}</span>"</span>)
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_soft_tabs'</span>).val(<span class="hljs-string">"<span class="hljs-subst">#{softTabs}</span>"</span>)
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_theme'</span>).val(theme)
 
     @</pre></div></div>
             
@@ -760,13 +763,13 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>:<span class="hljs-function"> -&gt;</span>
-    $indentSize = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_indent_size'</span>
-    $lineWrap   = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_line_wrap'</span>
-    $softTabs   = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_soft_tabs'</span>
-    $theme      = <span class="hljs-property">@$</span> <span class="hljs-string">'#editor_theme'</span>
+    $indentSize = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_indent_size'</span>)
+    $lineWrap   = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_line_wrap'</span>)
+    $softTabs   = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_soft_tabs'</span>)
+    $theme      = <span class="hljs-property">@$</span>(<span class="hljs-string">'#editor_theme'</span>)
 
     <span class="hljs-property">@model</span>.save
-      <span class="hljs-attribute">indentSize</span>: parseInt $indentSize.val(), <span class="hljs-number">0</span>
+      <span class="hljs-attribute">indentSize</span>: parseInt($indentSize.val(), <span class="hljs-number">0</span>)
       <span class="hljs-attribute">lineWrap</span>:   $lineWrap.val() <span class="hljs-keyword">is</span> <span class="hljs-string">'true'</span>
       <span class="hljs-attribute">softTabs</span>:   $softTabs.val() <span class="hljs-keyword">is</span> <span class="hljs-string">'true'</span>
       <span class="hljs-attribute">theme</span>:      $theme.val()
@@ -817,19 +820,19 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@ace</span> = ace.edit <span class="hljs-string">'editor'</span>
-    <span class="hljs-property">@ace</span>.setReadOnly <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
-    <span class="hljs-property">@ace</span>.setShowPrintMargin <span class="hljs-literal">no</span>
+    <span class="hljs-property">@ace</span> = ace.edit(<span class="hljs-string">'editor'</span>)
+    <span class="hljs-property">@ace</span>.setReadOnly(<span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>())
+    <span class="hljs-property">@ace</span>.setShowPrintMargin(<span class="hljs-literal">no</span>)
     <span class="hljs-property">@ace</span>.getSession().<span class="hljs-literal">on</span> <span class="hljs-string">'change'</span>,<span class="hljs-function"> =&gt;</span>
-      <span class="hljs-property">@model</span>.trigger <span class="hljs-string">'modified'</span>, <span class="hljs-property">@hasUnsavedChanges</span>(), <span class="hljs-property">@ace</span>.getValue() <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()
+      <span class="hljs-property">@model</span>.trigger(<span class="hljs-string">'modified'</span>, <span class="hljs-property">@hasUnsavedChanges</span>(), <span class="hljs-property">@ace</span>.getValue()) <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()
 
-    <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> EditorSettingsView { <span class="hljs-attribute">model</span>: <span class="hljs-property">@options</span>.settings }
-    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> EditorControls { <span class="hljs-property">@ace</span> }
-    <span class="hljs-property">@modes</span>    = <span class="hljs-keyword">new</span> EditorModes { <span class="hljs-property">@ace</span> }
+    <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> EditorSettingsView({ <span class="hljs-attribute">model</span>: <span class="hljs-property">@options</span>.settings })
+    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> EditorControls({ <span class="hljs-property">@ace</span> })
+    <span class="hljs-property">@modes</span>    = <span class="hljs-keyword">new</span> EditorModes({ <span class="hljs-property">@ace</span> })
 
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@options</span>.settings, <span class="hljs-string">'change'</span>, <span class="hljs-property">@updateEditor</span>
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@options</span>.settings, <span class="hljs-string">'change'</span>, <span class="hljs-property">@updateEditor</span>)
 
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@updateEditor</span></pre></div></div>
+    <span class="hljs-property">@updateEditor</span>()</pre></div></div>
             
         </li>
         
@@ -845,7 +848,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">hasUnsavedChanges</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@ace</span>.getValue() <span class="hljs-keyword">isnt</span> <span class="hljs-property">@model</span>?.get <span class="hljs-string">'code'</span></pre></div></div>
+    <span class="hljs-property">@ace</span>.getValue() <span class="hljs-keyword">isnt</span> <span class="hljs-property">@model</span>?.get(<span class="hljs-string">'code'</span>)</pre></div></div>
             
         </li>
         
@@ -881,13 +884,13 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
-    <span class="hljs-property">@ace</span>.setReadOnly <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
-    <span class="hljs-property">@ace</span>.setValue <span class="hljs-property">@model</span>?.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>
-    <span class="hljs-property">@ace</span>.gotoLine <span class="hljs-number">0</span>
+    <span class="hljs-property">@ace</span>.setReadOnly(<span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>())
+    <span class="hljs-property">@ace</span>.setValue(<span class="hljs-property">@model</span>?.get(<span class="hljs-string">'code'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">''</span>)
+    <span class="hljs-property">@ace</span>.gotoLine(<span class="hljs-number">0</span>)
 
-    <span class="hljs-property">@settings</span>.update <span class="hljs-property">@model</span>
-    <span class="hljs-property">@controls</span>.update <span class="hljs-property">@model</span>
-    <span class="hljs-property">@modes</span>.update <span class="hljs-property">@model</span></pre></div></div>
+    <span class="hljs-property">@settings</span>.update(<span class="hljs-property">@model</span>)
+    <span class="hljs-property">@controls</span>.update(<span class="hljs-property">@model</span>)
+    <span class="hljs-property">@modes</span>.update(<span class="hljs-property">@model</span>)</pre></div></div>
             
         </li>
         
@@ -906,10 +909,10 @@ snippets.</p>
     {settings} = <span class="hljs-property">@options</span>
     aceSession = <span class="hljs-property">@ace</span>.getSession()
 
-    aceSession.setUseWrapMode settings.get <span class="hljs-string">'lineWrap'</span>
-    aceSession.setUseSoftTabs settings.get <span class="hljs-string">'softTabs'</span>
-    aceSession.setTabSize     settings.get <span class="hljs-string">'indentSize'</span>
-    <span class="hljs-property">@ace</span>.setTheme <span class="hljs-string">"ace/theme/<span class="hljs-subst">#{settings.get <span class="hljs-string">'theme'</span>}</span>"</span>
+    aceSession.setUseWrapMode(settings.get(<span class="hljs-string">'lineWrap'</span>))
+    aceSession.setUseSoftTabs(settings.get(<span class="hljs-string">'softTabs'</span>))
+    aceSession.setTabSize(settings.get(<span class="hljs-string">'indentSize'</span>))
+    <span class="hljs-property">@ace</span>.setTheme(<span class="hljs-string">"ace/theme/<span class="hljs-subst">#{settings.get(<span class="hljs-string">'theme'</span>)}</span>"</span>)
 
 }</pre></div></div>
             
@@ -998,10 +1001,10 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@render</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@updateAnalytics</span>
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@render</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change:analytics'</span>, <span class="hljs-property">@updateAnalytics</span>)
 
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@updateAnalytics</span></pre></div></div>
+    <span class="hljs-property">@updateAnalytics</span>()</pre></div></div>
             
         </li>
         
@@ -1017,7 +1020,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@$</span>(<span class="hljs-string">'#analytics'</span>).prop <span class="hljs-string">'checked'</span>, <span class="hljs-property">@model</span>.get <span class="hljs-string">'analytics'</span>
+    <span class="hljs-property">@$</span>(<span class="hljs-string">'#analytics'</span>).prop(<span class="hljs-string">'checked'</span>, <span class="hljs-property">@model</span>.get(<span class="hljs-string">'analytics'</span>))
 
     @</pre></div></div>
             
@@ -1035,9 +1038,9 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>:<span class="hljs-function"> -&gt;</span>
-    $analytics = <span class="hljs-property">@$</span> <span class="hljs-string">'#analytics'</span>
+    $analytics = <span class="hljs-property">@$</span>(<span class="hljs-string">'#analytics'</span>)
 
-    <span class="hljs-property">@model</span>.save { <span class="hljs-attribute">analytics</span>: $analytics.<span class="hljs-keyword">is</span> <span class="hljs-string">':checked'</span> }</pre></div></div>
+    <span class="hljs-property">@model</span>.save({ <span class="hljs-attribute">analytics</span>: $analytics.<span class="hljs-keyword">is</span>(<span class="hljs-string">':checked'</span>) })</pre></div></div>
             
         </li>
         
@@ -1053,11 +1056,11 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateAnalytics</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'analytics'</span>
-      analytics.add page.config.analytics
-      analytics.track <span class="hljs-string">'General'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Analytics'</span>, <span class="hljs-number">1</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get(<span class="hljs-string">'analytics'</span>)
+      analytics.add(page.config.analytics)
+      analytics.track(<span class="hljs-string">'General'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Analytics'</span>, <span class="hljs-number">1</span>)
     <span class="hljs-keyword">else</span>
-      analytics.track <span class="hljs-string">'General'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Analytics'</span>, <span class="hljs-number">0</span>
+      analytics.track(<span class="hljs-string">'General'</span>, <span class="hljs-string">'Changed'</span>, <span class="hljs-string">'Analytics'</span>, <span class="hljs-number">0</span>)
       analytics.remove()
 
 }</pre></div></div>
@@ -1106,7 +1109,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@general</span> = <span class="hljs-keyword">new</span> GeneralSettingsView { <span class="hljs-property">@model</span> }</pre></div></div>
+    <span class="hljs-property">@general</span> = <span class="hljs-keyword">new</span> GeneralSettingsView({ <span class="hljs-property">@model</span> })</pre></div></div>
             
         </li>
         
@@ -1219,7 +1222,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">addSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'add'</span></pre></div></div>
+    <span class="hljs-property">@submitSnippet</span>(event, <span class="hljs-string">'add'</span>)</pre></div></div>
             
         </li>
         
@@ -1235,7 +1238,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">focusHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    $modal = $ event.currentTarget
+    $modal = $(event.currentTarget)
 
     $modal.find(<span class="hljs-string">'form :text'</span>).focus()</pre></div></div>
             
@@ -1253,7 +1256,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">cloneSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'clone'</span></pre></div></div>
+    <span class="hljs-property">@submitSnippet</span>(event, <span class="hljs-string">'clone'</span>)</pre></div></div>
             
         </li>
         
@@ -1269,7 +1272,7 @@ snippets.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">editSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    <span class="hljs-property">@submitSnippet</span> event, <span class="hljs-string">'edit'</span></pre></div></div>
+    <span class="hljs-property">@submitSnippet</span>(event, <span class="hljs-string">'edit'</span>)</pre></div></div>
             
         </li>
         
@@ -1286,9 +1289,9 @@ dialog.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">insertHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    $modal = $ event.currentTarget
+    $modal = $(event.currentTarget)
 
-    $modal.find(<span class="hljs-string">'form :text'</span>).val <span class="hljs-property">@model</span>.get <span class="hljs-string">'host'</span></pre></div></div>
+    $modal.find(<span class="hljs-string">'form :text'</span>).val(<span class="hljs-property">@model</span>.get(<span class="hljs-string">'host'</span>))</pre></div></div>
             
         </li>
         
@@ -1306,7 +1309,7 @@ dialog.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">removeSnippet</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
 
-    model = <span class="hljs-property">@model</span>
+    {model} = @
     model.deselect().done<span class="hljs-function"> -&gt;</span>
       model.destroy()</pre></div></div>
             
@@ -1324,9 +1327,9 @@ dialog.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resetHost</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    $modal = $ event.currentTarget
+    $modal = $(event.currentTarget)
 
-    $modal.find(<span class="hljs-string">'form :text'</span>).val <span class="hljs-string">''</span></pre></div></div>
+    $modal.find(<span class="hljs-string">'form :text'</span>).val(<span class="hljs-string">''</span>)</pre></div></div>
             
         </li>
         
@@ -1342,26 +1345,26 @@ dialog.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">submitSnippet</span>: <span class="hljs-function"><span class="hljs-params">(event, action)</span> -&gt;</span>
-    $form  = $ event.currentTarget
-    $group = $form.find <span class="hljs-string">'.form-group:first'</span>
-    $modal = $form.closest <span class="hljs-string">'.modal'</span>
-    host   = $group.find(<span class="hljs-string">':text'</span>).val().replace <span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>
+    $form  = $(event.currentTarget)
+    $group = $form.find(<span class="hljs-string">'.form-group:first'</span>)
+    $modal = $form.closest(<span class="hljs-string">'.modal'</span>)
+    host   = $group.find(<span class="hljs-string">':text'</span>).val().replace(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>)
 
     <span class="hljs-keyword">unless</span> host
-      $group.addClass <span class="hljs-string">'has-error'</span>
+      $group.addClass(<span class="hljs-string">'has-error'</span>)
     <span class="hljs-keyword">else</span>
-      $group.removeClass <span class="hljs-string">'has-error'</span>
+      $group.removeClass(<span class="hljs-string">'has-error'</span>)
 
-      $modal.modal <span class="hljs-string">'hide'</span>
+      $modal.modal(<span class="hljs-string">'hide'</span>)
 
       <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'edit'</span>
-        <span class="hljs-property">@model</span>.save { host }
+        <span class="hljs-property">@model</span>.save({ host })
         .done<span class="hljs-function"> -&gt;</span>
-          analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Renamed'</span>, host
+          analytics.track(<span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Renamed'</span>, host)
 
           page.snippets.list.sort()
       <span class="hljs-keyword">else</span>
-        base = <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'clone'</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">new</span> Snippet
+        base = <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'clone'</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@model</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">new</span> Snippet()
 
         <span class="hljs-property">@collection</span>.create {
           host
@@ -1369,9 +1372,9 @@ dialog.</p>
           <span class="hljs-attribute">mode</span>: base.get(<span class="hljs-string">'mode'</span>) <span class="hljs-keyword">or</span> Snippet.defaultMode
         }, <span class="hljs-attribute">success</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
           <span class="hljs-keyword">if</span> action <span class="hljs-keyword">is</span> <span class="hljs-string">'clone'</span>
-            analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Cloned'</span>, base.get <span class="hljs-string">'host'</span>
+            analytics.track(<span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Cloned'</span>, base.get(<span class="hljs-string">'host'</span>))
           <span class="hljs-keyword">else</span>
-            analytics.track <span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Created'</span>, host
+            analytics.track(<span class="hljs-string">'Snippet'</span>, <span class="hljs-string">'Created'</span>, host)
 
           model.select().done<span class="hljs-function"> -&gt;</span>
             page.snippets.list.sort().showSelected()
@@ -1392,9 +1395,9 @@ dialog.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@model</span>)</span> -&gt;</span>
-    $modelButtons = <span class="hljs-property">@$</span> <span class="hljs-string">'#clone_button, #edit_button, #delete_menu .btn'</span>
+    $modelButtons = <span class="hljs-property">@$</span>(<span class="hljs-string">'#clone_button, #edit_button, #delete_menu .btn'</span>)
 
-    $modelButtons.prop <span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>()
+    $modelButtons.prop(<span class="hljs-string">'disabled'</span>, <span class="hljs-keyword">not</span> <span class="hljs-property">@hasModel</span>())
 
 }</pre></div></div>
             
@@ -1513,12 +1516,12 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'destroy'</span>, <span class="hljs-property">@remove</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'modified'</span>, <span class="hljs-property">@modified</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:host change:selected'</span>, <span class="hljs-property">@render</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@model</span>, <span class="hljs-string">'change:host change:mode'</span>, <span class="hljs-property">@updateTooltip</span>
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'destroy'</span>, <span class="hljs-property">@remove</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'modified'</span>, <span class="hljs-property">@modified</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change:host change:selected'</span>, <span class="hljs-property">@render</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@model</span>, <span class="hljs-string">'change:host change:mode'</span>, <span class="hljs-property">@updateTooltip</span>)
 
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@updateTooltip</span></pre></div></div>
+    <span class="hljs-property">@updateTooltip</span>()</pre></div></div>
             
         </li>
         
@@ -1535,9 +1538,9 @@ snippet.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modified</span>: <span class="hljs-function"><span class="hljs-params">(changed)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> changed
-      <span class="hljs-property">@$el</span>.addClass <span class="hljs-string">'modified'</span>
+      <span class="hljs-property">@$el</span>.addClass(<span class="hljs-string">'modified'</span>)
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@$el</span>.removeClass <span class="hljs-string">'modified'</span></pre></div></div>
+      <span class="hljs-property">@$el</span>.removeClass(<span class="hljs-string">'modified'</span>)</pre></div></div>
             
         </li>
         
@@ -1553,9 +1556,9 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">remove</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@$el</span>.tooltip <span class="hljs-string">'destroy'</span>
+    <span class="hljs-property">@$el</span>.tooltip(<span class="hljs-string">'destroy'</span>)
 
-    <span class="hljs-property">@super</span> <span class="hljs-string">'remove'</span></pre></div></div>
+    <span class="hljs-property">@super</span>(<span class="hljs-string">'remove'</span>)</pre></div></div>
             
         </li>
         
@@ -1571,12 +1574,12 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@$el</span>.html <span class="hljs-property">@mainTemplate</span> <span class="hljs-property">@model</span>.pick <span class="hljs-string">'host'</span>
+    <span class="hljs-property">@$el</span>.html(<span class="hljs-property">@mainTemplate</span>(<span class="hljs-property">@model</span>.pick(<span class="hljs-string">'host'</span>)))
 
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get <span class="hljs-string">'selected'</span>
-      <span class="hljs-property">@$el</span>.addClass <span class="hljs-string">'active'</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@model</span>.get(<span class="hljs-string">'selected'</span>)
+      <span class="hljs-property">@$el</span>.addClass(<span class="hljs-string">'active'</span>)
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@$el</span>.removeClass <span class="hljs-string">'active modified'</span>
+      <span class="hljs-property">@$el</span>.removeClass(<span class="hljs-string">'active modified'</span>)
 
     @</pre></div></div>
             
@@ -1594,9 +1597,9 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateSelection</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
-    <span class="hljs-keyword">if</span> event.ctrlKey <span class="hljs-keyword">or</span> event.metaKey <span class="hljs-keyword">and</span> <span class="hljs-regexp">/^mac/i</span>.test navigator.platform
+    <span class="hljs-keyword">if</span> event.ctrlKey <span class="hljs-keyword">or</span> event.metaKey <span class="hljs-keyword">and</span> <span class="hljs-regexp">/^mac/i</span>.test(navigator.platform)
       <span class="hljs-property">@model</span>.deselect()
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@$el</span>.hasClass <span class="hljs-string">'active'</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@$el</span>.hasClass(<span class="hljs-string">'active'</span>)
       <span class="hljs-property">@model</span>.select()</pre></div></div>
             
         </li>
@@ -1614,11 +1617,12 @@ snippet.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">updateTooltip</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@$el</span>
-    .tooltip <span class="hljs-string">'destroy'</span>
-    .tooltip
+    .tooltip(<span class="hljs-string">'destroy'</span>)
+    .tooltip {
       <span class="hljs-attribute">container</span>: <span class="hljs-string">'body'</span>
       <span class="hljs-attribute">html</span>:      <span class="hljs-literal">yes</span>
-      <span class="hljs-attribute">title</span>:     <span class="hljs-property">@tooltipTemplate</span> <span class="hljs-property">@model</span>.pick <span class="hljs-string">'host'</span>, <span class="hljs-string">'mode'</span>
+      <span class="hljs-attribute">title</span>:     <span class="hljs-property">@tooltipTemplate</span>(<span class="hljs-property">@model</span>.pick(<span class="hljs-string">'host'</span>, <span class="hljs-string">'mode'</span>))
+    }
 
 }</pre></div></div>
             
@@ -1666,11 +1670,11 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">addItem</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
-    item = <span class="hljs-keyword">new</span> SnippetItem { model }
+    item = <span class="hljs-keyword">new</span> SnippetItem({ model })
 
-    <span class="hljs-property">@items</span>.push item
+    <span class="hljs-property">@items</span>.push(item)
 
-    <span class="hljs-property">@$el</span>.append item.render().$el
+    <span class="hljs-property">@$el</span>.append(item.render().$el)
 
     item</pre></div></div>
             
@@ -1690,8 +1694,8 @@ snippet.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@items</span> = []
 
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@collection</span>, <span class="hljs-string">'add'</span>, <span class="hljs-property">@addItem</span>
-    <span class="hljs-property">@listenTo</span> <span class="hljs-property">@collection</span>, <span class="hljs-string">'reset'</span>, <span class="hljs-property">@resetItems</span></pre></div></div>
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@collection</span>, <span class="hljs-string">'add'</span>, <span class="hljs-property">@addItem</span>)
+    <span class="hljs-property">@listenTo</span>(<span class="hljs-property">@collection</span>, <span class="hljs-string">'reset'</span>, <span class="hljs-property">@resetItems</span>)</pre></div></div>
             
         </li>
         
@@ -1707,9 +1711,9 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">remove</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@removeItems</span>
+    <span class="hljs-property">@removeItems</span>()
 
-    <span class="hljs-property">@super</span> <span class="hljs-string">'remove'</span></pre></div></div>
+    <span class="hljs-property">@super</span>(<span class="hljs-string">'remove'</span>)</pre></div></div>
             
         </li>
         
@@ -1741,7 +1745,7 @@ snippet.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">render</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@resetItems</span>
+    <span class="hljs-property">@resetItems</span>()
 
     @</pre></div></div>
             
@@ -1760,9 +1764,9 @@ each snippet model in the collection.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resetItems</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">do</span> <span class="hljs-property">@removeItems</span>
+    <span class="hljs-property">@removeItems</span>()
 
-    <span class="hljs-property">@collection</span>.each <span class="hljs-property">@addItem</span>, @</pre></div></div>
+    <span class="hljs-property">@collection</span>.each(<span class="hljs-property">@addItem</span>, @)</pre></div></div>
             
         </li>
         
@@ -1778,9 +1782,9 @@ each snippet model in the collection.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">showSelected</span>:<span class="hljs-function"> -&gt;</span>
-    $selectedItem = <span class="hljs-property">@$</span> <span class="hljs-string">'li.active'</span>
+    $selectedItem = <span class="hljs-property">@$</span>(<span class="hljs-string">'li.active'</span>)
 
-    <span class="hljs-property">@$el</span>.scrollTop $selectedItem.offset().top - <span class="hljs-property">@$el</span>.offset().top
+    <span class="hljs-property">@$el</span>.scrollTop($selectedItem.offset().top - <span class="hljs-property">@$el</span>.offset().top)
 
     @</pre></div></div>
             
@@ -1799,7 +1803,7 @@ re-appending them.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">sort</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@$el</span>.append _.sortBy <span class="hljs-property">@$</span>(<span class="hljs-string">'li'</span>).detach(), <span class="hljs-string">'textContent'</span>
+    <span class="hljs-property">@$el</span>.append(_.sortBy(<span class="hljs-property">@$</span>(<span class="hljs-string">'li'</span>).detach(), <span class="hljs-string">'textContent'</span>))
 
     @
 
@@ -1849,8 +1853,8 @@ re-appending them.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">init</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> SnippetControls { <span class="hljs-property">@collection</span> }
-    <span class="hljs-property">@list</span>     = <span class="hljs-keyword">new</span> SnippetsList { <span class="hljs-property">@collection</span> }</pre></div></div>
+    <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> SnippetControls({ <span class="hljs-property">@collection</span> })
+    <span class="hljs-property">@list</span>     = <span class="hljs-keyword">new</span> SnippetsList({ <span class="hljs-property">@collection</span> })</pre></div></div>
             
         </li>
         
@@ -1885,7 +1889,7 @@ re-appending them.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(model)</span> -&gt;</span>
-    <span class="hljs-property">@controls</span>.update model
+    <span class="hljs-property">@controls</span>.update(model)
 
 }</pre></div></div>
             
@@ -1928,7 +1932,7 @@ re-appending them.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">activateTooltips</span> = <span class="hljs-params">(selector)</span> -&gt;</span>
-  base = $ selector <span class="hljs-keyword">or</span> <span class="hljs-built_in">document</span></pre></div></div>
+  base = $(selector <span class="hljs-keyword">or</span> <span class="hljs-built_in">document</span>)</pre></div></div>
             
         </li>
         
@@ -1943,14 +1947,14 @@ re-appending them.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  base.find <span class="hljs-string">'[data-original-title]:not(.js-tooltip-ignore)'</span>
+            <div class="content"><div class='highlight'><pre>  base.find(<span class="hljs-string">'[data-original-title]:not(.js-tooltip-ignore)'</span>)
   .each<span class="hljs-function"> -&gt;</span>
-    $<span class="hljs-keyword">this</span> = $ @
+    $<span class="hljs-keyword">this</span> = $(@)
 
     $<span class="hljs-keyword">this</span>
-    .tooltip <span class="hljs-string">'destroy'</span>
-    .attr <span class="hljs-string">'title'</span>, $<span class="hljs-keyword">this</span>.attr <span class="hljs-string">'data-original-title'</span>
-    .removeAttr <span class="hljs-string">'data-original-title'</span></pre></div></div>
+    .tooltip(<span class="hljs-string">'destroy'</span>)
+    .attr(<span class="hljs-string">'title'</span>, $<span class="hljs-keyword">this</span>.attr <span class="hljs-string">'data-original-title'</span>)
+    .removeAttr(<span class="hljs-string">'data-original-title'</span>)</pre></div></div>
             
         </li>
         
@@ -1965,13 +1969,14 @@ re-appending them.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  base.find <span class="hljs-string">'[title]:not(.js-tooltip-ignore)'</span>
+            <div class="content"><div class='highlight'><pre>  base.find(<span class="hljs-string">'[title]:not(.js-tooltip-ignore)'</span>)
   .each<span class="hljs-function"> -&gt;</span>
-    $<span class="hljs-keyword">this</span> = $ @
+    $<span class="hljs-keyword">this</span> = $(@)
 
-    $<span class="hljs-keyword">this</span>.tooltip
+    $<span class="hljs-keyword">this</span>.tooltip {
       <span class="hljs-attribute">container</span>: $<span class="hljs-keyword">this</span>.attr(<span class="hljs-string">'data-container'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">'body'</span>
-      <span class="hljs-attribute">placement</span>: $<span class="hljs-keyword">this</span>.attr(<span class="hljs-string">'data-placement'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">'top'</span></pre></div></div>
+      <span class="hljs-attribute">placement</span>: $<span class="hljs-keyword">this</span>.attr(<span class="hljs-string">'data-placement'</span>) <span class="hljs-keyword">or</span> <span class="hljs-string">'top'</span>
+    }</pre></div></div>
             
         </li>
         
@@ -2131,7 +2136,7 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      Snippet.mapModeGroups <span class="hljs-property">@config</span>.editor.modeGroups</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      Snippet.mapModeGroups(<span class="hljs-property">@config</span>.editor.modeGroups)</pre></div></div>
             
         </li>
         
@@ -2146,7 +2151,7 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      loadFeedback <span class="hljs-property">@config</span>.options.userVoice</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      loadFeedback(<span class="hljs-property">@config</span>.options.userVoice)</pre></div></div>
             
         </li>
         
@@ -2192,9 +2197,9 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-property">@editor</span>   = <span class="hljs-keyword">new</span> EditorView <span class="hljs-attribute">settings</span>: editorSettings
-        <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> SettingsView <span class="hljs-attribute">model</span>: settings
-        <span class="hljs-property">@snippets</span> = <span class="hljs-keyword">new</span> SnippetsView <span class="hljs-attribute">collection</span>: snippets</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-property">@editor</span>   = <span class="hljs-keyword">new</span> EditorView({ <span class="hljs-attribute">settings</span>: editorSettings })
+        <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> SettingsView({ <span class="hljs-attribute">model</span>: settings })
+        <span class="hljs-property">@snippets</span> = <span class="hljs-keyword">new</span> SnippetsView({ <span class="hljs-attribute">collection</span>: snippets })</pre></div></div>
             
         </li>
         
@@ -2227,10 +2232,10 @@ settings.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        snippets.<span class="hljs-literal">on</span> <span class="hljs-string">'selected deselected'</span>, <span class="hljs-function"><span class="hljs-params">(snippet)</span> =&gt;</span>
-          <span class="hljs-keyword">if</span> snippet.get <span class="hljs-string">'selected'</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@update</span> snippet <span class="hljs-keyword">else</span> <span class="hljs-keyword">do</span> <span class="hljs-property">@update</span>
+          <span class="hljs-keyword">if</span> snippet.get(<span class="hljs-string">'selected'</span>) <span class="hljs-keyword">then</span> <span class="hljs-property">@update</span>(snippet) <span class="hljs-keyword">else</span> <span class="hljs-property">@update</span>()
 
-        selectedSnippet = snippets.findWhere <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span>
-        <span class="hljs-property">@update</span> selectedSnippet <span class="hljs-keyword">if</span> selectedSnippet</pre></div></div>
+        selectedSnippet = snippets.findWhere({ <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span> })
+        <span class="hljs-property">@update</span>(selectedSnippet) <span class="hljs-keyword">if</span> selectedSnippet</pre></div></div>
             
         </li>
         
@@ -2245,7 +2250,7 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'.js-insert-year'</span>).html <span class="hljs-string">"<span class="hljs-subst">#{<span class="hljs-keyword">new</span> Date().getFullYear()}</span>"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'.js-insert-year'</span>).html(<span class="hljs-string">"<span class="hljs-subst">#{<span class="hljs-keyword">new</span> Date().getFullYear()}</span>"</span>)</pre></div></div>
             
         </li>
         
@@ -2263,20 +2268,20 @@ settings.</p>
             <div class="content"><div class='highlight'><pre>        initialSnippetDisplay = initialTabChange = <span class="hljs-literal">yes</span>
 
         $(<span class="hljs-string">'a[data-tabify]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
-          target  = $(@).data <span class="hljs-string">'tabify'</span>
-          $nav    = $ <span class="hljs-string">"header.navbar .nav a[data-tabify='<span class="hljs-subst">#{target}</span>']"</span>
-          $parent = $nav.parent <span class="hljs-string">'li'</span>
+          target  = $(@).data(<span class="hljs-string">'tabify'</span>)
+          $nav    = $(<span class="hljs-string">"header.navbar .nav a[data-tabify='<span class="hljs-subst">#{target}</span>']"</span>)
+          $parent = $nav.parent(<span class="hljs-string">'li'</span>)
 
-          <span class="hljs-keyword">unless</span> $parent.hasClass <span class="hljs-string">'active'</span>
-            $parent.addClass(<span class="hljs-string">'active'</span>).siblings().removeClass <span class="hljs-string">'active'</span>
-            $(target).removeClass(<span class="hljs-string">'hide'</span>).siblings(<span class="hljs-string">'.tab'</span>).addClass <span class="hljs-string">'hide'</span>
+          <span class="hljs-keyword">unless</span> $parent.hasClass(<span class="hljs-string">'active'</span>)
+            $parent.addClass(<span class="hljs-string">'active'</span>).siblings().removeClass(<span class="hljs-string">'active'</span>)
+            $(target).removeClass(<span class="hljs-string">'hide'</span>).siblings(<span class="hljs-string">'.tab'</span>).addClass(<span class="hljs-string">'hide'</span>)
 
-            id = $nav.attr <span class="hljs-string">'id'</span>
+            id = $nav.attr(<span class="hljs-string">'id'</span>)
 
-            settings.save <span class="hljs-attribute">tab</span>: id
+            settings.save({ <span class="hljs-attribute">tab</span>: id })
             .<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
               <span class="hljs-keyword">unless</span> initialTabChange
-                analytics.track <span class="hljs-string">'Tabs'</span>, <span class="hljs-string">'Changed'</span>, _.capitalize id.match(<span class="hljs-regexp">/(\S*)_nav$/</span>)[<span class="hljs-number">1</span>]
+                analytics.track(<span class="hljs-string">'Tabs'</span>, <span class="hljs-string">'Changed'</span>, _.capitalize(id.match(<span class="hljs-regexp">/(\S*)_nav$/</span>)[<span class="hljs-number">1</span>]))
 
               <span class="hljs-keyword">if</span> id <span class="hljs-keyword">is</span> <span class="hljs-string">'snippets'</span> <span class="hljs-keyword">and</span> initialSnippetDisplay
                 initialSnippetDisplay = <span class="hljs-literal">no</span>
@@ -2284,7 +2289,7 @@ settings.</p>
 
               initialTabChange = <span class="hljs-literal">no</span>
 
-              $(<span class="hljs-built_in">document</span>.body).scrollTop <span class="hljs-number">0</span></pre></div></div>
+              $(<span class="hljs-built_in">document</span>.body).scrollTop(<span class="hljs-number">0</span>)</pre></div></div>
             
         </li>
         
@@ -2299,7 +2304,7 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">"#<span class="hljs-subst">#{settings.get <span class="hljs-string">'tab'</span>}</span>"</span>).trigger <span class="hljs-string">'click'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">"#<span class="hljs-subst">#{settings.get <span class="hljs-string">'tab'</span>}</span>"</span>).trigger(<span class="hljs-string">'click'</span>)</pre></div></div>
             
         </li>
         
@@ -2330,8 +2335,8 @@ settings.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'[data-goto]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
-          <span class="hljs-keyword">switch</span> $(@).data <span class="hljs-string">'goto'</span>
-            <span class="hljs-keyword">when</span> <span class="hljs-string">'top'</span> <span class="hljs-keyword">then</span> $(<span class="hljs-built_in">document</span>.body).scrollTop <span class="hljs-number">0</span></pre></div></div>
+          <span class="hljs-keyword">switch</span> $(@).data(<span class="hljs-string">'goto'</span>)
+            <span class="hljs-keyword">when</span> <span class="hljs-string">'top'</span> <span class="hljs-keyword">then</span> $(<span class="hljs-built_in">document</span>.body).scrollTop(<span class="hljs-number">0</span>)</pre></div></div>
             
         </li>
         
@@ -2347,7 +2352,7 @@ settings.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'footer a[href*="neocotic.com"]'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
-          analytics.track <span class="hljs-string">'Footer'</span>, <span class="hljs-string">'Clicked'</span>, <span class="hljs-string">'Homepage'</span></pre></div></div>
+          analytics.track(<span class="hljs-string">'Footer'</span>, <span class="hljs-string">'Clicked'</span>, <span class="hljs-string">'Homepage'</span>)</pre></div></div>
             
         </li>
         
@@ -2362,15 +2367,15 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#donation input[name="hosted_button_id"]'</span>).val <span class="hljs-property">@config</span>.options.payPal
+            <div class="content"><div class='highlight'><pre>        $(<span class="hljs-string">'#donation input[name="hosted_button_id"]'</span>).val(<span class="hljs-property">@config</span>.options.payPal)
         $(<span class="hljs-string">'.js-donate'</span>).<span class="hljs-literal">on</span> <span class="hljs-string">'click'</span>,<span class="hljs-function"> -&gt;</span>
-          $(@).tooltip <span class="hljs-string">'hide'</span>
+          $(@).tooltip(<span class="hljs-string">'hide'</span>)
 
           $(<span class="hljs-string">'#donation'</span>).submit()
 
-          analytics.track <span class="hljs-string">'Donate'</span>, <span class="hljs-string">'Clicked'</span>
+          analytics.track(<span class="hljs-string">'Donate'</span>, <span class="hljs-string">'Clicked'</span>)
 
-        <span class="hljs-keyword">do</span> activateTooltips</pre></div></div>
+        activateTooltips()</pre></div></div>
             
         </li>
         
@@ -2386,8 +2391,8 @@ settings.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">update</span>: <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
-    <span class="hljs-property">@editor</span>.update snippet
-    <span class="hljs-property">@snippets</span>.update snippet</pre></div></div>
+    <span class="hljs-property">@editor</span>.update(snippet)
+    <span class="hljs-property">@snippets</span>.update(snippet)</pre></div></div>
             
         </li>
         
@@ -2402,7 +2407,7 @@ settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>page = <span class="hljs-built_in">window</span>.page = <span class="hljs-keyword">new</span> OptionsPage
+            <div class="content"><div class='highlight'><pre>page = <span class="hljs-built_in">window</span>.page = <span class="hljs-keyword">new</span> OptionsPage()
 
 $<span class="hljs-function"> -&gt;</span> page.init()</pre></div></div>
             

@@ -118,7 +118,7 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>analytics = <span class="hljs-built_in">window</span>.analytics =</pre></div></div>
+            <div class="content"><div class='highlight'><pre>analytics = <span class="hljs-built_in">window</span>.analytics = {</pre></div></div>
             
         </li>
         
@@ -164,8 +164,8 @@ options page.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    _gaq = <span class="hljs-built_in">window</span>._gaq ?= []
-    _gaq.push [ <span class="hljs-string">'_setAccount'</span>, account ]
-    _gaq.push [ <span class="hljs-string">'_trackPageview'</span> ]</pre></div></div>
+    _gaq.push([ <span class="hljs-string">'_setAccount'</span>, account ])
+    _gaq.push([ <span class="hljs-string">'_trackPageview'</span> ])</pre></div></div>
             
         </li>
         
@@ -180,12 +180,12 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    ga = <span class="hljs-built_in">document</span>.createElement <span class="hljs-string">'script'</span>
+            <div class="content"><div class='highlight'><pre>    ga = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'script'</span>)
     ga.async = <span class="hljs-string">'async'</span>
     ga.src   = analytics.source
 
-    script = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-string">'script'</span>
-    script.parentNode.insertBefore ga, script</pre></div></div>
+    script = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'script'</span>)
+    script.parentNode.insertBefore(ga, script)</pre></div></div>
             
         </li>
         
@@ -215,8 +215,8 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> script <span class="hljs-keyword">in</span> <span class="hljs-built_in">document</span>.querySelectorAll <span class="hljs-string">"script[src='<span class="hljs-subst">#{analytics.source}</span>']"</span>
-      script.parentNode.removeChild script</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    scripts = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"script[src='<span class="hljs-subst">#{analytics.source}</span>']"</span>)
+    script.parentNode.removeChild(script) <span class="hljs-keyword">for</span> script <span class="hljs-keyword">in</span> scripts</pre></div></div>
             
         </li>
         
@@ -264,8 +264,8 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    event.push category
-    event.push action</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    event.push(category)
+    event.push(action)</pre></div></div>
             
         </li>
         
@@ -280,9 +280,9 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    event.push label          <span class="hljs-keyword">if</span> label?
-    event.push value          <span class="hljs-keyword">if</span> value?
-    event.push nonInteraction <span class="hljs-keyword">if</span> nonInteraction?</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    event.push(label)          <span class="hljs-keyword">if</span> label?
+    event.push(value)          <span class="hljs-keyword">if</span> value?
+    event.push(nonInteraction) <span class="hljs-keyword">if</span> nonInteraction?</pre></div></div>
             
         </li>
         
@@ -297,7 +297,9 @@ options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>._gaq.push event</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>._gaq.push(event)
+
+}</pre></div></div>
             
         </li>
         

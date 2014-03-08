@@ -115,7 +115,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>id         = chrome.i18n.getMessage <span class="hljs-string">'@@extension_id'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>id         = chrome.i18n.getMessage(<span class="hljs-string">'@@extension_id'</span>)</pre></div></div>
             
         </li>
         
@@ -160,11 +160,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> link <span class="hljs-keyword">in</span> <span class="hljs-built_in">document</span>.querySelectorAll <span class="hljs-string">"a.<span class="hljs-subst">#{oldClasses[<span class="hljs-number">0</span>]}</span>[href$=<span class="hljs-subst">#{id}</span>]"</span>
-  link.innerHTML = link.innerHTML.replace <span class="hljs-string">'Install'</span>, <span class="hljs-string">'Installed'</span>
+            <div class="content"><div class='highlight'><pre>links = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"a.<span class="hljs-subst">#{oldClasses[<span class="hljs-number">0</span>]}</span>[href$=<span class="hljs-subst">#{id}</span>]"</span>)
+<span class="hljs-keyword">for</span> link <span class="hljs-keyword">in</span> links
+  link.innerHTML = link.innerHTML.replace(<span class="hljs-string">'Install'</span>, <span class="hljs-string">'Installed'</span>)
 
-  link.classList.add    cls <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> newClasses
-  link.classList.remove cls <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> oldClasses</pre></div></div>
+  link.classList.add(cls)    <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> newClasses
+  link.classList.remove(cls) <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> oldClasses</pre></div></div>
             
         </li>
         

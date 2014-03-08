@@ -17,7 +17,7 @@ Injector = window.Injector = {}
 getSuper = (property, args...) ->
   result = @constructor.__super__[property]
 
-  if _.isFunction result then result.apply @, args else result
+  if _.isFunction(result) then result.apply(@, args) else result
 
 # Setup the Chrome storage for the specified `model` (may also be a collection) based on the
 # `storage` property, if it exists.
@@ -25,7 +25,7 @@ setupStorage = (model) ->
   {name, type} = model.storage ? {}
 
   if name and type
-    model.chromeStorage = new Backbone.ChromeStorage name, type
+    model.chromeStorage = new Backbone.ChromeStorage(name, type)
 
 # Model
 # -----
@@ -38,15 +38,15 @@ Model = Injector.Model = Backbone.Model.extend {
 
   # Override `initialize` to hook in our own custom model initialization.
   initialize: ->
-    setupStorage @
+    setupStorage(@)
 
-    @init arguments...
+    @init(arguments...)
 
   # Restore the default attribute values, where possible.
   restoreDefaults: (options) ->
-    attrs = _.extend {}, _.result @, 'defaults'
+    attrs = _.extend({}, _.result(@, 'defaults'))
 
-    @set attrs, options
+    @set(attrs, options)
 
   # Allow models to access "parent" properties easily.
   super: getSuper
@@ -61,17 +61,17 @@ SingletonModel = Injector.SingletonModel = Injector.Model.extend {
 
   # Override `initialize` to set the singleton identifier.
   initialize: (attributes, options) ->
-    @set @idAttribute, singletonId, options
+    @set(@idAttribute, singletonId, options)
 
-    Injector.Model::initialize.apply @, arguments
+    Injector.Model::initialize.apply(@, arguments)
 
 }, {
 
   # Retrieve a singleton instance of the model.
   fetch: (callback) ->
-    model = new @
+    model = new @()
     model.fetch().then ->
-      callback model
+      callback(model)
 
 }
 
@@ -89,9 +89,9 @@ Collection = Injector.Collection = Backbone.Collection.extend {
 
   # Override `initialize` to hook in our own custom collection initialization.
   initialize: ->
-    setupStorage @
+    setupStorage(@)
 
-    @init arguments...
+    @init(arguments...)
 
   # Allow collections to access "parent" properties easily.
   super: getSuper
@@ -109,7 +109,7 @@ View = Injector.View = Backbone.View.extend {
 
   # Override `initialize` to hook in our own custom view initialization.
   initialize: (@options) ->
-    @init arguments...
+    @init(arguments...)
 
   # Indicate whether or not this view has an underlying collection associated with it.
   hasCollection: ->
@@ -135,7 +135,7 @@ Router = Injector.Router = Backbone.Router.extend {
 
   # Override `initialize` to hook in our own custom model initialization.
   initialize: ->
-    @init arguments...
+    @init(arguments...)
 
   # Allow routers to access "parent" properties easily.
   super: getSuper

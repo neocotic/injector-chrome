@@ -11,7 +11,7 @@
 #
 # These are intentionally not added to the global object (i.e. `window`) to avoid cluttering that
 # *namespace*.
-models = window.models =
+models = window.models = {
 
   # Convenience short-hand method for retrieving all common models and collections.
   #
@@ -20,7 +20,9 @@ models = window.models =
     Settings.fetch (settings) ->
       EditorSettings.fetch (editorSettings) ->
         Snippets.fetch (snippets) ->
-          callback { settings, editorSettings, snippets }
+          callback({ settings, editorSettings, snippets })
+
+}
 
 # Editor
 # ------
@@ -80,31 +82,31 @@ Snippet = models.Snippet = Injector.Model.extend {
 
   # Deselect this snippet, but only if it is currently selected.
   deselect: ->
-    if @get 'selected'
-      @save selected: no
+    if @get('selected')
+      @save({ selected: no })
       .done =>
-        @trigger 'deselected', @
+        @trigger('deselected', @)
     else
       $.Deferred().resolve()
 
   # Indicate whether or not the mode of this snippet falls under a group with the given `name`.
   inGroup: (group, name) ->
-    name = group if _.isString group
+    name = group if _.isString(group)
 
-    _.contains Snippet.modeGroups[name], @get 'mode'
+    _.contains(Snippet.modeGroups[name], @get('mode'))
 
   # Select this snippet, but only if it is *not* already selected.
   select: ->
-    if @get 'selected'
+    if @get('selected')
       $.Deferred().resolve()
     else
-      @save selected: yes
+      @save({ selected: yes })
       .done =>
         @collection?.chain()
-        .without @
-        .invoke 'save', selected: no
+        .without(@)
+        .invoke('save', { selected: no })
 
-        @trigger 'selected', @
+        @trigger('selected', @)
 
   # Validate that the attributes of this snippet are valid.
   validate: (attributes) ->
@@ -133,13 +135,13 @@ Snippet = models.Snippet = Injector.Model.extend {
   #
   # Nothing happens if `Snippet.modeGroups` has already been populated.
   populateModeGroups: (callback) ->
-    if _.isEmpty @modeGroups
+    if _.isEmpty(@modeGroups)
       $.getJSON chrome.extension.getURL('configuration.json'), (config) =>
-        @mapModeGroups config.editor.modeGroups
+        @mapModeGroups(config.editor.modeGroups)
 
-        do callback
+        callback()
     else
-      do callback
+      callback()
 }
 
 # Collection of snippets created by the user.
@@ -158,16 +160,16 @@ Snippets = models.Snippets = Injector.Collection.extend {
 
   # List the snippets that are associated with a mode under the group witht the given `name`.
   group: (name) ->
-    Snippets.group @, name
+    Snippets.group(@, name)
 
 }, {
 
   # Retrieve **all** `Snippet` models.
   fetch: (callback) ->
     Snippet.populateModeGroups ->
-      collection = new Snippets
+      collection = new Snippets()
       collection.fetch().then ->
-        callback collection
+        callback(collection)
 
   # Map the specified `snippets` based on their mode groups.
   #
@@ -176,13 +178,13 @@ Snippets = models.Snippets = Injector.Collection.extend {
   group: (snippets, name) ->
     if name
       snippets.filter (snippet) ->
-        snippet.inGroup name
+        snippet.inGroup(name)
     else
       groups = {}
 
       for name, modes of Snippet.modeGroups
         groups[name] = snippets.filter (snippet) ->
-          snippet.inGroup name
+          snippet.inGroup(name)
 
       groups
 

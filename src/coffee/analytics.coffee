@@ -12,7 +12,7 @@
 #
 # Although enabled by default, the user can disable the capturing of this information via the
 # options page.
-analytics = window.analytics =
+analytics = window.analytics = {
 
   # Source URL of the analytics script.
   source: 'https://ssl.google-analytics.com/ga.js'
@@ -21,22 +21,22 @@ analytics = window.analytics =
   add: (account) ->
     # Setup tracking details for analytics.
     _gaq = window._gaq ?= []
-    _gaq.push [ '_setAccount', account ]
-    _gaq.push [ '_trackPageview' ]
+    _gaq.push([ '_setAccount', account ])
+    _gaq.push([ '_trackPageview' ])
 
     # Inject script to capture analytics.
-    ga = document.createElement 'script'
+    ga = document.createElement('script')
     ga.async = 'async'
     ga.src   = analytics.source
 
-    script = document.querySelector 'script'
-    script.parentNode.insertBefore ga, script
+    script = document.querySelector('script')
+    script.parentNode.insertBefore(ga, script)
 
   # Remove analytics from the current page.
   remove: ->
     # Delete scripts used to capture analytics.
-    for script in document.querySelectorAll "script[src='#{analytics.source}']"
-      script.parentNode.removeChild script
+    scripts = document.querySelectorAll("script[src='#{analytics.source}']")
+    script.parentNode.removeChild(script) for script in scripts
 
     # Remove tracking details for analytics.
     delete window._gaq
@@ -47,12 +47,14 @@ analytics = window.analytics =
 
     event = [ '_trackEvent' ]
     # Add the required information.
-    event.push category
-    event.push action
+    event.push(category)
+    event.push(action)
     # Add the optional information, where possible.
-    event.push label          if label?
-    event.push value          if value?
-    event.push nonInteraction if nonInteraction?
+    event.push(label)          if label?
+    event.push(value)          if value?
+    event.push(nonInteraction) if nonInteraction?
 
     # Add the event to analytics.
-    window._gaq.push event
+    window._gaq.push(event)
+
+}

@@ -117,7 +117,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>models = <span class="hljs-built_in">window</span>.models =</pre></div></div>
+            <div class="content"><div class='highlight'><pre>models = <span class="hljs-built_in">window</span>.models = {</pre></div></div>
             
         </li>
         
@@ -137,7 +137,9 @@
     Settings.fetch <span class="hljs-function"><span class="hljs-params">(settings)</span> -&gt;</span>
       EditorSettings.fetch <span class="hljs-function"><span class="hljs-params">(editorSettings)</span> -&gt;</span>
         Snippets.fetch <span class="hljs-function"><span class="hljs-params">(snippets)</span> -&gt;</span>
-          callback { settings, editorSettings, snippets }</pre></div></div>
+          callback({ settings, editorSettings, snippets })
+
+}</pre></div></div>
             
         </li>
         
@@ -346,10 +348,10 @@ script to be executed on the page or contain styles to be applied to it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">deselect</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span> <span class="hljs-string">'selected'</span>
-      <span class="hljs-property">@save</span> <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span>(<span class="hljs-string">'selected'</span>)
+      <span class="hljs-property">@save</span>({ <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span> })
       .done<span class="hljs-function"> =&gt;</span>
-        <span class="hljs-property">@trigger</span> <span class="hljs-string">'deselected'</span>, @
+        <span class="hljs-property">@trigger</span>(<span class="hljs-string">'deselected'</span>, @)
     <span class="hljs-keyword">else</span>
       $.Deferred().resolve()</pre></div></div>
             
@@ -367,9 +369,9 @@ script to be executed on the page or contain styles to be applied to it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">inGroup</span>: <span class="hljs-function"><span class="hljs-params">(group, name)</span> -&gt;</span>
-    name = group <span class="hljs-keyword">if</span> _.isString group
+    name = group <span class="hljs-keyword">if</span> _.isString(group)
 
-    _.contains Snippet.modeGroups[name], <span class="hljs-property">@get</span> <span class="hljs-string">'mode'</span></pre></div></div>
+    _.contains(Snippet.modeGroups[name], <span class="hljs-property">@get</span>(<span class="hljs-string">'mode'</span>))</pre></div></div>
             
         </li>
         
@@ -385,16 +387,16 @@ script to be executed on the page or contain styles to be applied to it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">select</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span> <span class="hljs-string">'selected'</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@get</span>(<span class="hljs-string">'selected'</span>)
       $.Deferred().resolve()
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@save</span> <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span>
+      <span class="hljs-property">@save</span>({ <span class="hljs-attribute">selected</span>: <span class="hljs-literal">yes</span> })
       .done<span class="hljs-function"> =&gt;</span>
         <span class="hljs-property">@collection</span>?.chain()
-        .without @
-        .invoke <span class="hljs-string">'save'</span>, <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span>
+        .without(@)
+        .invoke(<span class="hljs-string">'save'</span>, { <span class="hljs-attribute">selected</span>: <span class="hljs-literal">no</span> })
 
-        <span class="hljs-property">@trigger</span> <span class="hljs-string">'selected'</span>, @</pre></div></div>
+        <span class="hljs-property">@trigger</span>(<span class="hljs-string">'selected'</span>, @)</pre></div></div>
             
         </li>
         
@@ -481,13 +483,13 @@ script to be executed on the page or contain styles to be applied to it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">populateModeGroups</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    <span class="hljs-keyword">if</span> _.isEmpty <span class="hljs-property">@modeGroups</span>
+    <span class="hljs-keyword">if</span> _.isEmpty(<span class="hljs-property">@modeGroups</span>)
       $.getJSON chrome.extension.getURL<span class="hljs-function"><span class="hljs-params">(<span class="hljs-string">'configuration.json'</span>)</span>, <span class="hljs-params">(config)</span> =&gt;</span>
-        <span class="hljs-property">@mapModeGroups</span> config.editor.modeGroups
+        <span class="hljs-property">@mapModeGroups</span>(config.editor.modeGroups)
 
-        <span class="hljs-keyword">do</span> callback
+        callback()
     <span class="hljs-keyword">else</span>
-      <span class="hljs-keyword">do</span> callback
+      callback()
 }</pre></div></div>
             
         </li>
@@ -566,7 +568,7 @@ script to be executed on the page or contain styles to be applied to it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">group</span>: <span class="hljs-function"><span class="hljs-params">(name)</span> -&gt;</span>
-    Snippets.group @, name
+    Snippets.group(@, name)
 
 }, {</pre></div></div>
             
@@ -585,9 +587,9 @@ script to be executed on the page or contain styles to be applied to it.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fetch</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     Snippet.populateModeGroups<span class="hljs-function"> -&gt;</span>
-      collection = <span class="hljs-keyword">new</span> Snippets
+      collection = <span class="hljs-keyword">new</span> Snippets()
       collection.fetch().<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
-        callback collection</pre></div></div>
+        callback(collection)</pre></div></div>
             
         </li>
         
@@ -607,13 +609,13 @@ with a mode under that group will be returned.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">group</span>: <span class="hljs-function"><span class="hljs-params">(snippets, name)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> name
       snippets.filter <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
-        snippet.inGroup name
+        snippet.inGroup(name)
     <span class="hljs-keyword">else</span>
       groups = {}
 
       <span class="hljs-keyword">for</span> name, modes <span class="hljs-keyword">of</span> Snippet.modeGroups
         groups[name] = snippets.filter <span class="hljs-function"><span class="hljs-params">(snippet)</span> -&gt;</span>
-          snippet.inGroup name
+          snippet.inGroup(name)
 
       groups
 

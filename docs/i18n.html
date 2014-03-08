@@ -136,9 +136,9 @@ the Chrome API.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-attribute">Internationalization</span>::<span class="hljs-function"><span class="hljs-title">get</span> = <span class="hljs-params">(name, subs...)</span> -&gt;</span>
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> name
 
-  message = chrome.i18n.getMessage name, subs
+  message = chrome.i18n.getMessage(name, subs)
 
-  <span class="hljs-keyword">if</span> <span class="hljs-property">@escaping</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@_</span>.escape message <span class="hljs-keyword">else</span> message</pre></div></div>
+  <span class="hljs-keyword">if</span> <span class="hljs-property">@escaping</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@_</span>.escape(message) <span class="hljs-keyword">else</span> message</pre></div></div>
             
         </li>
         
@@ -155,7 +155,7 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-attribute">Internationalization</span>::<span class="hljs-function"><span class="hljs-title">languages</span> = <span class="hljs-params">(parent, callback)</span> -&gt;</span>
-  <span class="hljs-keyword">if</span> _.isFunction parent
+  <span class="hljs-keyword">if</span> _.isFunction(parent)
     callback = parent
     parent   = <span class="hljs-literal">null</span>
 
@@ -164,16 +164,16 @@ optional specifying a <code>parent</code> locale for which only it’s <em>child
 
   <span class="hljs-keyword">if</span> parent
     <span class="hljs-keyword">return</span> <span class="hljs-property">@languages</span> <span class="hljs-function"><span class="hljs-params">(err, languages)</span> =&gt;</span>
-      <span class="hljs-keyword">if</span> err <span class="hljs-keyword">then</span> callOrThrow @, callback, err
-      <span class="hljs-keyword">else</span>        callOrThrow @, callback, <span class="hljs-literal">null</span>, filterLanguages parent, languages
+      <span class="hljs-keyword">if</span> err <span class="hljs-keyword">then</span> callOrThrow(@, callback, err)
+      <span class="hljs-keyword">else</span>        callOrThrow(@, callback, <span class="hljs-literal">null</span>, filterLanguages(parent, languages))
 
   <span class="hljs-keyword">if</span> languages.length
-    <span class="hljs-keyword">return</span> callOrThrow @, callback, <span class="hljs-literal">null</span>, languages[..]
+    <span class="hljs-keyword">return</span> callOrThrow(@, callback, <span class="hljs-literal">null</span>, languages[..])
 
   chrome.i18n.getAcceptLanguages <span class="hljs-function"><span class="hljs-params">(languages)</span> =&gt;</span>
     <span class="hljs-property">@messenger</span>.languages = languages.sort()
 
-    callOrThrow @, callback, <span class="hljs-literal">null</span>, languages[..]</pre></div></div>
+    callOrThrow(@, callback, <span class="hljs-literal">null</span>, languages[..])</pre></div></div>
             
         </li>
         
@@ -204,8 +204,9 @@ prevent any attempts to load message bundle resources.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.i18n = int17.create().initSync
-  <span class="hljs-attribute">locale</span>:   chrome.i18n.getMessage <span class="hljs-string">'@@ui_locale'</span>
-  <span class="hljs-attribute">messages</span>: <span class="hljs-attribute">prevent</span>: {}</pre></div></div>
+  <span class="hljs-attribute">locale</span>:   chrome.i18n.getMessage(<span class="hljs-string">'@@ui_locale'</span>)
+  <span class="hljs-attribute">messages</span>:
+    <span class="hljs-attribute">prevent</span>: {}</pre></div></div>
             
         </li>
         

@@ -147,7 +147,7 @@ value of that call instead.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">getSuper</span> = <span class="hljs-params">(property, args...)</span> -&gt;</span>
   result = <span class="hljs-property">@constructor</span>.__super__[property]
 
-  <span class="hljs-keyword">if</span> _.isFunction result <span class="hljs-keyword">then</span> result.apply @, args <span class="hljs-keyword">else</span> result</pre></div></div>
+  <span class="hljs-keyword">if</span> _.isFunction(result) <span class="hljs-keyword">then</span> result.apply(@, args) <span class="hljs-keyword">else</span> result</pre></div></div>
             
         </li>
         
@@ -167,7 +167,7 @@ value of that call instead.</p>
   {name, type} = model.storage ? {}
 
   <span class="hljs-keyword">if</span> name <span class="hljs-keyword">and</span> type
-    model.chromeStorage = <span class="hljs-keyword">new</span> Backbone.ChromeStorage name, type</pre></div></div>
+    model.chromeStorage = <span class="hljs-keyword">new</span> Backbone.ChromeStorage(name, type)</pre></div></div>
             
         </li>
         
@@ -238,9 +238,9 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
-    setupStorage @
+    setupStorage(@)
 
-    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+    <span class="hljs-property">@init</span>(arguments...)</pre></div></div>
             
         </li>
         
@@ -256,9 +256,9 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">restoreDefaults</span>: <span class="hljs-function"><span class="hljs-params">(options)</span> -&gt;</span>
-    attrs = _.extend {}, _.result @, <span class="hljs-string">'defaults'</span>
+    attrs = _.extend({}, _.result(@, <span class="hljs-string">'defaults'</span>))
 
-    <span class="hljs-property">@set</span> attrs, options</pre></div></div>
+    <span class="hljs-property">@set</span>(attrs, options)</pre></div></div>
             
         </li>
         
@@ -321,9 +321,9 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>: <span class="hljs-function"><span class="hljs-params">(attributes, options)</span> -&gt;</span>
-    <span class="hljs-property">@set</span> <span class="hljs-property">@idAttribute</span>, singletonId, options
+    <span class="hljs-property">@set</span>(<span class="hljs-property">@idAttribute</span>, singletonId, options)
 
-    Injector.<span class="hljs-attribute">Model</span>::initialize.apply @, arguments
+    Injector.<span class="hljs-attribute">Model</span>::initialize.apply(@, arguments)
 
 }, {</pre></div></div>
             
@@ -341,9 +341,9 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fetch</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    model = <span class="hljs-keyword">new</span> @
+    model = <span class="hljs-keyword">new</span> @()
     model.fetch().<span class="hljs-keyword">then</span><span class="hljs-function"> -&gt;</span>
-      callback model
+      callback(model)
 
 }</pre></div></div>
             
@@ -431,9 +431,9 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
-    setupStorage @
+    setupStorage(@)
 
-    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+    <span class="hljs-property">@init</span>(arguments...)</pre></div></div>
             
         </li>
         
@@ -521,7 +521,7 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@options</span>)</span> -&gt;</span>
-    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+    <span class="hljs-property">@init</span>(arguments...)</pre></div></div>
             
         </li>
         
@@ -641,7 +641,7 @@ value of that call instead.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">initialize</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@init</span> arguments...</pre></div></div>
+    <span class="hljs-property">@init</span>(arguments...)</pre></div></div>
             
         </li>
         

@@ -18,14 +18,14 @@
 Internationalization::get = (name, subs...) ->
   return unless name
 
-  message = chrome.i18n.getMessage name, subs
+  message = chrome.i18n.getMessage(name, subs)
 
-  if @escaping then @_.escape message else message
+  if @escaping then @_.escape(message) else message
 
 # Use `chrome.i18n.getAcceptLanguages` to asynchronously fetch all of the supported languages,
 # optional specifying a `parent` locale for which only it's *children* should be retrieved.
 Internationalization::languages = (parent, callback) ->
-  if _.isFunction parent
+  if _.isFunction(parent)
     callback = parent
     parent   = null
 
@@ -34,16 +34,16 @@ Internationalization::languages = (parent, callback) ->
 
   if parent
     return @languages (err, languages) =>
-      if err then callOrThrow @, callback, err
-      else        callOrThrow @, callback, null, filterLanguages parent, languages
+      if err then callOrThrow(@, callback, err)
+      else        callOrThrow(@, callback, null, filterLanguages(parent, languages))
 
   if languages.length
-    return callOrThrow @, callback, null, languages[..]
+    return callOrThrow(@, callback, null, languages[..])
 
   chrome.i18n.getAcceptLanguages (languages) =>
     @messenger.languages = languages.sort()
 
-    callOrThrow @, callback, null, languages[..]
+    callOrThrow(@, callback, null, languages[..])
 
 # Internalization setup
 # ---------------------
@@ -53,5 +53,6 @@ Internationalization::languages = (parent, callback) ->
 #
 # Also, use `chrome.i18n.getMessage` to derive the active locale.
 window.i18n = int17.create().initSync
-  locale:   chrome.i18n.getMessage '@@ui_locale'
-  messages: prevent: {}
+  locale:   chrome.i18n.getMessage('@@ui_locale')
+  messages:
+    prevent: {}
