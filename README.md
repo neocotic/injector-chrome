@@ -8,7 +8,7 @@
                        \ \____/
                         \/___/
 
-<img align="right" width="128" height="128" src="https://raw.github.com/neocotic/injector-chrome/master/src/img/icon128.png">
+<img align="right" width="128" height="128" src="https://raw.github.com/neocotic/injector-chrome/master/src/img/icon-128.png">
 
 [Injector][] is a browser extension that allows you to create custom code snippets to be injected
 into any website.
