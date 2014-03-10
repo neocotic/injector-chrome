@@ -16,7 +16,7 @@ content_scripts: [
   {
     js:      [ 'js/install.js' ]
     run_at:  'document_end'
-    matches: [ 'http://*.neocotic.com/injector/*' ]
+    matches: [ 'http://*.neocotic.com/*' ]
   }
   {
     js:         [ 'js/content.js' ]
