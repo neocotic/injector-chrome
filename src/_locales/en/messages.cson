@@ -259,7 +259,7 @@ snippet_clone_header:
   description: 'Header for the clone snippet form modal dialog.'
 
 snippet_edit_button:
-  message: 'Update'
+  message: 'Save'
   description: 'Text for the submit button in the edit snippet modal dialog form.'
 
 snippet_edit_header:
@@ -290,10 +290,10 @@ top_button:
   message: 'Back to top'
   description: 'Text for the link in the footer that takes the user to the top of the page.'
 
-update_button:
-  message: 'Update'
-  description: 'Text for the Update button.'
+save_button:
+  message: 'Save'
+  description: 'Text for the Save button.'
 
-update_button_alt:
+save_button_alt:
   message: 'Saving...'
-  description: 'Alternative text for the Update button which is displayed after being clicked.'
+  description: 'Alternative text for the Save button which is displayed after being clicked.'

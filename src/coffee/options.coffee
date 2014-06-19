@@ -61,7 +61,7 @@ EditorControls = Injector.View.extend {
   # Register DOM events for the editor controls
   events:
     'click #reset_button:not(:disabled)':  'reset'
-    'click #update_button:not(:disabled)': 'save'
+    'click #save_button:not(:disabled)': 'save'
 
   # Render the editor controls.
   render: ->
@@ -100,7 +100,7 @@ EditorControls = Injector.View.extend {
 
   # Update the state of the editor controls.
   update: (@model) ->
-    $buttons = @$('#reset_button, #update_button')
+    $buttons = @$('#reset_button, #save_button')
 
     # Ensure that specific buttons are only enabled when a snippet is selected.
     $buttons.prop('disabled', not @hasModel())
