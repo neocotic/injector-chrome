@@ -1,7 +1,7 @@
 {
   "name": "injector-chrome",
   "description": "Chrome extension that allows you to create custom code snippets to be injected into any website",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "http://neocotic.com/injector",
   "bugs": {
     "url": "https://github.com/neocotic/injector-chrome/issues"
@@ -35,15 +35,15 @@
     "type": "git"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
+    "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-compress": "~0.7.0",
+    "grunt-contrib-compress": "~0.9.1",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-less": "~0.10.0",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.5.3",
-    "grunt-cson": "~0.7.0",
+    "grunt-contrib-less": "~0.11.2",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-cson": "~0.8.0",
     "grunt-json-minify": "~0.4.0",
     "grunt-docco": "~0.3.3",
     "int17": "~0.3.0"
