@@ -142,9 +142,17 @@ editor_theme_idle_fingers:
   message: 'Idle Fingers'
   description: 'Text for the Idle Fingers editor theme.'
 
+editor_theme_katzenmilch:
+  message: 'Katzenmilch'
+  description: 'Text for the Katzenmilch editor theme.'
+
 editor_theme_kr:
   message: 'KR'
   description: 'Text for the KR editor theme.'
+
+editor_theme_kuroir:
+  message: 'Kuroir'
+  description: 'Text for the Kuroir editor theme.'
 
 editor_theme_label:
   message: 'Theme'
