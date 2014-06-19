@@ -61,7 +61,7 @@ EditorControls = Injector.View.extend {
   # Register DOM events for the editor controls
   events:
     'click #reset_button:not(:disabled)':  'reset'
-    'click #update_button:not(:disabled)': 'save'
+    'click #save_button:not(:disabled)': 'save'
 
   # Render the editor controls.
   render: ->
@@ -81,10 +81,10 @@ EditorControls = Injector.View.extend {
     ace.gotoLine(0)
 
   # Save the contents of the Ace editor as the snippet code.
-  save: (event) ->
+  save: ->
     return unless @hasModel()
 
-    $button = $(event.currentTarget)
+    $button = $('#save_button')
     code    = @options.ace.getValue()
 
     $button.button('loading').delay(500)
@@ -100,7 +100,7 @@ EditorControls = Injector.View.extend {
 
   # Update the state of the editor controls.
   update: (@model) ->
-    $buttons = @$('#reset_button, #update_button')
+    $buttons = @$('#reset_button, #save_button')
 
     # Ensure that specific buttons are only enabled when a snippet is selected.
     $buttons.prop('disabled', not @hasModel())
@@ -264,6 +264,17 @@ EditorView = Injector.View.extend {
     @ace.setShowPrintMargin(no)
     @ace.getSession().on 'change', =>
       @model.trigger('modified', @hasUnsavedChanges(), @ace.getValue()) if @hasModel()
+
+    @ace.commands.addCommand({
+      name: 'save'
+      bindKey: {
+        mac: 'Command-S'
+        win: 'Ctrl-S'
+      }
+      readOnly: no
+      exec: =>
+        @controls.save()
+    })
 
     @settings = new EditorSettingsView({ model: @options.settings })
     @controls = new EditorControls({ @ace })
