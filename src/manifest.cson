@@ -56,7 +56,7 @@ background:
   ]
   persistent: no
 
-version: '1.0.3'
+version: '1.0.4'
 
 icons:
   16:  'img/icon-128.png'
