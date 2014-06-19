@@ -378,10 +378,10 @@ of the Ace editor.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>: <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">save</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@hasModel</span>()
 
-    $button = $(event.currentTarget)
+    $button = $(<span class="hljs-string">'#save_button'</span>)
     code    = <span class="hljs-property">@options</span>.ace.getValue()
 
     $button.button(<span class="hljs-string">'loading'</span>).delay(<span class="hljs-number">500</span>)
@@ -825,6 +825,17 @@ snippets.</p>
     <span class="hljs-property">@ace</span>.setShowPrintMargin(<span class="hljs-literal">no</span>)
     <span class="hljs-property">@ace</span>.getSession().<span class="hljs-literal">on</span> <span class="hljs-string">'change'</span>,<span class="hljs-function"> =&gt;</span>
       <span class="hljs-property">@model</span>.trigger(<span class="hljs-string">'modified'</span>, <span class="hljs-property">@hasUnsavedChanges</span>(), <span class="hljs-property">@ace</span>.getValue()) <span class="hljs-keyword">if</span> <span class="hljs-property">@hasModel</span>()
+
+    <span class="hljs-property">@ace</span>.commands.addCommand({
+      <span class="hljs-attribute">name</span>: <span class="hljs-string">'save'</span>
+      <span class="hljs-attribute">bindKey</span>: {
+        <span class="hljs-attribute">mac</span>: <span class="hljs-string">'Command-S'</span>
+        <span class="hljs-attribute">win</span>: <span class="hljs-string">'Ctrl-S'</span>
+      }
+      <span class="hljs-attribute">readOnly</span>: <span class="hljs-literal">no</span>
+      <span class="hljs-attribute">exec</span>:<span class="hljs-function"> =&gt;</span>
+        <span class="hljs-property">@controls</span>.save()
+    })
 
     <span class="hljs-property">@settings</span> = <span class="hljs-keyword">new</span> EditorSettingsView({ <span class="hljs-attribute">model</span>: <span class="hljs-property">@options</span>.settings })
     <span class="hljs-property">@controls</span> = <span class="hljs-keyword">new</span> EditorControls({ <span class="hljs-property">@ace</span> })
