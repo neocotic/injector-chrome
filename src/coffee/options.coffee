@@ -189,7 +189,6 @@ EditorSettingsView = Injector.View.extend {
     'change #editor_line_wrap':         'update'
     'change #editor_soft_tabs':         'update'
     'change #editor_theme':             'update'
-    'click .modal-footer .btn-warning': 'restoreDefaults'
 
   # Initialize the editor settings.
   init: ->
@@ -230,11 +229,6 @@ EditorSettingsView = Injector.View.extend {
     @$('#editor_theme').val(theme)
 
     @
-
-  # Restore the attributes of underlying model to their default values.
-  restoreDefaults: ->
-    @model.restoreDefaults()
-    @model.save()
 
   # Update the state of the editor settings.
   update: ->
@@ -325,7 +319,7 @@ EditorView = Injector.View.extend {
 GeneralSettingsView = Injector.View.extend {
 
   # Overlay the general settings on top of this element.
-  el: '#general_tab'
+  el: '#general_settings'
 
   # Register DOM events for the general settings.
   events:
@@ -358,24 +352,6 @@ GeneralSettingsView = Injector.View.extend {
     else
       analytics.track('General', 'Changed', 'Analytics', 0)
       analytics.remove()
-
-}
-
-# Parent view for all configurable settings.
-SettingsView = Injector.View.extend {
-
-  # Overlay the settings on top of this element.
-  el: 'body'
-
-  # Initialize the settings.
-  init: ->
-    @general = new GeneralSettingsView({ @model })
-
-  # Render the settings.
-  render: ->
-    @general.render()
-
-    @
 
 }
 
@@ -722,7 +698,7 @@ class OptionsPage
 
         # Create views for the important models and collections.
         @editor   = new EditorView({ settings: editorSettings })
-        @settings = new SettingsView({ model: settings })
+        @settings = new GeneralSettingsView({ model: settings })
         @snippets = new SnippetsView({ collection: snippets })
 
         # Render these new views.
