@@ -42,7 +42,6 @@
 
         <nav class="collapse navbar-collapse" role="navigation">
           <ul class="nav navbar-nav">
-            <li><a id="general_nav" data-tabify="#general_tab" data-i18n-content="general_header"></a></li>
             <li><a id="snippets_nav" data-tabify="#snippets_tab" data-i18n-content="snippets_header"></a></li>
           </ul>
 
@@ -54,31 +53,6 @@
     </header>
 
     <main id="content" class="container" role="main">
-      <section id="general_tab" class="tab hide">
-        <div class="row">
-          <div class="form-horizontal col-lg-12">
-            <fieldset>
-              <legend data-i18n-content="misc_header"></legend>
-
-              <div class="form-group">
-                <label for="analytics" class="control-label col-lg-2" data-i18n-content="analytics_label"></label>
-
-                <div class="col-lg-10">
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" id="analytics">
-                      <span data-i18n-content="analytics_text"></span>
-                    </label>
-
-                    <span class="help-block" data-i18n-content="analytics_sub_text"></span>
-                  </div>
-                </div>
-              </div>
-            </fieldset>
-          </div>
-        </div>
-      </section>
-
       <section id="snippets_tab" class="tab hide">
         <div class="row">
           <div class="col-lg-12">
@@ -249,7 +223,7 @@
 
     <div id="editor_settings_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editor_settings_header" aria-hidden="true">
       <div class="modal-dialog">
-        <form id="editor_settings" class="form-horizontal js-no-submit" role="form">
+        <form class="form-horizontal js-no-submit" role="form">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -258,42 +232,64 @@
             </div>
 
             <div class="modal-body">
-              <div class="form-group">
-                <label for="editor_theme" class="control-label col-sm-3" data-i18n-content="editor_theme_label"></label>
+              <fieldset id="general_settings">
+                <legend data-i18n-content="general_settings_legend"></legend>
 
-                <div class="col-sm-9">
-                  <select id="editor_theme" class="form-control"></select>
+                <div class="form-group">
+                  <label for="analytics" class="control-label col-sm-3" data-i18n-content="analytics_label"></label>
+
+                  <div class="col-sm-9">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" id="analytics">
+                        <span data-i18n-content="analytics_text"></span>
+                      </label>
+
+                      <span class="help-block" data-i18n-content="analytics_sub_text"></span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </fieldset>
 
-              <div class="form-group">
-                <label for="editor_soft_tabs" class="control-label col-sm-3" data-i18n-content="editor_indent_mode_label"></label>
+              <fieldset id="editor_settings">
+                <legend data-i18n-content="editor_settings_legend"></legend>
 
-                <div class="col-sm-9">
-                  <select id="editor_soft_tabs" class="form-control" data-i18n-options="editor_indent_mode_tabs:false;editor_indent_mode_spaces:true"></select>
+                <div class="form-group">
+                  <label for="editor_theme" class="control-label col-sm-3" data-i18n-content="editor_theme_label"></label>
+
+                  <div class="col-sm-9">
+                    <select id="editor_theme" class="form-control"></select>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label for="editor_indent_size" class="control-label col-sm-3" data-i18n-content="editor_indent_size_label"></label>
+                <div class="form-group">
+                  <label for="editor_soft_tabs" class="control-label col-sm-3" data-i18n-content="editor_indent_mode_label"></label>
 
-                <div class="col-sm-9">
-                  <select id="editor_indent_size" class="form-control"></select>
+                  <div class="col-sm-9">
+                    <select id="editor_soft_tabs" class="form-control" data-i18n-options="editor_indent_mode_tabs:false;editor_indent_mode_spaces:true"></select>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label for="editor_line_wrap" class="control-label col-sm-3" data-i18n-content="editor_line_wrap_label"></label>
+                <div class="form-group">
+                  <label for="editor_indent_size" class="control-label col-sm-3" data-i18n-content="editor_indent_size_label"></label>
 
-                <div class="col-sm-9">
-                  <select id="editor_line_wrap" class="form-control" data-i18n-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></select>
+                  <div class="col-sm-9">
+                    <select id="editor_indent_size" class="form-control"></select>
+                  </div>
                 </div>
-              </div>
+
+                <div class="form-group">
+                  <label for="editor_line_wrap" class="control-label col-sm-3" data-i18n-content="editor_line_wrap_label"></label>
+
+                  <div class="col-sm-9">
+                    <select id="editor_line_wrap" class="form-control" data-i18n-options="editor_line_wrap_none:false;editor_line_wrap_soft:true"></select>
+                  </div>
+                </div>
+              </fieldset>
             </div>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n-content="close_button"></button>
-              <button type="button" class="btn btn-warning" data-i18n-content="restore_defaults_button"></button>
             </div>
           </div>
         </form>
