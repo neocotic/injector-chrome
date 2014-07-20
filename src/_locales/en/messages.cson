@@ -87,12 +87,16 @@ editor_mode_less:
   description: 'Text for the LESS editor mode.'
 
 editor_settings_button:
-  message: 'Settings'
-  description: 'Text for the button used to open the Editor Settings modal dialog.'
+  message: 'Preferences'
+  description: 'Text for the button used to open the Preferences modal dialog.'
 
 editor_settings_header:
-  message: 'Settings'
-  description: 'Header for the Editor Settings modal dialog.'
+  message: 'Preferences'
+  description: 'Header for the Preferences modal dialog.'
+
+editor_settings_legend:
+  message: 'Editor'
+  description: 'Legend for the editor settings.'
 
 editor_theme_ambiance:
   message: 'Ambiance'
@@ -230,9 +234,9 @@ feedback_button:
   message: 'feedback'
   description: 'Text of Feedback button.'
 
-general_header:
+general_settings_legend:
   message: 'General'
-  description: 'Header of the General tab.'
+  description: 'Legend for the general settings.'
 
 misc_header:
   message: 'Miscellaneous'
@@ -245,10 +249,6 @@ name:
 reset_button:
   message: 'Reset'
   description: 'Text for the Reset button.'
-
-restore_defaults_button:
-  message: 'Restore Defaults'
-  description: 'Text for the Restore Defaults button.'
 
 snippet_add_button:
   message: 'Create'
