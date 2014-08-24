@@ -4,19 +4,58 @@
 //
 // Freely distributable under the MIT license
 
-@editorHeight: 335px;
-
-body {
-  padding-top: 50px;
-  position: relative;
-}
-
 a {
   cursor: pointer;
 }
 abbr {
   cursor: help;
   border-bottom: 1px dotted #999;
+}
+
+.form-donation {
+  display: none;
+}
+
+.navbar {
+  margin-bottom: 0;
+
+  .dropdown li .glyphicon {
+    padding-right: .5em;
+  }
+}
+
+.row.fill-height [class*='col-'] {
+  height: 100%;
+}
+
+.row.no-gutter {
+  margin-left: 0;
+  margin-right: 0;
+
+  [class*='col-']:not(:first-child),
+  [class*='col-']:not(:last-child) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.sidebar {
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+}
+
+#editor {
+  display: none;
+
+  &.ace-chrome {
+    border: 0;
+    border-radius: 0;
+    display: block;
+    height: 100%;
+    margin-bottom: 0;
+  }
 }
 
 .tab {
@@ -45,13 +84,6 @@ legend {
   .snippet-tooltip-mode {
     font-style: italic;
   }
-}
-
-#editor {
-  position: relative !important;
-  border: 1px solid #ccc;
-  margin: auto;
-  height: @editorHeight;
 }
 
 #editor_settings_button > span:last-child {
@@ -84,7 +116,6 @@ legend {
 }
 
 #snippets_list {
-  height: @editorHeight;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -96,11 +127,5 @@ legend {
 
   li.modified {
     font-style: italic;
-  }
-}
-
-#uvTab {
-  @media (max-width: 991px) {
-    display: none;
   }
 }

@@ -7,46 +7,91 @@
 # Extract any models and collections that are required by the options page.
 {Snippet} = models
 
-# Feedback
-# --------
+# Navigation
+# ----------
 
-# Indicate whether the user feedback feature has been added to the page.
-feedbackAdded = no
+# View containing navigation controls interaction with the options page.
+Navigation = Injector.View.extend({
 
-# Add the user feedback feature to the page using the `options` provided.
-loadFeedback = (options) ->
-  # Only load and configure the feedback widget once.
-  return if feedbackAdded
+  # Overlay the navigation on top of this element.
+  el: '.navbar'
 
-  # Create a script element to load the UserVoice widget.
-  uv       = document.createElement('script')
-  uv.async = yes
-  uv.src   = "https://widget.uservoice.com/#{options.id}.js"
+  # Register DOM events for the navigation.
+  events: {
+    'click [data-action]': 'handleAction'
+  }
 
-  # Insert the script element into the DOM.
-  script = document.querySelector('script')
-  script.parentNode.insertBefore(uv, script)
+  # TODO: doc
+  actions: {
+    # TODO: doc
+    donate: ->
+      @$('.form-donation').submit()
 
-  # Configure the widget as it's loading.
-  UserVoice = window.UserVoice or= []
-  UserVoice.push [
-    'showTab'
-    'classic_widget'
-    {
-      mode:          'full'
-      primary_color: '#333'
-      link_color:    '#08c'
-      default_mode:  'feedback'
-      forum_id:      options.forum
-      tab_label:     i18n.get('feedback_button')
-      tab_color:     '#333'
-      tab_position:  'middle-right'
-      tab_inverted:  yes
-    }
-  ]
+      analytics.track('Donate', 'Clicked')
 
-  # Ensure that the widget isn't loaded again.
-  feedbackAdded = yes
+    # TODO: doc
+    exit: ->
+      chrome.tabs.getCurrent (tab) ->
+        analytics.track('Exit', 'Clicked')
+
+        chrome.tabs.remove(tab.id)
+
+    # TODO: doc
+    feedback: ->
+      UserVoice = window.UserVoice ?= []
+      UserVoice.push([
+        'showLightbox'
+        'classic_widget'
+        {
+          mode:          'full',
+          primary_color: '#333',
+          link_color:    '#08c',
+          default_mode:  'feedback',
+          forum_id:      @options.userVoice.forum
+        }
+      ])
+
+      analytics.track('Feedback', 'Clicked')
+  }
+
+  # Initialize the navigation.
+  init: ->
+    @initFeedback()
+
+  # TODO: doc
+  handleAction: (e) ->
+    $el    = $(e.currentTarget)
+    action = $el.attr('data-action')
+    method = @actions[action]
+
+    method.call(@) if _.isFunction(method)
+
+    e.preventDefault()
+
+  # Initialize the feedback feature.
+  initFeedback: ->
+    # Create a script element to load the UserVoice widget.
+    uv       = document.createElement('script')
+    uv.async = yes
+    uv.src   = "https://widget.uservoice.com/#{@options.userVoice.id}.js"
+
+    # Insert the script element into the DOM.
+    script = document.querySelector('script')
+    script.parentNode.insertBefore(uv, script)
+
+  # Render the navigation bar.
+  render: ->
+    manifest = chrome.runtime.getManifest()
+
+    # TODO: comment
+    @$('.nav .dropdown:last-child .dropdown-header').text(i18n.get('menu_help_about', manifest.version))
+
+    # Insert the PayPal ID into the donation form.
+    @$('.form-donation input[name="hosted_button_id"]').val(@options.payPal)
+
+    @
+
+})
 
 # Editor
 # ------
@@ -58,7 +103,7 @@ EditorControls = Injector.View.extend {
   # Overlay the editor controls on top of this element.
   el: '#editor_controls'
 
-  # Register DOM events for the editor controls
+  # Register DOM events for the editor controls.
   events:
     'click #reset_button:not(:disabled)':  'reset'
     'click #save_button:not(:disabled)': 'save'
@@ -152,7 +197,7 @@ EditorModes = Injector.View.extend {
   save: ->
     mode = @$el.val()
 
-    @options.ace.getSession().setMode("ace/mode/#{mode}")
+    @options.ace.getSession().setMode("ace/mode/#{mode}") if mode
 
     if @hasModel()
       analytics.track('Snippet', 'Changed', 'Mode')
@@ -686,8 +731,8 @@ class OptionsPage
       # `Snippets.fetch`.
       Snippet.mapModeGroups(@config.editor.modeGroups)
 
-      # Add the user feedback feature to the page.
-      loadFeedback(@config.options.userVoice)
+      # Overlay the `Navigation` view on top of the navigation bar.
+      @navigation = new Navigation(@config.options).render()
 
       # Begin initialization.
       i18n.traverse()
@@ -706,6 +751,10 @@ class OptionsPage
         @settings.render()
         @snippets.render()
 
+        # Ensure that certain elements are automatically resized to fill the page height.
+        $(window).resize(_.bind(@resize, @))
+        @resize()
+
         # Ensure that views are updated accordingly when snippets are selected/deselected.
         snippets.on 'selected deselected', (snippet) =>
           if snippet.get('selected') then @update(snippet) else @update()
@@ -713,61 +762,16 @@ class OptionsPage
         selectedSnippet = snippets.findWhere({ selected: yes })
         @update(selectedSnippet) if selectedSnippet
 
-        # Ensure the current year is displayed throughout, where appropriate.
-        $('.js-insert-year').html("#{new Date().getFullYear()}")
-
-        # Bind tab selection event to all tabs.
-        initialSnippetDisplay = initialTabChange = yes
-
-        $('a[data-tabify]').on 'click', ->
-          target  = $(@).data('tabify')
-          $nav    = $("header.navbar .nav a[data-tabify='#{target}']")
-          $parent = $nav.parent('li')
-
-          unless $parent.hasClass('active')
-            $parent.addClass('active').siblings().removeClass('active')
-            $(target).removeClass('hide').siblings('.tab').addClass('hide')
-
-            id = $nav.attr('id')
-
-            settings.save({ tab: id })
-            .then ->
-              unless initialTabChange
-                analytics.track('Tabs', 'Changed', _.capitalize(id.match(/(\S*)_nav$/)[1]))
-
-              if id is 'snippets' and initialSnippetDisplay
-                initialSnippetDisplay = no
-                page.snippets.list.showSelected()
-
-              initialTabChange = no
-
-              $(document.body).scrollTop(0)
-
-        # Reflect the previously persisted tab initially.
-        $("##{settings.get 'tab'}").trigger('click')
-
         # Ensure that form submissions don't reload the page.
         $('form.js-no-submit').on 'submit', -> false
 
-        # Support *goto* navigation elements that change the current scroll position when clicked.
-        $('[data-goto]').on 'click', ->
-          switch $(@).data('goto')
-            when 'top' then $(document.body).scrollTop(0)
-
-        # Bind analytical tracking events to key footer buttons and links.
-        $('footer a[href*="neocotic.com"]').on 'click', ->
-          analytics.track('Footer', 'Clicked', 'Homepage')
-
-        # Setup and configure donation buttons.
-        $('#donation input[name="hosted_button_id"]').val(@config.options.payPal)
-        $('.js-donate').on 'click', ->
-          $(@).tooltip('hide')
-
-          $('#donation').submit()
-
-          analytics.track('Donate', 'Clicked')
-
         activateTooltips()
+
+  # Dynamically resize elements that must fill the available height on the page.
+  resize: ->
+    height = window.innerHeight - $('.navbar').outerHeight()
+
+    $('.fill-height:first').css('height', height)
 
   # Update the primary views with the selected `snippet` provided.
   update: (snippet) ->

@@ -30,10 +30,6 @@ description:
   message: 'Runs your custom code snippets on any website'
   description: 'Brief description of the extension.'
 
-donate_title:
-  message: 'Share the love!'
-  description: 'Hover text for donation links/buttons.'
-
 editor_indent_mode_label:
   message: 'Indent Mode'
   description: 'Label for the editor Indent Mode field.'
@@ -230,13 +226,61 @@ editor_theme_xcode:
   message: 'Xcode'
   description: 'Text for the Xcode editor theme.'
 
-feedback_button:
-  message: 'feedback'
-  description: 'Text of Feedback button.'
-
 general_settings_legend:
   message: 'General'
   description: 'Legend for the general settings.'
+
+menu_help:
+  message: 'Help'
+  description: 'Text for Help menu.'
+
+menu_help_about:
+  message: 'Injector $version$'
+  description: 'Text for About Injector menu item.'
+  placeholders:
+    version:
+      content: '$1'
+      example: '1.0.0'
+
+menu_help_donate:
+  message: 'Donate'
+  description: 'Text for Donate menu item.'
+
+menu_help_feedback:
+  message: 'Feedback & Support'
+  description: 'Text for Feedback & Support menu item.'
+
+menu_snippets:
+  message: 'Snippets'
+  description: 'Text for Snippets menu.'
+
+menu_snippets_delete:
+  message: 'Delete'
+  description: 'Text for Delete menu item.'
+
+menu_snippets_edit:
+  message: 'Edit'
+  description: 'Text for Edit menu item.'
+
+menu_snippets_exit:
+  message: 'Exit'
+  description: 'Text for Exit menu item.'
+
+menu_snippets_new:
+  message: 'New Snippet'
+  description: 'Text for New Snippet menu item.'
+
+menu_snippets_exit:
+  message: 'Exit'
+  description: 'Text for Exit menu item.'
+
+menu_snippets_save:
+  message: 'Save'
+  description: 'Text for Save menu item.'
+
+menu_snippets_settings:
+  message: 'Settings'
+  description: 'Text for Settings menu item.'
 
 misc_header:
   message: 'Miscellaneous'
@@ -281,10 +325,6 @@ snippet_host_label:
 snippet_host_placeholder:
   message: 'example.com'
   description: 'Placeholder text for the Domain field in the snippet form modal dialog.'
-
-snippets_header:
-  message: 'Snippets'
-  description: 'Header of the Snippets tab.'
 
 skip_navigation:
   message: 'Skip navigation'
